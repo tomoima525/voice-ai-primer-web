@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Voice AI & Voice Agents | An illustrated primer</title>
+  <meta name="description" content="A comprehensive guide to voice AI in 2025">
+  <link rel="stylesheet" href="styles.css">
+  <link rel="icon" href="favicon.ico">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,wght@0,400;0,500;0,700;1,400&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://use.typekit.net/rff5lbb.css">
+</head>
+<body>
+  <div class="container">
+    <header class="header">
+      <h1 class="title">Voice AI & Voice Agents</h1>
+      <h2 class="subtitle">An illustrated primer</h2>
+    </header>
+
+    <nav id="table-of-contents">
+      <h2 class="table-of-contents-title">Table of Contents</h2>
+      <ol>
+        <li><a href="#conversational-voice-ai">Conversational Voice AI in 2025</a></li>
+        <li><a href="#about-this-guide">About this guide</a></li>
+        <li><a href="#basic-loop">The basic conversational AI loop</a></li>
+        <li><a href="#core-tech">Core technologies and best practices</a></li>
+        <li><a href="#multiple-models">Using multiple AI models</a></li>
+        <li><a href="#scripting">Scripting and instruction following</a></li>
+        <li><a href="#evals">Voice AI Evals</a></li>
+        <li><a href="#telephony">Integrating with telephony infrastructure</a></li>
+        <li><a href="#rag-memory">RAG and memory</a></li>
+        <li><a href="#hosting">Hosting and Scaling</a></li>
+        <li><a href="#future">What's coming in 2025</a></li>
+      </ol>
+    </nav>
+
+    <main>
+      <div class="chapter-row">
+        <div class="chapter-content">
+          <section id="conversational-voice-ai">
+            <h1>1. Conversational Voice AI in 2025</h1>
+            
+            <p>LLMs are good conversationalists.</p>
+            
+            <p>If you've spent much time in free-form dialog with ChatGPT or Claude, you have an intuitive sense that talking to an LLM feels quite natural and is broadly useful.</p>
+            
+            <p>LLMs are also good at turning unstructured information into structured data.<sup>[2]</sup></p>
+            
+            <p>New voice AI agents leverage these two LLM capabilities – conversation, and extracting structure from unstructured data – to create a new kind of user experience.</p>
+            
+            <p>Voice AI is being deployed today in a wide range of business contexts. For example:</p>
+            
+            <ul class="arrow-list">
+              <li>collecting patient data prior to healthcare appointments,</li>
+              <li>following up on inbound sales leads,</li>
+              <li>coordinating scheduling and logistics between companies, and</li>
+              <li>answering the phone for nearly every kind of small business.</li>
+            </ul>
+            
+            <p>On the consumer side, conversational voice (and video) AI is also starting to make its way into social applications and games. And developers are sharing personal voice AI projects and experiments every day on github and social media.</p>
+          </section>
+        </div>
+        
+        <div class="chapter-notes">
+          <div class="chapter-footnotes" id="chapter-1-notes">
+            <div class="footnote" id="footnote-2">
+              <p>[2] Here we mean this broadly, rather in the narrow sense of the "structured output" feature of some LLMs.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="chapter-row">
+        <div class="chapter-content">
+          <section id="about-this-guide">
+            <h1>2. About this guide</h1>
+            
+            <p>This guide is a snapshot of the voice AI state of the art.</p>
+            
+            <p>As more and more developers jump into building realtime, conversational AI applications, materials to help people get started are important.</p>
+            
+            <p>This guide was directly inspired by Sean DuBois' open-source book WebRTC For the Curious. That book has helped numerous developers get up to speed with WebRTC since it was first released four years ago.<sup>[3]</sup></p>
+            
+            <p>Building production-ready voice agents is complicated. Many elements are non-trivial to implement from scratch. If you build voice AI apps, you'll likely rely on a framework for many of the things discussed in this document. But we think it's useful to understand how the pieces fit together, whether you are building them all from scratch or not.</p>
+            
+            <p>The voice AI code examples in this document use the Pipecat<sup>[4]</sup> open source framework. Pipecat is a vendor-neutral agent layer for realtime AI.<sup>[5]</sup> We used Pipecat in this document because:</p>
+            
+            <ol class="list-decimal">
+              <li>We build with it every day and help to maintain it, so we're familiar with it!</li>
+              <li>Pipecat is currently the most widely used voice AI framework, with teams at NVIDIA, Google, and hundreds of startups leveraging and contributing to the codebase.</li>
+            </ol>
+            
+            <p>We've tried to give general advice in this document, rather than recommend commercial products and services. Where we highlight specific vendors, we do so because they are used by a large percentage of voice AI developers.</p>
+            
+            <p>Let's get started …</p>
+          </section>
+        </div>
+        
+        <div class="chapter-notes">
+          <div class="chapter-footnotes" id="chapter-2-notes">
+            <div class="footnote" id="footnote-3">
+              <p>[3] <a href="https://webrtcforthecurious.com" target="_blank">webrtcforthecurious.com</a> If you're interested in WebRTC, go read it! WebRTC is relevant to voice AI, as we'll discuss later in section 4.6.1.</p>
+            </div>
+            <div class="footnote" id="footnote-4">
+              <p>[4] <a href="https://pipecat.ai" target="_blank">pipecat.ai</a></p>
+            </div>
+            <div class="footnote" id="footnote-5">
+              <p>[5] Pipecat has integrations for more than 40 AI models and services, along with state of-the-art implementations of things like turn detection and interruption handling. You can write code with Pipecat that uses WebSockets, WebRTC, HTTP, and telephony to communicate with users. Pipecat includes transport implementations for a variety of infrastructure platforms including Twilio, Telnyx, LiveKit, Daily, and others.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="chapter-row">
+        <div class="chapter-content">
+          <section id="basic-loop">
+            <h1>3. The basic conversational AI loop</h1>
+            
+            <p>The basic "job to be done" of a voice AI agent is to listen to what a human says, respond in some useful way, then repeat that sequence.</p>
+            
+            <p>This is a useful high-level starting point. But if you're building a voice agent, today, you'll need to dive into the details of speech processing, LLM inference, voice generation, and orchestration.</p>
+            
+            <p>Production voice agents today almost all have a very similar architecture. A voice agent program runs in the cloud and orchestrates the speech-to-speech loop. The agent program uses multiple AI models, some running locally to the agent, some accessed via APIs. The agent program also uses LLM function calling or structured outputs to integrate with back-end systems.</p>
+            
+            <ol class="list-decimal">
+              <li>Speech is captured by a microphone on a user's device, encoded, and sent over the network to a voice agent program running in the cloud.</li>
+              <li>Input speech is transcribed, to create text input for the LLM.</li>
+              <li>Text is assembled into a context — a prompt — and inference is performed by an LLM. Inference output will often be filtered or transformed by the agent program logic.<sup>[6]</sup></li>
+              <li>Output text is sent to a text-to-speech model to create audio output.</li>
+              <li>Audio output is sent back to the user.</li>
+            </ol>
+            
+            <p>You'll notice that the voice agent program is running in the cloud, and the text-to-speech, LLM, and speech-to-text processing are happening in the cloud. Over the long term, we expect to see more AI workloads running on-device. Today, though, production voice AI is very cloud-centric, for two reasons:</p>
+            
+            <ol class="list-decimal">
+              <li>Voice AI agents need to use the best available AI models to reliably execute complex workflows at low latency. End-user devices do not yet have enough AI compute horsepower to run the best STT, LLM, and TTS models at acceptable latency.</li>
+              <li>The majority of commercial voice AI agents today are communicating with users via phone calls. For a phone call, there is no end-user device — at least, not one that you can run any code on!</li>
+            </ol>
+            
+            <p>Let's dive into this agent orchestration world and answer questions like:</p>
+            
+            <ol class="list-decimal">
+              <li>What LLMs work best for voice AI agents?</li>
+              <li>How do you manage the conversation context during a long-running session?</li>
+              <li>How do you connect voice agents to existing back-end systems?<sup>[8]</sup></li>
+              <li>How do you know if your voice agents are performing well?</li>
+            </ol>
+          </section>
+        </div>
+        
+        <div class="chapter-notes">
+          <div class="chapter-image">
+            <img src="images/Figure 0100.svg" alt="The basic conversational AI loop" class="basic-loop-image" width="200">
+            <p class="image-caption">Figure 3.a</p>
+          </div>
+          <div class="chapter-footnotes" id="chapter-3-notes">
+            <div class="footnote" id="footnote-6">
+              <p>[6] For example, to detect common LLM errors and safety issues.</p>
+            </div>
+            <div class="footnote" id="footnote-8">
+              <p>[8] For example, CRMs, proprietary knowledge bases, and call center systems.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="chapter-row">
+        <div class="chapter-content">
+          <section id="core-tech">
+            <h1>4. Core technologies and best practices</h1>
+            
+            <h2 id="latency">4.1. Latency</h2>
+            
+            <p>Building voice agents is similar in most ways to other kinds of AI engineering. If you have experience building text-based, multi-turn AI agents, much of your experience from that domain will be useful in voice, as well.</p>
+            
+            <p><strong>The big difference is latency.</strong></p>
+            
+            <p>Humans expect fast responses in normal conversation. A response time of 500ms is typical. Long pauses feel unnatural.</p>
+            
+            <p>It's worth learning how to accurately measure latency — from the end user's perspective — if you are building voice AI agents.</p>
+            
+            <p>You will often see AI platforms quote latencies that are not true "voice-to-voice" measurements. This is generally not malicious. From the provider side of things, the easy way to measure latency is to time how long it takes for a model to respond to a request.</p>
+          </section>
+        </div>
+        
+        <div class="chapter-notes">
+          <div class="chapter-footnotes" id="chapter-4-notes">
+            <!-- Footnotes for Chapter 4 will be added here -->
+          </div>
+        </div>
+      </div>
+
+      <!-- More sections will be added as we process the content -->
+    </main>
+
+    <footer>
+      <p>This book is available under the CC0 license. The authors have waived all their copyright and related rights in their works to the fullest extent allowed by law. You may use this work however you want and no attribution is required.</p>
+    </footer>
+  </div>
+
+  <script src="script/pagination.js"></script>
+</body>
+</html> 
