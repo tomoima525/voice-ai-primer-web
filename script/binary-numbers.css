@@ -1,0 +1,28 @@
+/* Binary paragraph numbers */
+.binary-paragraph-number {
+  font-family: monospace;
+  font-size: 0.8rem;
+  color: var(--muted);
+  opacity: 0.3;
+  text-align: left;
+  letter-spacing: 1px;
+  white-space: nowrap;
+  padding-left: 10px; /* Add some padding to move away from content */
+}
+
+.binary-container {
+  position: absolute;
+  right: 0;
+  width: 100%;
+  text-align: left;
+  pointer-events: none;
+  z-index: 5;
+  transition: opacity 0.2s ease; /* Add smooth transition */
+}
+
+/* Media query for mobile */
+@media (max-width: 768px) {
+  .binary-container {
+    display: none; /* Hide binary numbers on mobile */
+  }
+}

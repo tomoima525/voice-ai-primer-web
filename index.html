@@ -10,7 +10,9 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,wght@0,400;0,500;0,700;1,400&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://use.typekit.net/rff5lbb.css">
+  <link rel="stylesheet" href="script/binary-numbers.css">
 </head>
 <body>
   <div class="container">
@@ -152,12 +154,17 @@
         
         <div class="chapter-notes">
           <div class="chapter-image">
-            <img src="images/Figure 0100.svg" alt="The basic conversational AI loop" class="basic-loop-image" width="200">
+            <img src="images/Figure 0100.svg" alt="The basic conversational AI loop" class="basic-loop-image" width="150">
             <p class="image-caption">Figure 3.a</p>
+            <img src="images/Figure 0200.svg" alt="The basic conversational AI loop" class="basic-loop-image" width="250">
+            <p class="image-caption">Figure 3.b</p>
           </div>
           <div class="chapter-footnotes" id="chapter-3-notes">
             <div class="footnote" id="footnote-6">
               <p>[6] For example, to detect common LLM errors and safety issues.</p>
+            </div>
+            <div class="footnote" id="footnote-7">
+              <p>[7] Let's delve —— ed.</p>
             </div>
             <div class="footnote" id="footnote-8">
               <p>[8] For example, CRMs, proprietary knowledge bases, and call center systems.</p>
@@ -181,13 +188,736 @@
             
             <p>It's worth learning how to accurately measure latency — from the end user's perspective — if you are building voice AI agents.</p>
             
-            <p>You will often see AI platforms quote latencies that are not true "voice-to-voice" measurements. This is generally not malicious. From the provider side of things, the easy way to measure latency is to time how long it takes for a model to respond to a request.</p>
+            <p>You will often see AI platforms quote latencies that are not true "voice-to-voice" measurements. This is generally not malicious. From the provider side of things, the easy way to measure latency is to measure inference time. So that's how providers get used to thinking about latency. However, this server-side view does not account for audio processing, phrase endpointing delay, network transport, and operating system overhead.</p>
+            
+            <p><strong>Measuring voice-to-voice latency is easy to do manually.</strong></p>
+            
+            <p>Simply record the conversation, load the recording into an audio editor, look at the audio waveform, and measure from the end of the user's speech to the beginning of the LLM's speech.</p>
+            
+            <p>If you build conversational voice applications for production use, it's worthwhile to occasionally sanity check your latency numbers this way. Bonus points for adding simulated network packet loss and jitter when you do these tests!</p>
+            
+            <p>Measuring true voice-to-voice latency is challenging to do programmatically. Some of the latency happens deep inside the operating system. So most observability tools just measure time-to-first-(audio)-byte. This is a reasonable proxy for total voice-to-voice latency, but again please note that things you don't measure — like phrase endpointing variation and network round-trip time — can become problematic if you have no way to track them.</p>
+            
+            <p><strong>If you are building conversational AI applications, 800ms voice-to-voice latency is a good target to aim for.</strong> This is challenging, though not impossible, to consistently achieve with today's LLMs.</p>
+            
+            <p>Because latency is so important for voice use cases, latency will come up often throughout this guide.</p>
+            
+            <h2 id="llms-for-voice">4.2. LLMs for voice use cases</h2>
+            
+            <p>The release of GPT-4 in March 2023 kicked off the current era of voice AI. GPT-4 was the first LLM that could both sustain a flexible, multi-turn conversation and be prompted precisely enough to perform useful work. Today, GPT-4's successor – GPT-4o – is still the dominant model for conversational voice AI.</p>
+            
+            <p>Several other models are now as good or better than the original GPT-4 at things that are critical for voice AI:</p>
+            
+            <ul class="arrow-list">
+              <li>Low enough latency for interactive voice conversation.</li>
+              <li>Good instruction following.<sup>[9]</sup></li>
+              <li>Reliable function calling.<sup>[10]</sup></li>
+              <li>Low rates of hallucination and other kinds of inappropriate responses.</li>
+              <li>Personality and tone.</li>
+              <li>Cost.</li>
+            </ul>
+            
+            <p>But GPT-4o is also better than GPT-4! Especially at instruction following, function calling, and reduced rates of hallucination.</p>
+            
+            <p>Voice AI use cases are demanding enough that it generally makes sense to use the best available model. At some point this will change, and models that are not state of the art will be good enough for broad adoption in voice AI use cases. But that's not true, yet.</p>
+            
+            <p>We do expect, though, that Google's Gemini 2.0 Flash, which was released on February 6th, will be widely used for voice AI. Gemini 2.0 Flash is fast, roughly as good as GPT-4o at instruction following, possibly better than GPT-4o at function calling, and priced aggressively.</p>
+            
+            <h3 id="latency-llm">4.2.1 Latency</h3>
+            
+            <p>The current version of Claude Sonnet 3.5 would be an excellent choice for voice AI, except that inference latency (time to first token) has not been an Anthropic priority. Claude Sonnet median latency is typically double the latency of GPT-4o and Gemini Flash, with a much bigger P95 spread as well.</p>
+            
+            <table class="data-table model-comparison">
+              <thead>
+                <tr>
+                  <th>Model</th>
+                  <th>Median TTFT (ms)</th>
+                  <th>P95 TTFT (ms)</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>GPT-4o (OpenAI)</td>
+                  <td>510</td>
+                  <td>1,360</td>
+                </tr>
+                <tr>
+                  <td>Claude Sonnet 3.5</td>
+                  <td>840</td>
+                  <td>1,960</td>
+                </tr>
+                <tr>
+                  <td>Gemini 2.0 Flash (Google)</td>
+                  <td>460</td>
+                  <td>1,610</td>
+                </tr>
+              </tbody>
+            </table>
+            <p class="table-caption">Table 4.c: Time to first token (TTFT) metrics for OpenAI, Anthropic, and Google APIs - Feb 2025</p>
+            
+            <p>A rough rule of thumb: LLM time-to-first-token of 500ms or less is good enough for most voice AI use cases. GPT-4o TTFT is typically 400-500ms. Gemini Flash is similar.</p>
+            
+            <p>Note that GPT-4o mini is not faster than GPT-4o. This often surprises people, because the general expectation is that small models are faster than big models.</p>
+            
+            <h3 id="cost-comparison">4.2.2 Cost comparison</h3>
+            
+            <p>Inference cost has been dropping regularly and rapidly. So, in general, LLM cost has been the least important factor in choosing which LLM to use. Gemini 2.0 Flash's newly announced pricing offers a 10x cost reduction compared to GPT-4o. We'll see what impact this has on the voice AI landscape.</p>
+            
+            <table class="data-table model-comparison">
+              <thead>
+                <tr>
+                  <th>Model</th>
+                  <th>3-minute conversation</th>
+                  <th>10-minute conversation</th>
+                  <th>30-minute conversation</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>GPT-4o (OpenAI)</td>
+                  <td>$0.009</td>
+                  <td>$0.08</td>
+                  <td>$0.75</td>
+                </tr>
+                <tr>
+                  <td>Claude Sonnet 3.5</td>
+                  <td>$0.012</td>
+                  <td>$0.11</td>
+                  <td>$0.90</td>
+                </tr>
+                <tr>
+                  <td>Gemini 2.0 Flash (Google)</td>
+                  <td>$0.0004</td>
+                  <td>$0.004</td>
+                  <td>$0.03</td>
+                </tr>
+              </tbody>
+            </table>
+            <p class="table-caption">Figure 4.d: Session costs for multi-turn conversations grow super-linearly with duration. A 30-minute session is roughly 100x more expensive than a 3-minute session. You can reduce the cost of long sessions with caching, context summari- zation, and other techniques.</p>
+            
+            <p>Note that cost increases super linearly as a function of session length. Unless you trim or summarize the context during a session, cost becomes an issue for long sessions. This is particularly true for speech-to-speech models (see below).</p>
+            
+            <p>The math of context growth makes it tricky to pin down a per-minute cost for a voice conversation. In addition, API providers are increasingly offering token caching, which can offset cost (and reduce latency) but adds to the complexity of estimating what costs will be for different use cases.</p>
+            
+            <p>OpenAI's automatic token caching for the OpenAI Realtime API is particularly nice. We encourage other platforms to consider implementing similarly simple, transparent caching.<sup>[11]</sup></p>
+            
+            <p>We built a calculator for the OpenAI Realtime API that shows how cost scales with session length, factoring in caching.<sup>[11]</sup></p>
+            
+            <h3 id="open-source">4.2.3 Open source / open weights</h3>
+            
+            <p>Llama 3.3 70B is promising. This open weights model from Meta performs better than the original GPT-4 on relevant benchmarks. But it is not good enough to supplant the current versions of GPT-4o and Gemini for commercial use cases, yet, unless you must run your LLM locally rather than use an API.<sup>[12]</sup></p>
+            
+            <p>Note that Meta does not offer a first-party, hosted Llama 3.3 70B. Many smaller providers offer Llama inference endpoints, and serverless GPU platforms offer a range of options for deploying your own Llama.</p>
+            
+            <p>We do expect to see a lot of progress in open source / open weights models in 2025. Llama 4 and future models from Alibaba (Qwen), and DeepSeek seem likely to be good models for voice AI use cases.</p>
+            
+            <h3 id="speech-to-speech">4.2.4 What about speech-to-speech models?</h3>
+            
+            <p>Speech-to-speech models are an exciting, relatively new, development. A speech-to-speech LLM can be prompted with audio, rather than text, and can produce audio output directly. This eliminates the speech-to-text and text-to-speech parts of the voice agent orchestration loop.</p>
+            
+            <p>The potential benefits of speech-to-speech models are:</p>
+            
+            <ul class="arrow-list">
+              <li>Lower latency.</li>
+              <li>Improved ability to understand the nuances of human conversation.</li>
+              <li>More natural voice output.</li>
+            </ul>
+            
+            <p>OpenAI and Google have both released speech-to-speech APIs. Everyone training large models and building voice AI applications believes that speech-to-speech models are the future of voice AI.</p>
+            
+            <p>However, current speech to speech models and APIs are not yet good enough for most production voice AI use cases.</p>
+            
+            <p>Today's best speech-to-speech models definitely sound more natural than today's best text-to-speech models. OpenAI's gpt4o-audio-preview<sup>[13]</sup> model really does sound like a preview of the voice AI future.</p>
+            
+            <p>Speech-to-speech models aren't yet as mature and reliable as text-mode LLMs, though.</p>
+            
+            <ul class="arrow-list">
+              <li>Lower latency is possible in theory, but audio uses more tokens than text. Larger token contexts are slower for the LLM to process. In practice, today, audio models are slower for multi-turn conversation than text models.<sup>[14]</sup></li>
+              <li>Better understanding does seem to be a real benefit, today, of these models. This is particularly apparent for Gemini 2.0 Flash audio input. The story is a bit less clear today for gpt 4o audio preview, which is a smaller and somewhat less capable model than the text-mode GPT-4o.</li>
+              <li>Better natural voice output is clearly perceptible, today. But the audio LLMs do have some odd output patterns in audio mode that don't happen in text mode as often: word repetition, discourse markers that sometimes fall into the uncanny valley, and occasional failure to complete sentences.</li>
+            </ul>
+            
+            <p>The biggest of these issues is the larger context size required for multi-turn audio. One approach to squaring the circle and getting the benefits of native audio without the context-size drawbacks is to process each conversation turn as a mixture of text and audio. Use audio for the most recent user message; use text for the rest of the conversation history.</p>
+            
+            <p>The beta speech to speech offering from OpenAI — the OpenAI Realtime API — is fast and the voice quality is amazing. But the model behind that API is the smaller gpt-4o-audio-preview rather than the full GPT-4o. So instruction following and function calling are not as good. The API also does not have all of the features needed to manage conversation context, and has a variety of early-product bugs and quirks. See detailed notes about the OpenAI Realtime API here.<sup>[15]</sup></p>
+            
+            <p>The Google Multimodal Live API is another promising — and also currently beta — speech-to-speech service. This API offers a view into the near-future of the Gemini models: long context windows, excellent vision capabilities, fast inference, strong audio understanding, code execution, and search grounding. Like the OpenAI Realtime API, this beta product is not yet a good choice for production voice AI.</p>
+            
+            <p>We expect to see lots of progress on the speech-to-speech front in 2025. But whether production voice AI applications will begin to use speech-to-speech APIs this year is still an open question.</p>
           </section>
         </div>
         
         <div class="chapter-notes">
+          <div class="chapter-image">
+            <img src="images/Figure 0300.svg" alt="Latency breakdown diagram" class="latency-image" width="300">
+            <p class="image-caption">Figure 4.a</p>
+          </div>
           <div class="chapter-footnotes" id="chapter-4-notes">
-            <!-- Footnotes for Chapter 4 will be added here -->
+          <div class="chapter-image">
+            <img src="images/Figure 0700 Spreadsheet.png" alt="Cost calculator spreadsheet" class="footnote-image" width="300">
+            <p class="image-caption">Figure 4.e: OpenAI Realtime API cost calculator</p>
+          </div>
+            <div class="footnote" id="footnote-9">
+              <p>[9] How easy is it to prompt the model to do specific things?</p>
+            </div>
+            <div class="footnote" id="footnote-10">
+              <p>[10] Voice AI agents rely heavily on function calling.</p>
+            </div>
+            <div class="footnote" id="footnote-11">
+              <p>[11] <a href="https://dub.sh/voice-agents-010" target="_blank">dub.sh/voice-agents-010</a></p>
+
+            </div>
+              <p>[12] If you plan to fine-tune an LLM for your use case, Llama 3.3 70B is a very good starting point. More on fine-tuning below in 5.1 Using several fine-tuned models.</p>
+            <div class="footnote" id="footnote-12">
+            </div>
+            <div class="footnote" id="footnote-13">
+              <p>[13] <a href="https://platform.openai.com/docs/guides/audio" target="_blank">platform.openai.com/docs/guides/audio</a></p>
+            </div>
+            <div class="footnote" id="footnote-14">
+              <p>[14] This latency issue for audio models is clearly fixable through a combination of caching, clever API design, and architectural evolution of the models themselves.</p>
+            </div>
+            <div class="footnote" id="footnote-15">
+              <p>[15] <a href="https://latent.space/p/realtime-api" target="_blank">latent.space/p/realtime-api</a></p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="chapter-row">
+        <div class="chapter-content">
+          <section id="speech-to-text">
+            <h2 id="speech-to-text">4.3. Speech-to-text</h2>
+            
+            <p>Speech-to-text — transcription — is the "input" stage for voice AI.</p>
+            
+            <p>For voice AI use cases, we need very low transcription latency and very low word error rate. Sadly, optimizing a speech model for low latency has a negative impact on accuracy.</p>
+            
+            <p>Today there are several very good transcription models that are not architected for low latency. Whisper is an open source model that is used in many products and services. It's very good, but with a time-to-first-token of 800ms or so, is rarely used for conversational voice AI use cases.</p>
+            
+            <h3 id="deepgram">4.3.1 Deepgram</h3>
+            
+            <p>Most production voice AI agents today use Deepgram<sup>[16]</sup> for text-to-speech. Deepgram is a commercial speech-to-text AI lab and API platform with a long track record of delivering a very good combination of low latency, low word error rate, and low cost.</p>
+            
+            <p>Deepgram's models are available as self-serve APIs or as Docker containers that customers can run on their own systems.</p>
+            
+            <p>Most people start out using Deepgram speech-to-text via the API. Time-to-first token is typically 150ms, for users in the US.</p>
+            
+            <p>Managing a scalable GPU cluster is a significant ongoing devops job to take on, so moving from the Deepgram API to hosting their models on your own infrastructure is not something you should do without a good reason. Good reasons include:</p>
+            
+            <ul class="arrow-list">
+              <li>Keeping audio/transcription data private. Deepgram offers BAAs and data processing agreements, but some customers will want complete control of audio and transcription data. Customers outside the US may have a legal obligation to keep data inside their own countries or regions. (Note that by default Deepgram's terms of service allow them to train on all data you send to them via their APIs. You can opt out of this on enterprise plans.)</li>
+              <li>Reducing latency. Deepgram does not have inference servers outside the US. From Europe, Deepgram's TTFT is ~200ms; from India, ~300ms.</li>
+            </ul>
+            
+            <p>Deepgram offers fine-tuning services, which can help lower word error rates if your use case includes relatively unusual vocabularies, speech styles, or accents.</p>
+            
+            <h3 id="prompting-help">4.3.2 Prompting can help the LLM.</h3>
+            
+            <p>A large percentage of Deepgram transcription errors result from the very small amount of context that the transcription model has available in a realtime stream.</p>
+            
+            <p>Today's LLMs are smart enough to work around transcription errors. When the LLM is performing inference it has access to the full conversation context. So you can tell the LLM that the input is a transcription of user speech, and that it should reason accordingly.</p>
+
+            <pre><code>You are a helpful, concise, and reliable voice assistant. Your primary goal is to understand the user's spoken requests, even if the speech-to-text transcription contains errors. Your responses will be converted to speech using a text-to-speech system. Therefore, your output must be plain, unformatted text.
+
+When you receive a transcribed user request:
+1. Silently correct for likely transcription errors. Focus on the intended meaning, not the literal text. If a word sounds like another word in the given context, infer and correct. For example, if the transcription says "buy milk two tomorrow" interpret this as "buy milk tomorrow".
+2. Provide short, direct answers unless the user explicitly asks for a more detailed response. For example, if the user says "what time is it?" you should respond with "It is 2:38 AM". If the user asks "Tell me a joke", you should provide a short joke.
+3. Always prioritize clarity and accuracy. Respond in plain text, without any formatting, bullet points, or extra conversational filler.
+4. If you are asked a question that is time dependent, use the current date, which is February 3, 2025, to provide the most up to date information.
+5. If you do not understand the user request, respond with "I'm sorry, I didn't understand that."
+
+Your output will be directly converted to speech, so your response should be natural-sounding and appropriate for a spoken conversation.
+</code></pre>
+            <p class="image-caption">Figure 4.g: Example prompt language for a voice AI agent.</p>
+            <h3 id="other-stt-options">4.3.3 Other speech-to-text options</h3>
+            
+            <p>All of the big cloud services have speech-to-text APIs. None of them are as good as Deepgram, today, for low-latency, general-purpose English language transcription.</p>
+            
+            <p>But you may want to use Azure AI Speech, Amazon Transcribe, or Google Speech-to-Text if:</p>
+            
+            <ul class="arrow-list">
+              <li>You already have a large committed spend or data processing arrangements with one of these cloud providers.</li>
+              <li>Your users will not be speaking English. Deepgram supports a number of non-English languages, but the different labs all have different language strengths. It's worth doing your own testing if you are operating in non-English languages.</li>
+              <li>You have a lot of startup credits to spend!</li>
+            </ul>
+            
+            <h3 id="gemini-transcribing">4.3.4 Transcribing with Google Gemini</h3>
+            
+            <p>One way to leverage Gemini's strengths as a low-cost, native audio model is to run two parallel inference processes.</p>
+            
+            <p>One inference process generates the conversation response. The other inference process transcribes the user's speech.</p>
+            
+            <p>Each audio input is used for just one turn. The full conversation context is always the audio of the most recent user speech, plus the text transcription of all previous inputs and outputs.</p>
+            
+            <p>This gives you the best of both worlds: native audio understanding for the current user utterance; reduced token count for the whole context.<sup>[17]</sup></p>
+            <pre class="language-python"><code>
+  pipeline = Pipeline( 
+    [   
+        transport.input(), 
+        audio_collector,
+        context_aggregator.user(),
+        ParallelPipeline( 
+            [ # transcribe
+                input_transcription_context_filter,
+                input_transcription_llm,
+                transcription_frames_emitter,
+            ],
+            [ # conversation inference
+                conversation_llm,
+            ],
+        ),
+        tts,
+        transport.output(),
+        context_text_audio_fixup, 
+    ] 
+  )            
+            </code></pre>
+
+            <p>See Pipecat pipeline above for a code-level view of this approach. The logic is as follows.</p>
+            
+            <ol class="list-decimal">
+              <li>The conversation LLM receives the conversation history as text, plus each new turn of user speech as native audio, and outputs a conversation response.</li>
+              <li>The input transcription LLM receives the same input, but outputs a literal transcription of the most recent user speech.</li>
+              <li>At the end of each conversation turn, the user audio context entry is replaced with the transcription of that audio.</li>
+            </ol>
+            <pre><code>
+You are an audio transcriber. You are receiving audio from a user. Your job is to transcribe the input au- dio to text exactly as it was said by the user.
+You will receive the full conversation history before the audio input, to help with context. Use the full history only to help improve the accuracy of your transcription.
+Rules:
+- Respond with an exact transcription of the audio input.
+- Do not include any text other than the transcrip- tion.
+- Do not explain or add to your response.
+- Transcribe the audio input simply and precisely.
+- If the audio is not clear, emit the special string "".
+- No response other than exact transcription, or "", is allowed.
+            </code></pre>
+            <p>Gemini's per-token costs are so low that this approach is actually cheaper than using Deepgram for transcription.</p>
+          </section>
+        </div>
+        
+        <div class="chapter-notes">
+          <div class="chapter-image">
+            <img src="images/Figure 0800.svg" alt="Pipecat pipeline diagram" class="pipeline-image" width="300">
+            <p class="image-caption">Figure 4.f</p>
+          </div>
+          <div class="chapter-footnotes" id="chapter-4-3-notes">
+            <div class="footnote" id="footnote-16">
+              <p>[16] <a href="https://deepgram.com" target="_blank">deepgram.com</a></p>
+            </div>
+            <div class="footnote" id="footnote-17">
+              <p>[17] Replacing audio with text reduces token count by ~10x. For a ten-minute conversation, this reduces the total tokens processed – and therefore the cost of input tokens – by ~100x. (Because the conversation history compounds every turn.)</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="chapter-row">
+        <div class="chapter-content">
+          <section id="text-to-speech">
+            <h2 id="text-to-speech">4.4. Text-to-speech</h2>
+            
+            <p>Text-to-speech is the output stage of the voice-to-voice processing loop.</p>
+            
+            <p>Voice AI developers choose a voice model/service based on:</p>
+            
+            <ul class="arrow-list">
+              <li>How natural the voices sound<sup>[18]</sup></li>
+              <li>Latency<sup>[19]</sup></li>
+              <li>Cost</li>
+              <li>Language support</li>
+            </ul>
+            
+            <p>Voice options expanded markedly in 2024. New startups appeared on the scene. Best-in-class voice quality went way up. And every provider improved latency.</p>
+            
+            <p>As is the case for speech-to-text, all of the big cloud providers have text-to-speech products.<sup>[20]</sup> But most voice AI developers are not using them, because models from startups are currently better.</p>
+            
+            <p>The labs that have the most traction for realtime conversational voice models are (in alphabetical order):</p>
+            
+            <ul class="arrow-list">
+              <li>Cartesia – Uses an innovative state-space model architecture to achieve both high quality and low latency.</li>
+              <li>Deepgram – Prioritizes latency and low cost.</li>
+              <li>ElevenLabs – Emphasizes emotional and contextual realism.</li>
+              <li>Rime – Offers customizable TTS models trained exclusively on conversational speech.</li>
+            </ul>
+            
+            <p>All four companies have strong models, engineering teams, and stable and performant APIs. Deepgram and Rime models can be deployed on your own infrastructure.</p>
+            
+            <p>As with speech-to-text, there is wide variance in quality and support for non-English voice models. If you are building voice AI for non-English use cases, you will likely need to do more extensive testing — test more services and more voices to find a solution that you are happy with.</p>
+            
+            <p>All voice models will mispronounce words some of the time, and will not necessarily know how to pronounce proper nouns or unusual words.</p>
+            
+            <p>Some services offer the ability to steer pronunciation. This is helpful if you know in advance that your text output will include specific proper nouns. If your voice service does not support phonetic steering, you can prompt your LLM to output "sounds-like" spellings of specific words. For example, in-vidia instead of NVIDIA.</p>
+            
+
+          <div class="latency-table">
+            <h4>Voice-to-voice conversation roundtrip – latency breakdown</h4>
+            <table class="data-table latency-breakdown">
+              <thead>
+                <tr>
+                  <th>Col1</th>
+                  <th>Cost per minute (approx)</th>
+                  <th>Median TTFB (ms)</th>
+                  <th>P95 TTFB (ms)</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>Cartesia</td>
+                  <td>$0.02</td>
+                  <td>170</td>
+                  <td>240</td>
+                </tr>
+                <tr>
+                  <td>Deepgram</td>
+                  <td>$0.008</td>
+                  <td>90</td>
+                  <td>1,840</td>
+                </tr>
+                <tr>
+                  <td>ElevenLabs</td>
+                  <td>$0.03</td>
+                  <td>190</td>
+                  <td>460</td>
+                </tr>
+                <tr>
+                  <td>Rime</td>
+                  <td>$0.024</td>
+                  <td>310</td>
+                  <td>370</td>
+                </tr>
+              </tbody>
+            </table>
+            <p class="table-caption">Figure 4.l: Approximate cost per minute and time to first byte metrics – February 2025. Note that cost depends on committed volume and features used.</p>
+          </div>
+          <p>We expect voice model progress to continue in 2025. Several of the companies listed above have hinted at new models coming in the first half of the year!</p>
+        </section>
+        </div>
+        
+        <div class="chapter-notes">
+          <div class="chapter-image">
+            <img src="images/Figure 0300.svg" alt="Latency breakdown diagram" class="latency-image" width="300">
+            <p class="image-caption">Figure 4.k</p>
+          </div>
+
+          <pre ><code class="nobreak">
+Replace "NVIDIA" with 
+"in vidia" and replace <br/>
+"GPU" with "gee pee
+you" in your responses.
+          </code></pre>
+          <p class="image-caption">Figure 4.m: Example prompt language to steer pronunciation via LLM text output</p>
+          <div class="chapter-footnotes" id="chapter-4-4-notes">
+            <div class="footnote" id="footnote-18">
+              <p>[18] Pronunciation, intonation, pacing, stress, rhythm, emotional valence</p>
+            </div>
+            <div class="footnote" id="footnote-19">
+              <p>[19] Time to first audio byte</p>
+            </div>
+            <div class="footnote" id="footnote-20">
+              <p>[20] Azure AI Speech, Amazon Polly, and Google Cloud Text-to-Speech.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="chapter-row">
+        <div class="chapter-content">
+          <section id="audio-processing">
+            <h2 id="audio-processing">4.5. Audio processing</h2>
+            
+            <p>A good voice AI platform or library will mostly hide the complexities of audio capture and processing. But if you build complex voice agents, at some point you'll bump up against bugs and corner cases in audio handling.<sup>[21]</sup> So it's worth taking a quick tour of the audio input pipeline.</p>
+
+            <h3>4.5.1 Microphones and automatic gain control</h3>
+            
+            <p>Microphones today are extremely sophisticated hardware devices coupled to large amounts of low-level software. This is usually great — we get terrific audio from tiny microphones built into mobile devices, laptops, and bluetooth earpieces.</p>
+            
+            <p>But sometimes this low-level software doesn't do what we want. In particular, bluetooth devices can add several hundred milliseconds of latency to voice input. This is largely outside of your control as a voice AI developer. But it's worth being aware that latency can vary widely depending on what operating system and input device a particular user has.</p>
+
+            <div class="chapter-image">
+              <img src="images/Figure 1600.jpg" alt="Bluetooth is problematic? Always has been." class="microphone-image" width="900">
+              <p class="image-caption">Figure 4.n</p>
+            </div>
+            <p>Most audio capture pipelines will apply some amount of automatic gain control to the input signal. Again, this is usually what you want, because this compensates for things like the user's distance from the microphone. You can often disable some automatic gain control, but on consumer-class devices you usually can't disable it completely.</p>
+
+            <h3>4.5.2 Echo cancellation</h3>
+            
+            <p>If a user is holding a phone up to their ear, or wearing headphones, you don't need to worry about feedback between the local microphone and speaker. But if a user is talking on a speakerphone, or using a laptop without headphones, then good echo cancellation is extremely important.</p>
+            
+            <p>Echo cancellation is very sensitive to latency, so echo cancellation has to run on the device (not in the cloud). Today, excellent echo cancellation is built into telephony stacks, web browsers, and WebRTC native mobile SDKs.<sup>[22]</sup></p>
+            
+            <p>So if you're using a voice AI, WebRTC, or telephony SDK, you should have echo cancellation that you can count on "just working" in almost all real-world scenarios. If you are rolling your own voice AI capture pipeline, you will need to figure out how to integrate echo cancellation logic.</p>
+
+            <h3>4.5.3 Noise suppression, speech and music</h3>
+            
+            <p>Audio capture pipelines for telephony and WebRTC almost always default to "speech mode." Speech can be compressed much more than music, and noise reduction and echo cancellation algorithms are easier to implement for narrower band signals.</p>
+            
+            <p>Many telephony platforms only support 8khz audio. This is noticeably low-quality by modern standards. If you are routing through a system with this limitation, there's nothing you can do about it. Your users may or may not notice the quality — most people have low expectations for phone call audio.</p>
+            
+            <p>WebRTC supports very high-quality audio.<sup>[23]</sup> Default WebRTC settings are usually 48khz sample rate, single channel, 32 kbs Opus encoding, and a moderate noise suppression algorithm. These settings are optimized for speech. They work across a wide range of devices and environments and are generally the right choice for voice AI.</p>
+            
+            <p>Music will not sound good with these settings!</p>
+            
+            <p>If you need to send music over a WebRTC connection, you'll want to:</p>
+            
+            <ul class="arrow-list">
+              <li>Turn off echo cancellation (the user will need to wear headphones).</li>
+              <li>Turn off noise suppression.</li>
+              <li>Optionally, enable stereo.</li>
+              <li>Increase the Opus encoding bitrate (64 kbs is a good target for mono, 96 kbs or 128 kbs for stereo).</li>
+            </ul>
+
+            <h3>4.5.4 Encoding</h3>
+            
+            <p>Encoding is the general term for how audio data is formatted for sending over a network connection.<sup>[24]</sup></p>
+            
+            <p>Common encodings for real-time communication include:</p>
+            
+            <ul class="arrow-list">
+              <li>Uncompressed audio in 16-bit PCM format.</li>
+              <li>Opus — WebRTC and some telephony systems.</li>
+              <li>G.711 — a standard telephony codec with wide support.</li>
+            </ul>
+
+            <table class="data-table">
+              <tr>
+                <th>Codec</th>
+                <th>Bitrate</th>
+                <th>Quality</th>
+                <th>Use Cases</th>
+              </tr>
+              <tr>
+                <td>16-bit PCM</td>
+                <td>384 kbps (Mono 24 kHz)</td>
+                <td>Very High (Near lossless)</td>
+                <td>Voice recording, embedded systems, environments where simple decoding is vital</td>
+              </tr>
+              <tr>
+                <td>Opus 32 kbps</td>
+                <td>32 kbps</td>
+                <td>Good (Psychoacoustic compression optimized for speech)</td>
+                <td>Video calls, low-bandwidth streaming, podcasting</td>
+              </tr>
+              <tr>
+                <td>Opus 96 kbps</td>
+                <td>96 kbps</td>
+                <td>Very Good to Excellent (Psychoacoustic compression)</td>
+                <td>Streaming, music, audio archiving</td>
+              </tr>
+              <tr>
+                <td>G.711 (8 kHz)</td>
+                <td>64 kbps</td>
+                <td>Poor (Limited bandwidth, voice-centric)</td>
+                <td>Legacy VoIP systems, telephony, fax transmission, voice messaging</td>
+              </tr>
+            </table>
+            <p class="image-caption">Figure 4.o: Audio codecs used most often for voice AI</p>
+            
+            <p>Opus is by far the best of these three options. Opus is built into web browsers, designed from the ground up to be a low-latency codec, and very efficient. It also performs well across a wide range of bitrates, and supports both speech and high-fidelity use cases.</p>
+            
+            <p>16-bit PCM is "raw audio." You can send PCM audio frames directly to a software sound channel (assuming that the sample rate and data type are correctly specified). Note, however, that this uncompressed audio is not something you generally want to send over an Internet connection. 24khz PCM has a bitrate of 384 kbs. That's a large enough bitrate that many real-world connections from end-user devices will struggle to deliver the bytes in real time.</p>
+
+            <h3>4.5.5 Server-side noise processing and speaker isolation</h3>
+            
+            <p>Speech-to-text models can usually ignore general ambient noise – street sounds, dogs barking, loud fans close to a mic, keyboard clicks. So the traditional "noise suppression" algorithms that are critical for many human-to-human use cases are not as critical for voice AI.</p>
+            
+            <p>But one kind of audio processing is particularly valuable for voice AI: primary speaker isolation. Primary speaker isolation suppresses background speech. This can significantly improve transcription accuracy.</p>
+            
+            <p>Think of trying to talk to a voice agent from an environment like an airport. Your phone mic is likely to pick up a lot of background speech from gate announcements and people walking by. You don't want that background speech in the text transcript the LLM sees!</p>
+            
+            <p>Or imagine the user who is in their living room with the TV or radio on in the background. Because humans are generally pretty good at filtering out low-volume background speech, people won't necessarily think to turn off their TV or radio before they call into a customer support line.</p>
+            
+            <p>The best available speaker isolation model is sold by Krisp.<sup>[25]</sup> Licenses are targeted at enterprise users and are not inexpensive. But for commercial use cases at scale, the improvement in voice agent performance justifies the cost.</p>
+
+            <pre class="language-python"><code>
+  pipeline = Pipeline(
+    [
+      transport.input(),
+      krisp_filter,
+      vad_turn_detector,
+      stt,
+      context_aggregator.user(), 
+      llm, 
+      tts, 
+      transport.output(), 
+      context_aggregator.assistant(),
+    ]
+  )
+            </code></pre>
+            <p class="image-caption">Figure 4.p: Pipecat pipeline with a Krisp processing element</p>
+
+            <h3>4.5.6 Voice activity detection</h3>
+            
+            <p>A voice activity detection stage is part of almost every voice AI pipeline. VAD classifies audio segments as "speech" and "not speech." We will talk in detail about VAD in 4.7 Turn Detection, below.</p>
+          </section>
+        </div>
+        
+        <div class="chapter-notes">
+          <div class="chapter-footnotes" id="chapter-4-5-notes">
+            <div class="footnote" id="footnote-21">
+              <p>[21] … this generalizes to all things in software, and perhaps most things in life.</p>
+            </div>
+            <div class="footnote" id="footnote-22">
+              <p>[22] Note that Firefox echo cancellation is not very good. We recommend that voice AI developers build with Chrome and Safari as primary platforms, and only test on Firefox as a secondary platform, time permitting.</p>
+            </div>
+            <div class="footnote" id="footnote-23">
+              <p>[23] Some use cases for high-quality audio:<br>
+              A music lesson with an LLM teacher.<br>
+              Recording a podcast that includes background sound or music.<br>
+              Generating AI music interactively.</p>
+            </div>
+            <div class="footnote" id="footnote-24">
+              <p>[24] (Or for saving in a file.)</p>
+            </div>
+            <div class="footnote" id="footnote-25">
+              <p>[25] krisp.ai</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="chapter-row">
+        <div class="chapter-content">
+          <section id="network-transport">
+            <h2 id="network-transport">4.6. Network transport</h2>
+            
+            <h3>4.6.1 WebSockets and WebRTC</h3>
+            
+            <p>Both WebSockets and WebRTC are used by AI services for audio streaming.</p>
+            
+            <p>WebSockets are great for server-to-server use cases. They are also fine for use cases where latency is not a primary concern, and are a good fit for prototyping and general hacking.</p>
+            
+            <p>WebSockets shouldn't be used in production for client-server, realtime media connections.</p>
+            
+            <p>If you are building a browser or native mobile app, and achieving conversational latency matters to your application, you should use a WebRTC connection to send and receive audio from your app.</p>
+            
+            <p>The major problems with WebSockets for real-time media delivery to and from end-user devices are:</p>
+            
+            <ul class="arrow-list">
+              <li>WebSockets are built on TCP, so audio streams will be subject to head-of-line blocking.</li>
+              <li>The Opus audio codec used for WebRTC is tightly coupled to WebRTC's bandwidth estimation and packet pacing (congestion control) logic, making a WebRTC audio stream resilient to a wide range of real-world network behaviors that would cause a WebSocket connection to accumulate latency.</li>
+              <li>The Opus audio codec has very good forward error correction, making the audio stream resilient to relatively high amounts of packet loss. (This only helps you if your network transport can drop late-arriving packets and doesn't do head of line blocking, though.)</li>
+              <li>WebRTC audio is automatically timestamped, so both playout and interruption logic are trivial.</li>
+              <li>WebRTC includes hooks for detailed performance and media quality statistics. A good WebRTC platform will give you detailed dashboards and analytics. This level of observability is somewhere between very hard and impossible to build for WebSockets.</li>
+              <li>WebSocket reconnection logic is quite hard to implement robustly. You will have to build a ping/ack framework (or fully test and understand the framework that your WebSocket library provides). TCP timeouts and connection events behave differently on different platforms.</li>
+              <li>Finally, good WebRTC implementations today come with very good echo cancellation, noise reduction, and automatic gain control.</li>
+            </ul>
+            <div class="chapter-image">
+              <img src="images/Figure 2000-2Percent-DelaySimulation.png" alt="WebSocket latency diagram" class="network-image" width="600">
+              <img src="images/Figure 2000-4Percent-DelaySimulation.png" alt="WebSocket latency diagram" class="network-image" width="600">
+              <p class="image-caption">Figure 4.r: WebSocket latency caused by head-of-line blocking</p>
+              <p class="image-caption">One-way audio latency rises to 500 milliseconds during a simulated 5-minute session with 2% packet loss.</p>
+              <p class="image-caption">One-way audio latency rises to 4 seconds during a simulated 5-minute session with 4% packet loss. It's likely that in a real session with this amount of packet loss, the WebSocket connection would drop at some point because of underlying TCP timeouts.</p>
+            </div>
+
+            <h3>4.6.2 HTTP</h3>
+            
+            <p>HTTP is still useful and important for voice AI, too! HTTP is the lingua franca for service interconnection on the Internet. REST APIs are HTTP. Webhooks are HTTP.</p>
+            
+            <p>Text-oriented inference usually happens via HTTP, so voice AI pipelines usually call out to HTTP APIs for the LLM parts of the conversational loop.</p>
+            
+            <p>Voice agents also use HTTP when integrating with external services and internal APIs. One useful technique is proxying LLM function calls to HTTP endpoints. This decouples voice AI agent code and devops from function implementations.</p>
+            
+            <p>Client apps will often want to implement both HTTP and WebRTC code paths in a client app. (There's usually more complexity on the server side. Imagine a chat app that supports both a text mode and a voice mode. Conversation state needs to be accessible via either connection path, which has ramifications for how things like Kubernetes pods and Docker containers are architected.)</p>
+            
+            <p>The drawback to HTTP is, of course, latency.</p>
+            
+            <ul class="arrow-list">
+              <li>Setting up an encrypted HTTP connection requires multiple network round trips. It's reasonably hard to achieve media connection setup times much lower than 30ms, and realistic time-to-send-first-byte is closer to 100ms even for heavily optimized servers.</li>
+              <li>Long-lived, bidirectional HTTP connections are difficult enough to manage that you're usually better off just using WebSockets.</li>
+              <li>HTTP is a TCP-based protocol, so the same head-of-line blocking issues that impact WebSockets are an issue for HTTP.</li>
+              <li>Sending raw binary data over HTTP is uncommon enough that most APIs opt to base64 encode binary data, which increases the bitrate of media streams.</li>
+            </ul>
+            
+            <p>Which brings us to QUIC …</p>
+
+            <h3>4.6.3 QUIC and MoQ</h3>
+            
+            <p>QUIC is a new network protocol designed to be the transport layer for the latest version of HTTP (HTTP/3) — and to flexibly support other Internet-scale use cases, too.</p>
+            
+            <p>QUIC is a UDP-based protocol, and addresses all of the above issues with HTTP. With QUIC you get faster connection times, bidirectional streams, and no head-of-line blocking. Google and Facebook have been steadily rolling out QUIC, so these days, some of your HTTP requests traverse the Internet as UDP, rather than TCP, packets.<sup>[26]</sup></p>
+            
+            <p>QUIC will be a big part of the future of media streaming on the Internet. Migration to QUIC-based protocols for realtime media streaming will take time, though. One blocker to building QUIC-based voice agents is that Safari does not yet support the QUIC-based evolution of WebSockets, WebTransport.<sup>[27]</sup></p>
+            
+            <p>The Media over QUIC IETF working group aims to develop a "simple low-latency media delivery solution for ingest and distribution of media." As with all standards, hashing out how to support the widest possible array of important use cases with the simplest possible building blocks is not easy. People are excited about using QUIC for on-demand video streaming, large-scale video broadcast, live video streaming, low-latency sessions with large numbers of participants, and low-latency 1:1 sessions.</p>
+            
+            <p>Realtime voice AI use cases are growing at just the right time to influence the development of the MoQ standard.</p>
+
+            <h3>4.6.4 Network routing</h3>
+            
+            <p>Long-haul network connections are problematic for latency and real-time media reliability, no matter what the underlying network protocol is.</p>
+            
+            <p><strong>For real time media delivery, you want your servers to be as close to your users as possible.</strong></p>
+            
+            <p>For example, round trip packet time from a user in the UK to a server hosted by AWS us-west-1 in Northern California will typically be about 140 milliseconds. In comparison, RTT from that same user to AWS eu-west-2 would generally be 15 milliseconds or less.</p>
+            <div class="chapter-image">
+              <img src="images/Figure 2300.svg" alt="Edge routing diagram" class="network-image" width="700">
+              <p class="image-caption">Figure 4.u: RTT from a user in the UK to AWS us-west-1 is ~100ms more than to AWS eu-west-2</p>
+            </div>
+            <p>That's a difference of more than 100 milliseconds — ten percent of your latency "budget" if your voice-to-voice latency target is 1,000 milliseconds.</p>
+            
+            <p><strong>Edge routing</strong></p>
+            
+            <p>You may not be able to deploy servers close to all of your users.</p>
+            
+            <p>Achieving a 15ms RTT to users everywhere in the world requires deploying to at least 40 global data centers. That's a big devops job. And if you're running workloads that require GPUs, or relying on services that aren't globally deployed themselves, it might be impossible.</p>
+            
+            <p>You can't cheat the speed of light.<sup>[29]</sup> But you can try to avoid route variability and congestion.</p>
+
+
+
+            <p>The key is to keep your public Internet routes as short as possible. Connect your users to an edge server close to them. From there, use private routes.</p>
+            
+            <p>This edge routing reduces median packet RTT. The UK → Northern California route over a private backbone is likely to be about 100 milliseconds. 100 ms (the long-haul private route) + 15 ms (the first hop over the public Internet) = 115 ms. This private route median RTT is 25ms better than the public route median RTT.</p>
+            <div class="chapter-image">
+              <img src="images/Figure 2400.svg" alt="Edge routing diagram" class="network-image" width="700">
+              <p class="image-caption">Figure 4.v: Edge route from the UK to AWS us-west-1. The first hop over the public network still has an RTT of 15ms. But the long route to Northern California over the private network has an RTT of 100ms. The total RTT of 115ms is 25ms faster than the public route from the UK to us-west-1. It's also significantly less variable (less packet loss and lower jitter).</p>
+            </div>
+            <p>Even more critical than median RTT improvement, though, is improved delivery reliability and lower jitter.<sup>[30]</sup> The P95 RTT of a private route will be significantly lower than the P95 of a public route.<sup>[31]</sup></p>
+            
+            <p>This means that realtime media connections over long-haul public routes will be measurably more laggy than connections that use private routes. Recall that we're trying to deliver each audio packet as quickly as possible, but that we have to play the audio packets in order. A single delayed packet forces us to expand our jitter buffer, holding onto other received packets until the delayed packet arrives. (Or, until we decide it's taken too long and we fill the gap with either fancy math or glitchy audio samples.)</p>
+            <div class="chapter-image">
+              <img src="images/Figure 2500 Figure 4.w.svg" alt="Jitter buffer diagram" class="network-image" width="800">
+              <p class="image-caption">Figure 4.w: The jitter buffer. A larger jitter buffer translates directly to a larger perceived delay in audio and video. Keeping jitter buffers as small as possible contributes significantly to a good user experience.</p>
+            </div>
+            <p>A good WebRTC infrastructure provider will offer edge routing. They will be able to show you where they have server clusters and provide metrics that show their private route performance.</p>
+          </section>
+        </div>
+        
+        <div class="chapter-notes">
+          <div class="chapter-image">
+            <img src="images/Figure 1900.svg" alt="WebSocket vs WebRTC diagram" class="network-image" width="300">
+            <p class="image-caption">Figure 4.q</p>
+          </div>
+
+          <div class="chapter-image">
+            <img src="images/Figure 2100.svg" alt="HTTP API diagram" class="network-image" width="300">
+            <p class="image-caption">Figure 4.s: A voice AI agent using HTTP requests to do LLM inference</p>
+          </div>
+          <div class="chapter-image">
+            <img src="images/Figure 2200.svg" alt="HTTP API diagram" class="network-image" width="300">
+            <p class="image-caption">Figure 4.t: A voice AI agent using HTTP requests to do LLM inference</p>
+          </div>
+
+
+          <div class="chapter-footnotes" id="chapter-4-6-notes">
+            <div class="footnote" id="footnote-26">
+              <p>[26] This is a little bit 🤯 if you have been building stuff on the Internet for a long time. HTTP has always been a TCP-based protocol!</p>
+            </div>
+            <div class="footnote" id="footnote-27">
+              <p>[27] <a href="https://w3c.github.io/webtransport/" target="_blank">w3c.github.io/webtransport/</a></p>
+            </div>
+            <div class="footnote" id="footnote-28">
+              <p>[28] <a href="https://datatracker.ietf.org/group/moq/about/" target="_blank">datatracker.ietf.org/group/moq/about/</a></p>
+            </div>
+            <div class="footnote" id="footnote-29">
+              <p>[29] Ancient network engineer wisdom – ed.</p>
+            </div>
+            <div class="footnote" id="footnote-30">
+              <p>[30] Jitter is the variability in how long it takes a packet to traverse the route.</p>
+            </div>
+            <div class="footnote" id="footnote-31">
+              <p>[31] P95 is the 95th percentile measurement of a metric. P50 is the median measurement (the 50th percentile). Loosely speaking, we think of the P50 as the average case, and P95 as capturing a rough sense of "typical worst-case" connections.</p>
+            </div>
           </div>
         </div>
       </div>

@@ -54,7 +54,7 @@ h2 {
 
 h3 {
   font-size: 1.25rem;
-  font-weight: 500;
+  font-weight: 600;
 }
 
 .title {
@@ -201,7 +201,7 @@ footer {
   color: var(--muted);
   display: flex;
   flex-direction: column;
-  justify-content: flex-end;
+  position: relative;
 }
 
 /* Footnotes aligned at the bottom of chapter content */
@@ -249,7 +249,6 @@ footer {
   width: 100%;
   display: flex;
   flex-direction: column;
-  justify-content: center;
   align-items: center;
 }
 
@@ -271,46 +270,154 @@ footer {
   margin-right: auto;
 }
 
-/* Page Indicator */
-#page-indicator {
-  font-family: "DM Sans", sans-serif;
+/* Binary paragraph numbers */
+.binary-paragraph-number {
+  font-family: monospace;
   font-size: 0.9rem;
   color: var(--muted);
-  box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.1);
-  letter-spacing: 0.01em;
-  position: fixed;
-  bottom: 0;
-  left: 0;
-  right: 0;
-  background: white;
-  z-index: 1000;
-  border-top: 1px solid var(--border);
-  padding: 12px 2rem;
-  display: flex;
-  justify-content: space-between;
-  max-width: 1600px;
-  margin: 0 auto;
+  opacity: 0.6;
+  text-align: left;
+  letter-spacing: 1px;
 }
 
-#page-indicator > div:first-child {
+.binary-container {
+  position: absolute;
+  right: 0;
+  width: 100%;
+  text-align: left;
+  pointer-events: none;
+}
+
+/* Remove page indicator styles since we're not using it anymore */
+#page-indicator {
+  display: none;
+}
+
+pre {
+  background-color: #bdbdbd;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  padding: 16px;
+  overflow: auto;
+  margin: 16px 0;
+  max-width: 100%;
+  box-sizing: border-box;
+}
+
+pre code {
+  background-color: transparent;
+  padding: 0;
+  border: none;
+  font-family: "DM Mono", monospace, Consolas, Monaco, "Andale Mono",
+    "Ubuntu Mono";
+  font-size: 0.7em;
+  line-height: 1.5;
+  white-space: pre-wrap;
+  word-break: break-word;
+  display: block;
+  width: 100%;
+}
+
+.nobreak {
   white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  margin-right: 2rem;
+  word-break: keep-all;
+}
+
+/* Table styles moved from inline CSS */
+.latency-table {
+  margin-top: 20px;
+  font-size: 0.9em;
+}
+
+.latency-table h4 {
+  font-size: 1em;
+  margin-bottom: 10px;
   font-weight: 500;
 }
 
-#page-indicator > div:last-child {
-  font-weight: 400;
+.data-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-bottom: 1em;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  font-size: 0.85em;
+  font-family: "DM Mono", monospace;
 }
 
-@media (max-width: 768px) {
-  #page-indicator {
-    padding: 10px 1rem;
-    font-size: 0.8rem;
-  }
+.data-table th {
+  background-color: #f2f2f2;
+  color: #333;
+  font-weight: 600;
+  text-align: left;
+  padding: 8px 12px;
+  border: 1px solid #ddd;
+}
 
-  #page-indicator > div:first-child {
-    max-width: 70%;
-  }
+.data-table td {
+  padding: 8px 12px;
+  border: 1px solid #ddd;
+  vertical-align: middle;
+}
+
+.data-table tr:nth-child(even) {
+  background-color: #f8f8f8;
+}
+
+.data-table tr:hover {
+  background-color: #f0f0f0;
+}
+
+.table-caption {
+  font-size: 0.85em;
+  margin-top: 8px;
+  margin-bottom: 16px;
+  font-style: italic;
+  color: #555;
+}
+
+/* Specific styling for cost and latency tables */
+.model-comparison td:first-child {
+  font-weight: 500;
+}
+
+.model-comparison td:not(:first-child) {
+  text-align: center;
+}
+
+.latency-breakdown td:last-child {
+  text-align: right;
+  font-family: "DM Mono", monospace;
+}
+
+.total-row {
+  border-top: 2px solid #ccc;
+  background-color: #f2f2f2 !important;
+}
+
+.total-row td {
+  font-weight: 600;
+}
+
+.footnote-image {
+  display: block;
+  max-width: 100%;
+  height: auto;
+  margin: 12px 0;
+  border-radius: 4px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.footnote .image-caption {
+  font-size: 0.85em;
+  margin-top: 4px;
+  margin-bottom: 12px;
+  font-style: italic;
+  color: #555;
+}
+
+.language-python {
+  font-family: "DM Mono", monospace;
+  background-color: #343433;
+  color: #f8f8f8;
+  padding: 0;
 }
