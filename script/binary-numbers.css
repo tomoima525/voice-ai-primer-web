@@ -4,20 +4,28 @@
   font-size: 0.8rem;
   color: var(--muted);
   opacity: 0.3;
-  text-align: left;
+  text-align: right;
   letter-spacing: 1px;
   white-space: nowrap;
-  padding-left: 10px; /* Add some padding to move away from content */
+  padding-right: 15px; /* Space between binary text and content */
+  width: 60px; /* Fixed width for alignment */
 }
 
 .binary-container {
   position: absolute;
-  right: 0;
-  width: 100%;
-  text-align: left;
+  left: -120px; /* Position outside the content area */
+  width: auto; /* Allow natural width */
+  text-align: right; /* Align text to the right */
   pointer-events: none;
   z-index: 5;
   transition: opacity 0.2s ease; /* Add smooth transition */
+}
+
+/* Adjust positioning for smaller screens but not mobile */
+@media (max-width: 1200px) and (min-width: 769px) {
+  .binary-container {
+    left: -60px; /* Slightly closer on smaller screens */
+  }
 }
 
 /* Media query for mobile */

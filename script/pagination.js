@@ -19,12 +19,9 @@ function setupBinaryParagraphNumbers() {
   
   // Process each paragraph
   paragraphs.forEach((paragraph, index) => {
-    // Get the corresponding chapter notes section
+    // Get the corresponding chapter row
     const chapterRow = paragraph.closest('.chapter-row');
     if (!chapterRow) return;
-    
-    const chapterNotes = chapterRow.querySelector('.chapter-notes');
-    if (!chapterNotes) return;
     
     // Create binary number element
     const binaryNumber = document.createElement('div');
@@ -37,8 +34,8 @@ function setupBinaryParagraphNumbers() {
     binaryContainer.style.opacity = '0'; // Start hidden
     binaryContainer.appendChild(binaryNumber);
     
-    // Add the binary container to the chapter notes
-    chapterNotes.appendChild(binaryContainer);
+    // Add the binary container to the chapter row instead of chapter notes
+    chapterRow.appendChild(binaryContainer);
     
     // Set initial position
     updateBinaryPosition(paragraph, binaryContainer);
@@ -63,9 +60,6 @@ function updateBinaryPosition(paragraph, binaryContainer) {
   const chapterRow = paragraph.closest('.chapter-row');
   if (!chapterRow) return;
   
-  const chapterNotes = chapterRow.querySelector('.chapter-notes');
-  if (!chapterNotes) return;
-  
   const paragraphRect = paragraph.getBoundingClientRect();
   const rowRect = chapterRow.getBoundingClientRect();
   
@@ -73,7 +67,7 @@ function updateBinaryPosition(paragraph, binaryContainer) {
   // Add a small offset to align with the first line of text
   const topPosition = paragraphRect.top - rowRect.top + 3;
   
-  // Set the position
+  // Set the top position only - left is handled by CSS
   binaryContainer.style.top = `${topPosition}px`;
 }
 
