@@ -13,6 +13,12 @@
   <link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://use.typekit.net/rff5lbb.css">
   <link rel="stylesheet" href="script/binary-numbers.css">
+  <style>
+    #table-of-contents ul {
+      list-style-type: none;
+      padding-left: 20px;
+    }
+  </style>
 </head>
 <body>
   <div class="container">
@@ -27,14 +33,154 @@
         <li><a href="#conversational-voice-ai">Conversational Voice AI in 2025</a></li>
         <li><a href="#about-this-guide">About this guide</a></li>
         <li><a href="#basic-loop">The basic conversational AI loop</a></li>
-        <li><a href="#core-tech">Core technologies and best practices</a></li>
-        <li><a href="#multiple-models">Using multiple AI models</a></li>
-        <li><a href="#scripting">Scripting and instruction following</a></li>
-        <li><a href="#evals">Voice AI Evals</a></li>
+        <li>
+          <a href="#core-tech">Core technologies and best practices</a>
+          <ul>
+            <li><a href="#latency">4.1. Latency</a></li>
+            <li>
+              <a href="#llms-for-voice">4.2. LLMs for voice use cases</a>
+              <ul>
+                <li><a href="#latency-llm">4.2.1. Latency</a></li>
+                <li><a href="#cost-comparison">4.2.2. Cost comparison</a></li>
+                <li><a href="#open-source">4.2.3. Open source / open weights</a></li>
+                <li><a href="#speech-to-speech">4.2.4. What about speech-to-speech models?</a></li>
+              </ul>
+            </li>
+            <li>
+              <a href="#speech-to-text">4.3. Speech-to-text</a>
+              <ul>
+                <li><a href="#deepgram">4.3.1. Deepgram</a></li>
+                <li><a href="#prompting-help">4.3.2. Prompting can help the LLM</a></li>
+                <li><a href="#other-stt-options">4.3.3. Other speech-to-text options</a></li>
+                <li><a href="#gemini-transcribing">4.3.4. Transcribing with Google Gemini</a></li>
+              </ul>
+            </li>
+            <li>
+              <a href="#text-to-speech">4.4. Text-to-speech</a>
+            </li>
+            <li>
+              <a href="#audio-processing">4.5. Audio processing</a>
+              <ul>
+                <li><a href="#avoiding-spurious-interruptions">4.5.1. Microphones and automatic gain control</a></li>
+                <li><a href="#echo-cancellation">4.5.2. Echo cancellation</a></li>
+                <li><a href="#noise-suppression">4.5.3. Noise suppression, speech and music</a></li>
+                <li><a href="#encoding">4.5.4. Encoding</a></li>
+                <li><a href="#server-side-noise">4.5.5. Server-side noise processing and speaker isolation</a></li>
+                <li><a href="#voice-activity-detection">4.5.6. Voice activity detection</a></li>
+              </ul>
+            </li>
+            <li>
+              <a href="#network-transport">4.6. Network transport</a>
+              <ul>
+                <li><a href="#websockets-webrtc">4.6.1. WebSockets and WebRTC</a></li>
+                <li><a href="#http">4.6.2. HTTP</a></li>
+                <li><a href="#quic-moq">4.6.3. QUIC and MoQ</a></li>
+                <li><a href="#network-routing">4.6.4. Network routing</a></li>
+              </ul>
+            </li>
+            <li>
+              <a href="#turn-detection">4.7. Turn detection</a>
+              <ul>
+                <li><a href="#voice-activity-detection">4.7.1. Voice activity detection</a></li>
+                <li><a href="#push-to-talk">4.7.2. Push-to-talk</a></li>
+                <li><a href="#endpoint-markers">4.7.3. Endpoint markers</a></li>
+                <li><a href="#context-aware-turn-detection">4.7.4. Context-aware turn detection</a></li>
+              </ul>
+            </li>
+            <li>
+              <a href="#interruption-handling">4.8. Interruption handling</a>
+              <ul>
+                <li><a href="#avoiding-spurious-interruptions">4.8.1. Avoiding spurious interruptions</a></li>
+                <li><a href="#maintaining-accurate-context">4.8.2. Maintaining accurate context after an interruption</a></li>
+              </ul>
+            </li>
+            <li>
+              <a href="#managing-conversation-context">4.9. Managing the conversation context</a>
+              <ul>
+                <li><a href="#differences-between-llm-apis">4.9.1. Differences between LLM APIs</a></li>
+                <li><a href="#modifying-context-between-turns">4.9.2. Modifying the context between turns</a></li>
+              </ul>
+            </li>
+            <li>
+              <a href="#function-calling">4.10. Function calling</a>
+              <ul>
+                <li><a href="#function-calling-reliability">4.10.1. Function calling reliability in the voice AI context</a></li>
+                <li><a href="#latency-function-calls">4.10.2. Latency</a></li>
+                <li><a href="#handling-interruptions">4.10.3. Handling interruptions</a></li>
+                <li><a href="#streaming-mode">4.10.4. Streaming mode and function call chunks</a></li>
+                <li><a href="#execute-function-calls">4.10.5. How and where to execute function calls</a></li>
+                <li><a href="#async-function-calls">4.10.6. Asynchronous function calls</a></li>
+                <li><a href="#parallel-composite-function-calling">4.10.7. Parallel and composite function calling</a></li>
+              </ul>
+            </li>
+            <li><a href="#multimodality">4.11. Multimodality</a></li>
+          </ul>
+        </li>
+        <li>
+          <a href="#multiple-models">Using multiple AI models</a>
+          <ul>
+            <li><a href="#fine-tuned-models">5.1. Using several fine-tuned models</a></li>
+            <li><a href="#async-inference-tasks">5.2. Performing async inference tasks</a></li>
+            <li><a href="#content-guardrails">5.3. Content guardrails</a></li>
+            <li><a href="#single-inference-actions">5.4. Performing single inference actions</a></li>
+            <li><a href="#self-improving-systems">5.5. Towards self-improving systems</a></li>
+          </ul>
+        </li>
+        <li>
+          <a href="#scripting">Scripting and instruction following</a>
+        </li>
+        <li>
+          <a href="#evals">Voice AI Evals</a>
+          <ul>
+            <li><a href="#evals-different">7.1. Voice AI evals are different from software unit tests</a></li>
+            <li><a href="#failure-modes">7.2. Failure modes</a></li>
+            <li><a href="#eval-strategy">7.3. Crafting an eval strategy</a></li>
+          </ul>
+        </li>
         <li><a href="#telephony">Integrating with telephony infrastructure</a></li>
-        <li><a href="#rag-memory">RAG and memory</a></li>
-        <li><a href="#hosting">Hosting and Scaling</a></li>
-        <li><a href="#future">What's coming in 2025</a></li>
+        <li>
+          <a href="#rag-memory">RAG and memory</a>
+        </li>
+        <li>
+          <a href="#hosting">Hosting and Scaling</a>
+          <ul>
+            <li>
+              <a href="#hosting-options">10.1. Hosting options</a>
+              <ul>
+                <li><a href="#voice-ai-platforms">10.1.1. Voice AI platforms</a></li>
+                <li><a href="#serverless-platforms">10.1.2. Serverless platforms</a></li>
+                <li><a href="#self-hosted">10.1.3. Self-hosted</a></li>
+              </ul>
+            </li>
+            <li>
+              <a href="#scaling-voice-ai">10.2. Scaling voice AI</a>
+              <ul>
+                <li><a href="#sticky-sessions">10.2.1. Sticky sessions</a></li>
+                <li><a href="#shared-state">10.2.2. Shared state</a></li>
+              </ul>
+            </li>
+            <li>
+              <a href="#observability">10.3. Observability</a>
+              <ul>
+                <li><a href="#logging">10.3.1. Logging</a></li>
+                <li><a href="#metrics">10.3.2. Metrics</a></li>
+                <li><a href="#tracing">10.3.3. Tracing</a></li>
+              </ul>
+            </li>
+          </ul>
+        </li>
+        <li>
+          <a href="#future">What's coming in 2025</a>
+          <ul>
+            <li><a href="#speech-to-speech-models">11.1. Speech-to-speech models</a></li>
+            <li><a href="#multimodal-agents">11.2. Multimodal agents</a></li>
+            <li><a href="#specialized-models">11.3. Specialized models</a></li>
+            <li><a href="#better-tooling">11.4. Better tooling</a></li>
+            <li><a href="#more-natural-conversations">11.5. More natural conversations</a></li>
+            <li><a href="#broader-adoption">11.6. Broader adoption</a></li>
+            <li><a href="#conclusion">11.7. Conclusion</a></li>
+          </ul>
+        </li>
         <li><a href="#contributors">Contributors</a></li>
       </ol>
     </nav>
@@ -88,7 +234,7 @@
             
             <p>Building production-ready voice agents is complicated. Many elements are non-trivial to implement from scratch. If you build voice AI apps, you'll likely rely on a framework for many of the things discussed in this document. But we think it's useful to understand how the pieces fit together, whether you are building them all from scratch or not.</p>
             
-            <p>The voice AI code examples in this document use the Pipecat<sup>[4]</sup> open source framework. Pipecat is a vendor-neutral agent layer for realtime AI.<sup>[5]</sup> We used Pipecat in this document because:</p>
+            <p>The voice AI code examples in this document use the <a href="https://pipecat.ai" target="_blank">Pipecat</a> open source framework. Pipecat is a vendor-neutral agent layer for realtime AI.<sup>[4]</sup> We used Pipecat in this document because:</p>
             
             <ol class="list-decimal">
               <li>We build with it every day and help to maintain it, so we're familiar with it!</li>
@@ -105,9 +251,6 @@
           <div class="chapter-footnotes" id="chapter-2-notes">
             <div class="footnote" id="footnote-3">
               <p>[3] <a href="https://webrtcforthecurious.com" target="_blank">webrtcforthecurious.com</a> If you're interested in WebRTC, go read it! WebRTC is relevant to voice AI, as we'll discuss later in section 4.6.1.</p>
-            </div>
-            <div class="footnote" id="footnote-4">
-              <p>[4] <a href="https://pipecat.ai" target="_blank">pipecat.ai</a></p>
             </div>
             <div class="footnote" id="footnote-5">
               <p>[5] Pipecat has integrations for more than 40 AI models and services, along with state of-the-art implementations of things like turn detection and interruption handling. You can write code with Pipecat that uses WebSockets, WebRTC, HTTP, and telephony to communicate with users. Pipecat includes transport implementations for a variety of infrastructure platforms including Twilio, Telnyx, LiveKit, Daily, and others.</p>
@@ -328,7 +471,7 @@
             
             <p>However, current speech to speech models and APIs are not yet good enough for most production voice AI use cases.</p>
             
-            <p>Today's best speech-to-speech models definitely sound more natural than today's best text-to-speech models. OpenAI's gpt4o-audio-preview<sup>[13]</sup> model really does sound like a preview of the voice AI future.</p>
+            <p>Today's best speech-to-speech models definitely sound more natural than today's best text-to-speech models. OpenAI's <a href="https://platform.openai.com/docs/guides/audio" target="_blank">gpt4o-audio-preview</a> model really does sound like a preview of the voice AI future.</p>
             
             <p>Speech-to-speech models aren't yet as mature and reliable as text-mode LLMs, though.</p>
             
@@ -349,7 +492,7 @@
         </div>
         
         <div class="chapter-notes">
-          <div class="chapter-image">
+          <div class="chapter-image-positioned image-position-adjust" style="--position-offset: 120px;">
             <img src="images/Figure 0300.svg" alt="Latency breakdown diagram" class="latency-image" width="300">
             <p class="image-caption">Figure 4.a</p>
           </div>
@@ -370,9 +513,6 @@
             </div>
               <p>[12] If you plan to fine-tune an LLM for your use case, Llama 3.3 70B is a very good starting point. More on fine-tuning below in 5.1 Using several fine-tuned models.</p>
             <div class="footnote" id="footnote-12">
-            </div>
-            <div class="footnote" id="footnote-13">
-              <p>[13] <a href="https://platform.openai.com/docs/guides/audio" target="_blank">platform.openai.com/docs/guides/audio</a></p>
             </div>
             <div class="footnote" id="footnote-14">
               <p>[14] This latency issue for audio models is clearly fixable through a combination of caching, clever API design, and architectural evolution of the models themselves.</p>
@@ -397,7 +537,7 @@
             
             <h3 id="deepgram">4.3.1 Deepgram</h3>
             
-            <p>Most production voice AI agents today use Deepgram<sup>[16]</sup> for text-to-speech. Deepgram is a commercial speech-to-text AI lab and API platform with a long track record of delivering a very good combination of low latency, low word error rate, and low cost.</p>
+            <p>Most production voice AI agents today use <a href="https://deepgram.com" target="_blank">Deepgram</a> for text-to-speech. Deepgram is a commercial speech-to-text AI lab and API platform with a long track record of delivering a very good combination of low latency, low word error rate, and low cost.</p>
             
             <p>Deepgram's models are available as self-serve APIs or as Docker containers that customers can run on their own systems.</p>
             
@@ -497,14 +637,11 @@ Rules:
         </div>
         
         <div class="chapter-notes">
-          <div class="chapter-image">
+          <div class="chapter-image-inline">
             <img src="images/Figure 0800.svg" alt="Pipecat pipeline diagram" class="pipeline-image" width="300">
             <p class="image-caption">Figure 4.f</p>
           </div>
           <div class="chapter-footnotes" id="chapter-4-3-notes">
-            <div class="footnote" id="footnote-16">
-              <p>[16] <a href="https://deepgram.com" target="_blank">deepgram.com</a></p>
-            </div>
             <div class="footnote" id="footnote-17">
               <p>[17] Replacing audio with text reduces token count by ~10x. For a ten-minute conversation, this reduces the total tokens processed – and therefore the cost of input tokens – by ~100x. (Because the conversation history compounds every turn.)</p>
             </div>
@@ -727,7 +864,7 @@ you" in your responses.
             
             <p>Or imagine the user who is in their living room with the TV or radio on in the background. Because humans are generally pretty good at filtering out low-volume background speech, people won't necessarily think to turn off their TV or radio before they call into a customer support line.</p>
             
-            <p>The best available speaker isolation model is sold by Krisp.<sup>[25]</sup> Licenses are targeted at enterprise users and are not inexpensive. But for commercial use cases at scale, the improvement in voice agent performance justifies the cost.</p>
+            <p>The best available speaker isolation model is sold by <a href="https://krisp.ai" target="_blank">Krisp</a>.<sup>[25]</sup> Licenses are targeted at enterprise users and are not inexpensive. But for commercial use cases at scale, the improvement in voice agent performance justifies the cost.</p>
 
             <pre class="language-python"><code>
   pipeline = Pipeline(
@@ -885,16 +1022,16 @@ you" in your responses.
         </div>
         
         <div class="chapter-notes">
-          <div class="chapter-image">
+          <div class="chapter-image-positioned image-position-adjust" style="--position-offset: 100px;">
             <img src="images/Figure 1900.svg" alt="WebSocket vs WebRTC diagram" class="network-image" width="300">
             <p class="image-caption">Figure 4.q</p>
           </div>
 
-          <div class="chapter-image">
+          <div class="chapter-image-positioned image-position-adjust" style="--position-offset: 800px;">
             <img src="images/Figure 2100.svg" alt="HTTP API diagram" class="network-image" width="300">
             <p class="image-caption">Figure 4.s: A voice AI agent using HTTP requests to do LLM inference</p>
           </div>
-          <div class="chapter-image">
+          <div class="chapter-image-positioned image-position-adjust" style="--position-offset: 100px;">
             <img src="images/Figure 2200.svg" alt="HTTP API diagram" class="network-image" width="300">
             <p class="image-caption">Figure 4.t: A voice AI agent using HTTP requests to do LLM inference</p>
           </div>
@@ -946,7 +1083,7 @@ you" in your responses.
             
             <p>Generally, though, it's a bit simpler to just run VAD as part of the voice AI agent processing loop. And if your users are connecting via telephone, you don't have a client where you can run VAD, so you have to do it on the server.</p>
             
-            <p>The VAD model used most often for voice AI is Silero VAD.<sup>[33]</sup> This open source model runs efficiently on CPU, supports multiple languages, works well for both 8khz and 16khz audio, and is available as wasm packages for use in web browsers. Running Silero on a realtime, mono audio stream normally takes less than 1/8th of a typical virtual machine CPU core.</p>
+            <p>The VAD model used most often for voice AI is <a href="https://github.com/snakers4/silero-vad" target="_blank">Silero VAD</a>. This open source model runs efficiently on CPU, supports multiple languages, works well for both 8khz and 16khz audio, and is available as wasm packages for use in web browsers. Running Silero on a realtime, mono audio stream normally takes less than 1/8th of a typical virtual machine CPU core.</p>
             
             <p>A turn detection algorithm will typically have a few configuration parameters:</p>
             
@@ -1056,16 +1193,14 @@ you" in your responses.
         
         <div class="chapter-notes">
           <div class="chapter-image">
-            <img src="images/Figure 2600.svg" alt="VAD processing step" class="vad-image" width="300">
+            <img src="images/4x.svg" alt="VAD processing step" class="vad-image" width="300">
             <p class="image-caption">Figure 4.x: A voice activity detection processing step, here configured to run just prior to speech-to-text</p>
           </div>
           <div class="chapter-footnotes" id="chapter-4-7-notes">
             <div class="footnote" id="footnote-32">
               <p>[32] Especially on audio calls, when we don't have visual cues to help us.</p>
             </div>
-            <div class="footnote" id="footnote-33">
-              <p>[33] <a href="https://github.com/snakers4/silero-vad" target="_blank">github.com/snakers4/silero-vad</a></p>
-            </div>
+   
             <div class="footnote" id="footnote-34">
               <p>[34] <a href="https://dub.sh/voice-agents-020" target="_blank">dub.sh/voice-agents-020</a></p>
             </div>
@@ -1089,7 +1224,7 @@ you" in your responses.
             <p>Several sources of unintended interruptions are worth noting.</p>
             
             <ol class="list-decimal">
-              <li>Transient noises classified as speech. In general, Silero VAD<sup>[35]</sup> is very good at separating speech from "noise." But certain kinds of short, sharp, initial audio will have moderate speech confidence attached to them when they appear at the beginning of an utterance. Coughing and keyboard clicks both fall into this category. You can adjust the VAD start segment length and confidence level to try to minimize this source of interruptions. The trade-off is that lengthening the start segment length and raising the confidence threshold will create problems for very short phrases that you do want to detect as complete utterances. For example, Pipecat's standard VAD settings will sometimes miss a quick "yep" from some speakers.</li>
+              <li>Transient noises classified as speech. In general, <a href="https://github.com/snakers4/silero-vad" target="_blank">Silero VAD</a><sup>[35]</sup> is very good at separating speech from "noise." But certain kinds of short, sharp, initial audio will have moderate speech confidence attached to them when they appear at the beginning of an utterance. Coughing and keyboard clicks both fall into this category. You can adjust the VAD start segment length and confidence level to try to minimize this source of interruptions. The trade-off is that lengthening the start segment length and raising the confidence threshold will create problems for very short phrases that you do want to detect as complete utterances. For example, Pipecat's standard VAD settings will sometimes miss a quick "yep" from some speakers.</li>
               
               <li>Echo cancellation failures. Echo cancellation algorithms aren't perfect. A transition from silence to speech playout is particularly challenging. If you've done a lot of voice agent testing, you've probably heard your bot interrupt itself right when it starts talking. The culprit is echo cancellation allowing a little bit of the initial speech audio to feed back into your microphone. The minimum VAD start segment length helps to avoid this problem. So does applying exponential smoothing<sup>[36]</sup> to the audio volume level to avoid sharp volume transitions.</li>
               
@@ -1319,7 +1454,7 @@ def from_standard_message(self, message):
             
             <p>Different LLMs and different updates of the same model — are differentially good at function calling, and differently good at different kinds of function calling in different circumstances.<sup>[39]</sup></p>
             
-            <p><em>It's important to develop evals that test the function calling performance of your app. See the 7. Voice AI evals section, below.</em></p>
+            <p id="function-calling-eval"><em>It's important to develop evals that test the function calling performance of your app. See the 7. Voice AI evals section, below.</em></p>
             
             <h3 id="latency-function-calls">4.10.2 Latency</h3>
             
@@ -1435,7 +1570,7 @@ Tower on a cloudy day.
         </div>
         
         <div class="chapter-notes">
-          <div class="chapter-image">
+          <div class="chapter-image-positioned" data-align-with="function-calling-eval">
             <img src="images/4ad.svg" alt="TTFT for inference that includes a function call" class="latency-image" width="300">
             <p class="image-caption">Figure 4.ad: TTFT for inference that includes a function call. Our LLM has a TTFT of 450ms and produces 100 tokens per second. If the function call request chunk is 100 tokens, it takes 1s to output the function call request. Then we execute the function and run inference again. This time, we can stream the output, so after 450ms we have tokens we can use. TTFT for the full inference is 1,450 (not including the time it takes to execute the function itself ).</p>
           </div>
@@ -1538,7 +1673,7 @@ Tower on a cloudy day.
               <p>[46] Two popular programming environments with deep AI integration and tooling.</p>
             </div>
             <div class="footnote" id="footnote-47">
-              <p>[47] See swyx's talk at OpenAI Dev Day 2024 Singapore, "Engineering AI Agents" dub.sh/voice-agents-040.</p>
+              <p>[47] See swyx's talk at OpenAI Dev Day 2024 Singapore, "Engineering AI Agents" <a href="https://dub.sh/voice-agents-040" target="_blank">dub.sh/voice-agents-040</a>.</p>
             </div>
             <div class="footnote" id="footnote-48">
               <p>[48] Hello, Gemini!</p>
@@ -1642,8 +1777,8 @@ Tower on a cloudy day.
             <p>Several open source agent frameworks have guardrails components.</p>
             
             <ul class="arrow-list">
-              <li>llama-guard is part of Meta's llama-stack<sup>[55]</sup></li>
-              <li>NeMO Guardrails<sup>[56]</sup> is an open-source toolkit for adding programmable guardrails to LLM-based conversational applications</li>
+              <li>llama-guard is part of Meta's <a href="https://github.com/facebookresearch/llama-stack" target="_blank">llama-stack</a></li>
+              <li><a href="https://github.com/NVIDIA/NeMo-Guardrails" target="_blank">NeMO Guardrails</a> is an open-source toolkit for adding programmable guardrails to LLM-based conversational applications</li>
             </ul>
             
           <div class="chapter-image">
@@ -1749,12 +1884,7 @@ interpreting phonemes or transcribed text as "MNI"
             <div class="footnote" id="footnote-54">
               <p>[54] See the 4.10.6 Asynchronouns function calls section.</p>
             </div>
-            <div class="footnote" id="footnote-55">
-              <p>[55] github.com/meta-llama/llama-stack</p>
-            </div>
-            <div class="footnote" id="footnote-56">
-              <p>[56] github.com/NVIDIA/NeMo-Guardrails</p>
-            </div>
+
             <div class="footnote" id="footnote-57">
               <p>[57] See also the 5.3 Guardrails section, above, regarding post-processing LLM output.</p>
             </div>
@@ -1812,7 +1942,7 @@ interpreting phonemes or transcribed text as "MNI"
             
             <p>The challenge is to find the right balance between on the one hand leveraging the LLM's ability to have an open-ended, natural conversation, and on the other to make sure the LLM reliably executes the important parts of the job to be done.</p>
             
-            <p>Pipecat Flows<sup>[60]</sup> is a library built on top of Pipecat that helps developers create workflow state machines.</p>
+            <p><a href="https://github.com/pipecat-ai/pipecat-flows" target="_blank">Pipecat Flows</a> is a library built on top of Pipecat that helps developers create workflow state machines.</p>
             
             <p>The state diagram is represented as JSON and can be loaded into a Pipecat process. There's a graphical editor for creating these JSON state diagrams.</p>
             <div class="chapter-image">
@@ -1834,9 +1964,6 @@ interpreting phonemes or transcribed text as "MNI"
           <div class="chapter-footnotes" id="chapter-6-notes">
             <div class="footnote" id="footnote-59">
               <p>[59] Usually, you make an LLM inference call to perform context summarization. :-)</p>
-            </div>
-            <div class="footnote" id="footnote-60">
-              <p>[60] <a href="https://github.com/pipecat-ai/pipecat-flows" target="_blank">github.com/pipecat-ai/pipecat-flows</a></p>
             </div>
           </div>
         </div>
@@ -1902,7 +2029,7 @@ interpreting phonemes or transcribed text as "MNI"
       <div class="chapter-row">
         <div class="chapter-content">
           <section id="eval-platforms">
-            <p>Evaluation platforms that offer sophisticated tooling for voice AI evals are just beginning to emerge. Coval is a startup building testing and eval tools for voice and chat agents. Coval's simulation-oriented approach<sup>[62]</sup> is strongly influencing the evolution of evals in the voice AI ecosystem.</p>
+            <p>Evaluation platforms that offer sophisticated tooling for voice AI evals are just beginning to emerge. <a href="https://coval.dev" target="_blank">Coval</a> is a startup building testing and eval tools for voice and chat agents. Coval's simulation-oriented approachis strongly influencing the evolution of evals in the voice AI ecosystem.</p>
             
             <p>Coval and other evaluation platforms can help with:</p>
             
@@ -1918,9 +2045,7 @@ interpreting phonemes or transcribed text as "MNI"
         
         <div class="chapter-notes">
           <div class="chapter-footnotes" id="chapter-7-notes-2">
-            <div class="footnote" id="footnote-62">
-              <p>[62] <a href="https://coval.dev" target="_blank">coval.dev</a></p>
-            </div>
+
           </div>
         </div>
       </div>
@@ -2100,9 +2225,9 @@ llm.register_function("query_order_system",
             <p>Some voice AI platforms are:</p>
             
             <ul class="arrow-list">
-              <li>Retell<sup>[67]</sup> – A platform for building voice AI agents that can make and receive phone calls.</li>
-              <li>Vapi<sup>[68]</sup> – A platform for building voice AI agents that can make and receive phone calls.</li>
-              <li>Vocode<sup>[69]</sup> – An open source framework for building voice AI agents.</li>
+              <li><a href="https://retellai.com" target="_blank">Retell</a> – A platform for building voice AI agents that can make and receive phone calls.</li>
+              <li><a href="https://vapi.ai" target="_blank">Vapi</a> – A platform for building voice AI agents that can make and receive phone calls.</li>
+              <li><a href="https://github.com/vocodedev/vocode-python" target="_blank">Vocode</a> – An open source framework for building voice AI agents.</li>
             </ul>
             
             <h3 id="serverless-platforms">10.1.2 Serverless platforms</h3>
@@ -2114,9 +2239,9 @@ llm.register_function("query_order_system",
             <p>Some serverless platforms that work well for voice AI are:</p>
             
             <ul class="arrow-list">
-              <li>Cloudflare Workers<sup>[70]</sup> – A serverless platform with good support for WebSockets and WebRTC.</li>
-              <li>AWS Lambda<sup>[71]</sup> – A serverless platform with good support for WebSockets and integration with AWS services.</li>
-              <li>Google Cloud Functions<sup>[72]</sup> – A serverless platform with good support for WebSockets and integration with Google Cloud services.</li>
+              <li><a href="https://workers.cloudflare.com" target="_blank">Cloudflare Workers</a> – A serverless platform with good support for WebSockets and WebRTC.</li>
+              <li><a href="https://aws.amazon.com/lambda" target="_blank">AWS Lambda</a> – A serverless platform with good support for WebSockets and integration with AWS services.</li>
+              <li><a href="https://cloud.google.com/functions" target="_blank">Google Cloud Functions</a> – A serverless platform with good support for WebSockets and integration with Google Cloud services.</li>
             </ul>
             
             <h3 id="self-hosted">10.1.3 Self-hosted</h3>
@@ -2229,7 +2354,7 @@ llm.register_function("query_order_system",
               <li>The dependencies between components.</li>
             </ul>
             
-            <p>OpenTelemetry<sup>[73]</sup> is a good framework for implementing tracing in your voice AI agent.</p>
+            <p>OpenTelemetry<sup>[67]</sup> is a good framework for implementing tracing in your voice AI agent.</p>
             
             <table class="data-table">
               <tr>
@@ -2268,33 +2393,8 @@ llm.register_function("query_order_system",
         </div>
         
         <div class="chapter-notes">
-          <div class="chapter-image">
-            <img src="images/10a.svg" alt="Voice AI hosting architecture" class="latency-image" width="300">
-            <p class="image-caption">Figure 10.b: A typical voice AI hosting architecture</p>
-          </div>
-          <div class="chapter-footnotes" id="chapter-10-notes">
-            <div class="footnote" id="footnote-67">
-              <p>[67] <a href="https://retellai.com" target="_blank">retellai.com</a></p>
-            </div>
-            <div class="footnote" id="footnote-68">
-              <p>[68] <a href="https://vapi.ai" target="_blank">vapi.ai</a></p>
-            </div>
-            <div class="footnote" id="footnote-69">
-              <p>[69] <a href="https://github.com/vocodedev/vocode-python" target="_blank">github.com/vocodedev/vocode-python</a></p>
-            </div>
-            <div class="footnote" id="footnote-70">
-              <p>[70] <a href="https://workers.cloudflare.com" target="_blank">workers.cloudflare.com</a></p>
-            </div>
-            <div class="footnote" id="footnote-71">
-              <p>[71] <a href="https://aws.amazon.com/lambda" target="_blank">aws.amazon.com/lambda</a></p>
-            </div>
-            <div class="footnote" id="footnote-72">
-              <p>[72] <a href="https://cloud.google.com/functions" target="_blank">cloud.google.com/functions</a></p>
-            </div>
-            <div class="footnote" id="footnote-73">
-              <p>[73] <a href="https://opentelemetry.io" target="_blank">opentelemetry.io</a></p>
-            </div>
-          </div>
+
+
         </div>
       </div>
 
@@ -2395,10 +2495,7 @@ llm.register_function("query_order_system",
         </div>
         
         <div class="chapter-notes">
-          <div class="chapter-image">
-            <img src="images/11a.svg" alt="The future of voice AI" class="latency-image" width="300">
-            <p class="image-caption">Figure 11.a: The future of voice AI is multimodal, natural, and ubiquitous</p>
-          </div>
+
           <div class="chapter-footnotes" id="chapter-11-notes">
             <!-- No footnotes in this section -->
           </div>
@@ -2448,5 +2545,42 @@ llm.register_function("query_order_system",
   </div>
 
   <script src="script/pagination.js"></script>
+  <script src="script/footnotes.js"></script>
+  
+  <script>
+    // Function to help with image positioning
+    document.addEventListener('DOMContentLoaded', function() {
+      // Initial positioning
+      adjustImagePositions();
+      
+      // Reposition on window resize
+      window.addEventListener('resize', adjustImagePositions);
+      
+      function adjustImagePositions() {
+        // Only apply on larger screens where the two-column layout is active
+        if (window.innerWidth <= 768) return;
+        
+        // Get all positioned images
+        const positionedImages = document.querySelectorAll('.chapter-image-positioned');
+        
+        positionedImages.forEach(function(image) {
+          // If the image has a data-align-with attribute, use it to align with that element
+          const alignWithId = image.getAttribute('data-align-with');
+          if (alignWithId) {
+            const alignWithElement = document.getElementById(alignWithId);
+            if (alignWithElement) {
+              // Calculate the offset based on the element's position
+              const alignElementRect = alignWithElement.getBoundingClientRect();
+              const parentRect = image.parentElement.getBoundingClientRect();
+              const offset = alignElementRect.top - parentRect.top;
+              
+              // Set the custom property for positioning
+              image.style.setProperty('--position-offset', `${offset}px`);
+            }
+          }
+        });
+      }
+    });
+  </script>
 </body>
 </html> 
