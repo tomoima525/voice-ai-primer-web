@@ -10,8 +10,12 @@ document.addEventListener('DOMContentLoaded', () => {
       
       // Get the footnote number from the superscript text
       const footnoteNum = sup.textContent.replace(/[\[\]]/g, '');
-      const footnoteId = `footnote-${footnoteNum}`;
-      const footnote = document.getElementById(footnoteId);
+      
+      // Find the footnote by matching the text content
+      const footnotes = document.querySelectorAll('.footnote p');
+      const footnote = Array.from(footnotes).find(p => 
+        p.textContent.startsWith(`[${footnoteNum}]`)
+      )?.closest('.footnote');
       
       if (footnote) {
         footnote.scrollIntoView({ 

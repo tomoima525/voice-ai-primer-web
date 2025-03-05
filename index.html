@@ -81,7 +81,7 @@
             <li>
               <a href="#turn-detection">4.7. Turn detection</a>
               <ul>
-                <li><a href="#voice-activity-detection">4.7.1. Voice activity detection</a></li>
+                <li><a href="#voice-activity-detection-4-7">4.7.1 Voice activity detection</a></li>
                 <li><a href="#push-to-talk">4.7.2. Push-to-talk</a></li>
                 <li><a href="#endpoint-markers">4.7.3. Endpoint markers</a></li>
                 <li><a href="#context-aware-turn-detection">4.7.4. Context-aware turn detection</a></li>
@@ -195,7 +195,7 @@
             
             <p>If you've spent much time in free-form dialog with ChatGPT or Claude, you have an intuitive sense that talking to an LLM feels quite natural and is broadly useful.</p>
             
-            <p>LLMs are also good at turning unstructured information into structured data.<sup>[2]</sup></p>
+            <p>LLMs are also good at turning unstructured information into structured data.<sup>[1]</sup></p>
             
             <p>New voice AI agents leverage these two LLM capabilities – conversation, and extracting structure from unstructured data – to create a new kind of user experience.</p>
             
@@ -214,8 +214,8 @@
         
         <div class="chapter-notes">
           <div class="chapter-footnotes" id="chapter-1-notes">
-            <div class="footnote" id="footnote-2">
-              <p>[2] Here we mean this broadly, rather in the narrow sense of the "structured output" feature of some LLMs.</p>
+            <div class="footnote" id="footnote-1">
+              <p>[1] Here we mean this broadly, rather in the narrow sense of the "structured output" feature of some LLMs.</p>
             </div>
           </div>
         </div>
@@ -230,11 +230,11 @@
             
             <p>As more and more developers jump into building realtime, conversational AI applications, materials to help people get started are important.</p>
             
-            <p>This guide was directly inspired by Sean DuBois' open-source book WebRTC For the Curious. That book has helped numerous developers get up to speed with WebRTC since it was first released four years ago.<sup>[3]</sup></p>
+            <p>This guide was directly inspired by Sean DuBois' open-source book WebRTC For the Curious. That book has helped numerous developers get up to speed with WebRTC since it was first released four years ago.<sup>[2]</sup></p>
             
             <p>Building production-ready voice agents is complicated. Many elements are non-trivial to implement from scratch. If you build voice AI apps, you'll likely rely on a framework for many of the things discussed in this document. But we think it's useful to understand how the pieces fit together, whether you are building them all from scratch or not.</p>
             
-            <p>The voice AI code examples in this document use the <a href="https://pipecat.ai" target="_blank">Pipecat</a> open source framework. Pipecat is a vendor-neutral agent layer for realtime AI.<sup>[4]</sup> We used Pipecat in this document because:</p>
+            <p>The voice AI code examples in this document use the <a href="https://pipecat.ai" target="_blank">Pipecat</a> open source framework. Pipecat is a vendor-neutral agent layer for realtime AI.<sup>[3]</sup> We used Pipecat in this document because:</p>
             
             <ol class="list-decimal">
               <li>We build with it every day and help to maintain it, so we're familiar with it!</li>
@@ -249,11 +249,11 @@
         
         <div class="chapter-notes">
           <div class="chapter-footnotes" id="chapter-2-notes">
-            <div class="footnote" id="footnote-3">
-              <p>[3] <a href="https://webrtcforthecurious.com" target="_blank">webrtcforthecurious.com</a> If you're interested in WebRTC, go read it! WebRTC is relevant to voice AI, as we'll discuss later in section 4.6.1.</p>
+            <div class="footnote" id="footnote-2">
+              <p>[2] <a href="https://webrtcforthecurious.com" target="_blank">webrtcforthecurious.com</a> If you're interested in WebRTC, go read it! WebRTC is relevant to voice AI, as we'll discuss later in section 4.6.1.</p>
             </div>
-            <div class="footnote" id="footnote-5">
-              <p>[5] Pipecat has integrations for more than 40 AI models and services, along with state of-the-art implementations of things like turn detection and interruption handling. You can write code with Pipecat that uses WebSockets, WebRTC, HTTP, and telephony to communicate with users. Pipecat includes transport implementations for a variety of infrastructure platforms including Twilio, Telnyx, LiveKit, Daily, and others.</p>
+            <div class="footnote" id="footnote-3">
+              <p>[3] Pipecat has integrations for more than 40 AI models and services, along with state of-the-art implementations of things like turn detection and interruption handling. You can write code with Pipecat that uses WebSockets, WebRTC, HTTP, and telephony to communicate with users. Pipecat includes transport implementations for a variety of infrastructure platforms including Twilio, Telnyx, LiveKit, Daily, and others.</p>
             </div>
           </div>
         </div>
@@ -273,7 +273,7 @@
             <ol class="list-decimal">
               <li>Speech is captured by a microphone on a user's device, encoded, and sent over the network to a voice agent program running in the cloud.</li>
               <li>Input speech is transcribed, to create text input for the LLM.</li>
-              <li>Text is assembled into a context — a prompt — and inference is performed by an LLM. Inference output will often be filtered or transformed by the agent program logic.<sup>[6]</sup></li>
+              <li>Text is assembled into a context — a prompt — and inference is performed by an LLM. Inference output will often be filtered or transformed by the agent program logic.<sup>[4]</sup></li>
               <li>Output text is sent to a text-to-speech model to create audio output.</li>
               <li>Audio output is sent back to the user.</li>
             </ol>
@@ -290,7 +290,7 @@
             <ol class="list-decimal">
               <li>What LLMs work best for voice AI agents?</li>
               <li>How do you manage the conversation context during a long-running session?</li>
-              <li>How do you connect voice agents to existing back-end systems?<sup>[8]</sup></li>
+              <li>How do you connect voice agents to existing back-end systems?<sup>[6]</sup></li>
               <li>How do you know if your voice agents are performing well?</li>
             </ol>
           </section>
@@ -304,14 +304,14 @@
             <p class="image-caption">Figure 3.b</p>
           </div>
           <div class="chapter-footnotes" id="chapter-3-notes">
+            <div class="footnote" id="footnote-4">
+              <p>[4] For example, to detect common LLM errors and safety issues.</p>
+            </div>
+            <div class="footnote" id="footnote-5">
+              <p>[5] Let's delve —— ed.</p>
+            </div>
             <div class="footnote" id="footnote-6">
-              <p>[6] For example, to detect common LLM errors and safety issues.</p>
-            </div>
-            <div class="footnote" id="footnote-7">
-              <p>[7] Let's delve —— ed.</p>
-            </div>
-            <div class="footnote" id="footnote-8">
-              <p>[8] For example, CRMs, proprietary knowledge bases, and call center systems.</p>
+              <p>[6] For example, CRMs, proprietary knowledge bases, and call center systems.</p>
             </div>
           </div>
         </div>
@@ -354,8 +354,8 @@
             
             <ul class="arrow-list">
               <li>Low enough latency for interactive voice conversation.</li>
-              <li>Good instruction following.<sup>[9]</sup></li>
-              <li>Reliable function calling.<sup>[10]</sup></li>
+              <li>Good instruction following.<sup>[7]</sup></li>
+              <li>Reliable function calling.<sup>[8]</sup></li>
               <li>Low rates of hallucination and other kinds of inappropriate responses.</li>
               <li>Personality and tone.</li>
               <li>Cost.</li>
@@ -443,13 +443,13 @@
             
             <p>The math of context growth makes it tricky to pin down a per-minute cost for a voice conversation. In addition, API providers are increasingly offering token caching, which can offset cost (and reduce latency) but adds to the complexity of estimating what costs will be for different use cases.</p>
             
-            <p>OpenAI's automatic token caching for the OpenAI Realtime API is particularly nice. We encourage other platforms to consider implementing similarly simple, transparent caching.<sup>[11]</sup></p>
+            <p>OpenAI's automatic token caching for the OpenAI Realtime API is particularly nice. We encourage other platforms to consider implementing similarly simple, transparent caching.<sup>[9]</sup></p>
             
-            <p>We built a calculator for the OpenAI Realtime API that shows how cost scales with session length, factoring in caching.<sup>[11]</sup></p>
+            <p>We built a calculator for the OpenAI Realtime API that shows how cost scales with session length, factoring in caching.<sup>[9]</sup></p>
             
             <h3 id="open-source">4.2.3 Open source / open weights</h3>
             
-            <p>Llama 3.3 70B is promising. This open weights model from Meta performs better than the original GPT-4 on relevant benchmarks. But it is not good enough to supplant the current versions of GPT-4o and Gemini for commercial use cases, yet, unless you must run your LLM locally rather than use an API.<sup>[12]</sup></p>
+            <p>Llama 3.3 70B is promising. This open weights model from Meta performs better than the original GPT-4 on relevant benchmarks. But it is not good enough to supplant the current versions of GPT-4o and Gemini for commercial use cases, yet, unless you must run your LLM locally rather than use an API.<sup>[10]</sup></p>
             
             <p>Note that Meta does not offer a first-party, hosted Llama 3.3 70B. Many smaller providers offer Llama inference endpoints, and serverless GPU platforms offer a range of options for deploying your own Llama.</p>
             
@@ -471,19 +471,19 @@
             
             <p>However, current speech to speech models and APIs are not yet good enough for most production voice AI use cases.</p>
             
-            <p>Today's best speech-to-speech models definitely sound more natural than today's best text-to-speech models. OpenAI's <a href="https://platform.openai.com/docs/guides/audio" target="_blank">gpt4o-audio-preview</a> model really does sound like a preview of the voice AI future.</p>
+            <p>Today's best speech-to-speech models definitely sound more natural than today's best text-to-speech models. OpenAI's <a href="https://platform.openai.com/docs/guides/audio" target="_blank">gpt4o-audio-preview</a> <sup>[13]</sup> model really does sound like a preview of the voice AI future.</p>
             
             <p>Speech-to-speech models aren't yet as mature and reliable as text-mode LLMs, though.</p>
             
             <ul class="arrow-list">
-              <li>Lower latency is possible in theory, but audio uses more tokens than text. Larger token contexts are slower for the LLM to process. In practice, today, audio models are slower for multi-turn conversation than text models.<sup>[14]</sup></li>
+              <li>Lower latency is possible in theory, but audio uses more tokens than text. Larger token contexts are slower for the LLM to process. In practice, today, audio models are slower for multi-turn conversation than text models.<sup>[11]</sup></li>
               <li>Better understanding does seem to be a real benefit, today, of these models. This is particularly apparent for Gemini 2.0 Flash audio input. The story is a bit less clear today for gpt 4o audio preview, which is a smaller and somewhat less capable model than the text-mode GPT-4o.</li>
               <li>Better natural voice output is clearly perceptible, today. But the audio LLMs do have some odd output patterns in audio mode that don't happen in text mode as often: word repetition, discourse markers that sometimes fall into the uncanny valley, and occasional failure to complete sentences.</li>
             </ul>
             
             <p>The biggest of these issues is the larger context size required for multi-turn audio. One approach to squaring the circle and getting the benefits of native audio without the context-size drawbacks is to process each conversation turn as a mixture of text and audio. Use audio for the most recent user message; use text for the rest of the conversation history.</p>
             
-            <p>The beta speech to speech offering from OpenAI — the OpenAI Realtime API — is fast and the voice quality is amazing. But the model behind that API is the smaller gpt-4o-audio-preview rather than the full GPT-4o. So instruction following and function calling are not as good. The API also does not have all of the features needed to manage conversation context, and has a variety of early-product bugs and quirks. See detailed notes about the OpenAI Realtime API here.<sup>[15]</sup></p>
+            <p>The beta speech to speech offering from OpenAI — the OpenAI Realtime API — is fast and the voice quality is amazing. But the model behind that API is the smaller gpt-4o-audio-preview rather than the full GPT-4o. So instruction following and function calling are not as good. The API also does not have all of the features needed to manage conversation context, and has a variety of early-product bugs and quirks. See detailed notes about the OpenAI Realtime API here.<sup>[12]</sup></p>
             
             <p>The Google Multimodal Live API is another promising — and also currently beta — speech-to-speech service. This API offers a view into the near-future of the Gemini models: long context windows, excellent vision capabilities, fast inference, strong audio understanding, code execution, and search grounding. Like the OpenAI Realtime API, this beta product is not yet a good choice for production voice AI.</p>
             
@@ -501,24 +501,27 @@
             <img src="images/Figure 0700 Spreadsheet.png" alt="Cost calculator spreadsheet" class="footnote-image" width="300">
             <p class="image-caption">Figure 4.e: OpenAI Realtime API cost calculator</p>
           </div>
+            <div class="footnote" id="footnote-7">
+              <p>[7] How easy is it to prompt the model to do specific things?</p>
+            </div>
+            <div class="footnote" id="footnote-8">
+              <p>[8] Voice AI agents rely heavily on function calling.</p>
+            </div>
             <div class="footnote" id="footnote-9">
-              <p>[9] How easy is it to prompt the model to do specific things?</p>
-            </div>
-            <div class="footnote" id="footnote-10">
-              <p>[10] Voice AI agents rely heavily on function calling.</p>
-            </div>
-            <div class="footnote" id="footnote-11">
-              <p>[11] <a href="https://dub.sh/voice-agents-010" target="_blank">dub.sh/voice-agents-010</a></p>
+              <p>[9] <a href="https://dub.sh/voice-agents-010" target="_blank">dub.sh/voice-agents-010</a></p>
 
             </div>
-              <p>[12] If you plan to fine-tune an LLM for your use case, Llama 3.3 70B is a very good starting point. More on fine-tuning below in 5.1 Using several fine-tuned models.</p>
+              <p>[10] If you plan to fine-tune an LLM for your use case, Llama 3.3 70B is a very good starting point. More on fine-tuning below in 5.1 Using several fine-tuned models.</p>
+            <div class="footnote" id="footnote-10">
+            </div>
+            <div class="footnote" id="footnote-11">
+              <p>[11] This latency issue for audio models is clearly fixable through a combination of caching, clever API design, and architectural evolution of the models themselves.</p>
+            </div>
             <div class="footnote" id="footnote-12">
+              <p>[12] <a href="https://latent.space/p/realtime-api" target="_blank">latent.space/p/realtime-api</a></p>
             </div>
-            <div class="footnote" id="footnote-14">
-              <p>[14] This latency issue for audio models is clearly fixable through a combination of caching, clever API design, and architectural evolution of the models themselves.</p>
-            </div>
-            <div class="footnote" id="footnote-15">
-              <p>[15] <a href="https://latent.space/p/realtime-api" target="_blank">latent.space/p/realtime-api</a></p>
+            <div class="footnote" id="footnote-13">
+              <p>[13] <a href="https://platform.openai.com/docs/guides/audio" target="_blank">platform.openai.com/docs/guides/audio</a></p>
             </div>
           </div>
         </div>
@@ -590,7 +593,7 @@ Your output will be directly converted to speech, so your response should be nat
             
             <p>Each audio input is used for just one turn. The full conversation context is always the audio of the most recent user speech, plus the text transcription of all previous inputs and outputs.</p>
             
-            <p>This gives you the best of both worlds: native audio understanding for the current user utterance; reduced token count for the whole context.<sup>[17]</sup></p>
+            <p>This gives you the best of both worlds: native audio understanding for the current user utterance; reduced token count for the whole context.<sup>[14]</sup></p>
             <pre class="language-python"><code>
   pipeline = Pipeline( 
     [   
@@ -642,8 +645,8 @@ Rules:
             <p class="image-caption">Figure 4.f</p>
           </div>
           <div class="chapter-footnotes" id="chapter-4-3-notes">
-            <div class="footnote" id="footnote-17">
-              <p>[17] Replacing audio with text reduces token count by ~10x. For a ten-minute conversation, this reduces the total tokens processed – and therefore the cost of input tokens – by ~100x. (Because the conversation history compounds every turn.)</p>
+            <div class="footnote" id="footnote-15">
+              <p>[14] Replacing audio with text reduces token count by ~10x. For a ten-minute conversation, this reduces the total tokens processed – and therefore the cost of input tokens – by ~100x. (Because the conversation history compounds every turn.)</p>
             </div>
           </div>
         </div>
@@ -659,15 +662,15 @@ Rules:
             <p>Voice AI developers choose a voice model/service based on:</p>
             
             <ul class="arrow-list">
-              <li>How natural the voices sound<sup>[18]</sup></li>
-              <li>Latency<sup>[19]</sup></li>
+              <li>How natural the voices sound<sup>[15]</sup></li>
+              <li>Latency<sup>[16]</sup></li>
               <li>Cost</li>
               <li>Language support</li>
             </ul>
             
             <p>Voice options expanded markedly in 2024. New startups appeared on the scene. Best-in-class voice quality went way up. And every provider improved latency.</p>
             
-            <p>As is the case for speech-to-text, all of the big cloud providers have text-to-speech products.<sup>[20]</sup> But most voice AI developers are not using them, because models from startups are currently better.</p>
+            <p>As is the case for speech-to-text, all of the big cloud providers have text-to-speech products.<sup>[17]</sup> But most voice AI developers are not using them, because models from startups are currently better.</p>
             
             <p>The labs that have the most traction for realtime conversational voice models are (in alphabetical order):</p>
             
@@ -745,14 +748,14 @@ you" in your responses.
           </code></pre>
           <p class="image-caption">Figure 4.m: Example prompt language to steer pronunciation via LLM text output</p>
           <div class="chapter-footnotes" id="chapter-4-4-notes">
+            <div class="footnote" id="footnote-16">
+              <p>[15] Pronunciation, intonation, pacing, stress, rhythm, emotional valence</p>
+            </div>
+            <div class="footnote" id="footnote-17">
+              <p>[16] Time to first audio byte</p>
+            </div>
             <div class="footnote" id="footnote-18">
-              <p>[18] Pronunciation, intonation, pacing, stress, rhythm, emotional valence</p>
-            </div>
-            <div class="footnote" id="footnote-19">
-              <p>[19] Time to first audio byte</p>
-            </div>
-            <div class="footnote" id="footnote-20">
-              <p>[20] Azure AI Speech, Amazon Polly, and Google Cloud Text-to-Speech.</p>
+              <p>[17] Azure AI Speech, Amazon Polly, and Google Cloud Text-to-Speech.</p>
             </div>
           </div>
         </div>
@@ -763,9 +766,9 @@ you" in your responses.
           <section id="audio-processing">
             <h2 id="audio-processing">4.5. Audio processing</h2>
             
-            <p>A good voice AI platform or library will mostly hide the complexities of audio capture and processing. But if you build complex voice agents, at some point you'll bump up against bugs and corner cases in audio handling.<sup>[21]</sup> So it's worth taking a quick tour of the audio input pipeline.</p>
+            <p>A good voice AI platform or library will mostly hide the complexities of audio capture and processing. But if you build complex voice agents, at some point you'll bump up against bugs and corner cases in audio handling.<sup>[18]</sup> So it's worth taking a quick tour of the audio input pipeline.</p>
 
-            <h3>4.5.1 Microphones and automatic gain control</h3>
+            <h3 id="avoiding-spurious-interruptions">4.5.1 Microphones and automatic gain control</h3>
             
             <p>Microphones today are extremely sophisticated hardware devices coupled to large amounts of low-level software. This is usually great — we get terrific audio from tiny microphones built into mobile devices, laptops, and bluetooth earpieces.</p>
             
@@ -777,21 +780,21 @@ you" in your responses.
             </div>
             <p>Most audio capture pipelines will apply some amount of automatic gain control to the input signal. Again, this is usually what you want, because this compensates for things like the user's distance from the microphone. You can often disable some automatic gain control, but on consumer-class devices you usually can't disable it completely.</p>
 
-            <h3>4.5.2 Echo cancellation</h3>
+            <h3 id="echo-cancellation">4.5.2 Echo cancellation</h3>
             
             <p>If a user is holding a phone up to their ear, or wearing headphones, you don't need to worry about feedback between the local microphone and speaker. But if a user is talking on a speakerphone, or using a laptop without headphones, then good echo cancellation is extremely important.</p>
             
-            <p>Echo cancellation is very sensitive to latency, so echo cancellation has to run on the device (not in the cloud). Today, excellent echo cancellation is built into telephony stacks, web browsers, and WebRTC native mobile SDKs.<sup>[22]</sup></p>
+            <p>Echo cancellation is very sensitive to latency, so echo cancellation has to run on the device (not in the cloud). Today, excellent echo cancellation is built into telephony stacks, web browsers, and WebRTC native mobile SDKs.<sup>[19]</sup></p>
             
             <p>So if you're using a voice AI, WebRTC, or telephony SDK, you should have echo cancellation that you can count on "just working" in almost all real-world scenarios. If you are rolling your own voice AI capture pipeline, you will need to figure out how to integrate echo cancellation logic.</p>
 
-            <h3>4.5.3 Noise suppression, speech and music</h3>
+            <h3 id="noise-suppression">4.5.3 Noise suppression, speech and music</h3>
             
             <p>Audio capture pipelines for telephony and WebRTC almost always default to "speech mode." Speech can be compressed much more than music, and noise reduction and echo cancellation algorithms are easier to implement for narrower band signals.</p>
             
             <p>Many telephony platforms only support 8khz audio. This is noticeably low-quality by modern standards. If you are routing through a system with this limitation, there's nothing you can do about it. Your users may or may not notice the quality — most people have low expectations for phone call audio.</p>
             
-            <p>WebRTC supports very high-quality audio.<sup>[23]</sup> Default WebRTC settings are usually 48khz sample rate, single channel, 32 kbs Opus encoding, and a moderate noise suppression algorithm. These settings are optimized for speech. They work across a wide range of devices and environments and are generally the right choice for voice AI.</p>
+            <p>WebRTC supports very high-quality audio.<sup>[20]</sup> Default WebRTC settings are usually 48khz sample rate, single channel, 32 kbs Opus encoding, and a moderate noise suppression algorithm. These settings are optimized for speech. They work across a wide range of devices and environments and are generally the right choice for voice AI.</p>
             
             <p>Music will not sound good with these settings!</p>
             
@@ -804,9 +807,9 @@ you" in your responses.
               <li>Increase the Opus encoding bitrate (64 kbs is a good target for mono, 96 kbs or 128 kbs for stereo).</li>
             </ul>
 
-            <h3>4.5.4 Encoding</h3>
+            <h3 id="encoding">4.5.4 Encoding</h3>
             
-            <p>Encoding is the general term for how audio data is formatted for sending over a network connection.<sup>[24]</sup></p>
+            <p>Encoding is the general term for how audio data is formatted for sending over a network connection.<sup>[21]</sup></p>
             
             <p>Common encodings for real-time communication include:</p>
             
@@ -854,7 +857,7 @@ you" in your responses.
             
             <p>16-bit PCM is "raw audio." You can send PCM audio frames directly to a software sound channel (assuming that the sample rate and data type are correctly specified). Note, however, that this uncompressed audio is not something you generally want to send over an Internet connection. 24khz PCM has a bitrate of 384 kbs. That's a large enough bitrate that many real-world connections from end-user devices will struggle to deliver the bytes in real time.</p>
 
-            <h3>4.5.5 Server-side noise processing and speaker isolation</h3>
+            <h3 id="server-side-noise">4.5.5 Server-side noise processing and speaker isolation</h3>
             
             <p>Speech-to-text models can usually ignore general ambient noise – street sounds, dogs barking, loud fans close to a mic, keyboard clicks. So the traditional "noise suppression" algorithms that are critical for many human-to-human use cases are not as critical for voice AI.</p>
             
@@ -864,7 +867,7 @@ you" in your responses.
             
             <p>Or imagine the user who is in their living room with the TV or radio on in the background. Because humans are generally pretty good at filtering out low-volume background speech, people won't necessarily think to turn off their TV or radio before they call into a customer support line.</p>
             
-            <p>The best available speaker isolation model is sold by <a href="https://krisp.ai" target="_blank">Krisp</a>.<sup>[25]</sup> Licenses are targeted at enterprise users and are not inexpensive. But for commercial use cases at scale, the improvement in voice agent performance justifies the cost.</p>
+            <p>The best available speaker isolation model is sold by <a href="https://krisp.ai" target="_blank">Krisp</a>. Licenses are targeted at enterprise users and are not inexpensive. But for commercial use cases at scale, the improvement in voice agent performance justifies the cost.</p>
 
             <pre class="language-python"><code>
   pipeline = Pipeline(
@@ -883,7 +886,7 @@ you" in your responses.
             </code></pre>
             <p class="image-caption">Figure 4.p: Pipecat pipeline with a Krisp processing element</p>
 
-            <h3>4.5.6 Voice activity detection</h3>
+            <h3 id="voice-activity-detection">4.5.6 Voice activity detection</h3>
             
             <p>A voice activity detection stage is part of almost every voice AI pipeline. VAD classifies audio segments as "speech" and "not speech." We will talk in detail about VAD in 4.7 Turn Detection, below.</p>
           </section>
@@ -891,24 +894,22 @@ you" in your responses.
         
         <div class="chapter-notes">
           <div class="chapter-footnotes" id="chapter-4-5-notes">
+            <div class="footnote" id="footnote-19">
+              <p>[18] … this generalizes to all things in software, and perhaps most things in life.</p>
+            </div>
+            <div class="footnote" id="footnote-20">
+              <p>[19] Note that Firefox echo cancellation is not very good. We recommend that voice AI developers build with Chrome and Safari as primary platforms, and only test on Firefox as a secondary platform, time permitting.</p>
+            </div>
             <div class="footnote" id="footnote-21">
-              <p>[21] … this generalizes to all things in software, and perhaps most things in life.</p>
-            </div>
-            <div class="footnote" id="footnote-22">
-              <p>[22] Note that Firefox echo cancellation is not very good. We recommend that voice AI developers build with Chrome and Safari as primary platforms, and only test on Firefox as a secondary platform, time permitting.</p>
-            </div>
-            <div class="footnote" id="footnote-23">
-              <p>[23] Some use cases for high-quality audio:<br>
+              <p>[20] Some use cases for high-quality audio:<br>
               A music lesson with an LLM teacher.<br>
               Recording a podcast that includes background sound or music.<br>
               Generating AI music interactively.</p>
             </div>
-            <div class="footnote" id="footnote-24">
-              <p>[24] (Or for saving in a file.)</p>
+            <div class="footnote" id="footnote-22">
+              <p>[21] (Or for saving in a file.)</p>
             </div>
-            <div class="footnote" id="footnote-25">
-              <p>[25] krisp.ai</p>
-            </div>
+      
           </div>
         </div>
       </div>
@@ -918,7 +919,7 @@ you" in your responses.
           <section id="network-transport">
             <h2 id="network-transport">4.6. Network transport</h2>
             
-            <h3>4.6.1 WebSockets and WebRTC</h3>
+            <h3 id="websockets-webrtc">4.6.1 WebSockets and WebRTC</h3>
             
             <p>Both WebSockets and WebRTC are used by AI services for audio streaming.</p>
             
@@ -947,7 +948,7 @@ you" in your responses.
               <p class="image-caption">One-way audio latency rises to 4 seconds during a simulated 5-minute session with 4% packet loss. It's likely that in a real session with this amount of packet loss, the WebSocket connection would drop at some point because of underlying TCP timeouts.</p>
             </div>
 
-            <h3>4.6.2 HTTP</h3>
+            <h3 id="http">4.6.2 HTTP</h3>
             
             <p>HTTP is still useful and important for voice AI, too! HTTP is the lingua franca for service interconnection on the Internet. REST APIs are HTTP. Webhooks are HTTP.</p>
             
@@ -968,19 +969,19 @@ you" in your responses.
             
             <p>Which brings us to QUIC …</p>
 
-            <h3>4.6.3 QUIC and MoQ</h3>
+            <h3 id="quic-moq">4.6.3 QUIC and MoQ</h3>
             
             <p>QUIC is a new network protocol designed to be the transport layer for the latest version of HTTP (HTTP/3) — and to flexibly support other Internet-scale use cases, too.</p>
             
-            <p>QUIC is a UDP-based protocol, and addresses all of the above issues with HTTP. With QUIC you get faster connection times, bidirectional streams, and no head-of-line blocking. Google and Facebook have been steadily rolling out QUIC, so these days, some of your HTTP requests traverse the Internet as UDP, rather than TCP, packets.<sup>[26]</sup></p>
-            
-            <p>QUIC will be a big part of the future of media streaming on the Internet. Migration to QUIC-based protocols for realtime media streaming will take time, though. One blocker to building QUIC-based voice agents is that Safari does not yet support the QUIC-based evolution of WebSockets, WebTransport.<sup>[27]</sup></p>
+            <p>QUIC is a UDP-based protocol, and addresses all of the above issues with HTTP. With QUIC you get faster connection times, bidirectional streams, and no head-of-line blocking. Google and Facebook have been steadily rolling out QUIC, so these days, some of your HTTP requests traverse the Internet as UDP, rather than TCP, packets. <sup>[22]</sup></p> 
+             
+            <p>QUIC will be a big part of the future of media streaming on the Internet. Migration to QUIC-based protocols for realtime media streaming will take time, though. One blocker to building QUIC-based voice agents is that Safari does not yet support the QUIC-based evolution of WebSockets, <a href="https://w3c.github.io/webtransport/" target="_blank">WebTransport</a>.</p>
             
             <p>The Media over QUIC IETF working group aims to develop a "simple low-latency media delivery solution for ingest and distribution of media." As with all standards, hashing out how to support the widest possible array of important use cases with the simplest possible building blocks is not easy. People are excited about using QUIC for on-demand video streaming, large-scale video broadcast, live video streaming, low-latency sessions with large numbers of participants, and low-latency 1:1 sessions.</p>
             
             <p>Realtime voice AI use cases are growing at just the right time to influence the development of the MoQ standard.</p>
 
-            <h3>4.6.4 Network routing</h3>
+            <h3 id="network-routing">4.6.4 Network routing</h3>
             
             <p>Long-haul network connections are problematic for latency and real-time media reliability, no matter what the underlying network protocol is.</p>
             
@@ -999,7 +1000,7 @@ you" in your responses.
             
             <p>Achieving a 15ms RTT to users everywhere in the world requires deploying to at least 40 global data centers. That's a big devops job. And if you're running workloads that require GPUs, or relying on services that aren't globally deployed themselves, it might be impossible.</p>
             
-            <p>You can't cheat the speed of light.<sup>[29]</sup> But you can try to avoid route variability and congestion.</p>
+            <p>You can't cheat the speed of light.<sup>[24]</sup> But you can try to avoid route variability and congestion.</p>
 
 
 
@@ -1010,7 +1011,7 @@ you" in your responses.
               <img src="images/Figure 2400.svg" alt="Edge routing diagram" class="network-image" width="700">
               <p class="image-caption">Figure 4.v: Edge route from the UK to AWS us-west-1. The first hop over the public network still has an RTT of 15ms. But the long route to Northern California over the private network has an RTT of 100ms. The total RTT of 115ms is 25ms faster than the public route from the UK to us-west-1. It's also significantly less variable (less packet loss and lower jitter).</p>
             </div>
-            <p>Even more critical than median RTT improvement, though, is improved delivery reliability and lower jitter.<sup>[30]</sup> The P95 RTT of a private route will be significantly lower than the P95 of a public route.<sup>[31]</sup></p>
+            <p>Even more critical than median RTT improvement, though, is improved delivery reliability and lower jitter.<sup>[25]</sup> The P95 RTT of a private route will be significantly lower than the P95 of a public route.<sup>[26]</sup></p>
             
             <p>This means that realtime media connections over long-haul public routes will be measurably more laggy than connections that use private routes. Recall that we're trying to deliver each audio packet as quickly as possible, but that we have to play the audio packets in order. A single delayed packet forces us to expand our jitter buffer, holding onto other received packets until the delayed packet arrives. (Or, until we decide it's taken too long and we fill the gap with either fancy math or glitchy audio samples.)</p>
             <div class="chapter-image">
@@ -1038,23 +1039,20 @@ you" in your responses.
 
 
           <div class="chapter-footnotes" id="chapter-4-6-notes">
+            <div class="footnote" id="footnote-24">
+              <p>[22] This is a little bit 🤯 if you have been building stuff on the Internet for a long time. HTTP has always been a TCP-based protocol!</p>
+            </div>
             <div class="footnote" id="footnote-26">
-              <p>[26] This is a little bit 🤯 if you have been building stuff on the Internet for a long time. HTTP has always been a TCP-based protocol!</p>
+              <p>[23] <a href="https://datatracker.ietf.org/group/moq/about/" target="_blank">datatracker.ietf.org/group/moq/about/</a></p>
             </div>
             <div class="footnote" id="footnote-27">
-              <p>[27] <a href="https://w3c.github.io/webtransport/" target="_blank">w3c.github.io/webtransport/</a></p>
+              <p>[24] Ancient network engineer wisdom – ed.</p>
             </div>
             <div class="footnote" id="footnote-28">
-              <p>[28] <a href="https://datatracker.ietf.org/group/moq/about/" target="_blank">datatracker.ietf.org/group/moq/about/</a></p>
+              <p>[25] Jitter is the variability in how long it takes a packet to traverse the route.</p>
             </div>
             <div class="footnote" id="footnote-29">
-              <p>[29] Ancient network engineer wisdom – ed.</p>
-            </div>
-            <div class="footnote" id="footnote-30">
-              <p>[30] Jitter is the variability in how long it takes a packet to traverse the route.</p>
-            </div>
-            <div class="footnote" id="footnote-31">
-              <p>[31] P95 is the 95th percentile measurement of a metric. P50 is the median measurement (the 50th percentile). Loosely speaking, we think of the P50 as the average case, and P95 as capturing a rough sense of "typical worst-case" connections.</p>
+              <p>[26] P95 is the 95th percentile measurement of a metric. P50 is the median measurement (the 50th percentile). Loosely speaking, we think of the P50 as the average case, and P95 as capturing a rough sense of "typical worst-case" connections.</p>
             </div>
           </div>
         </div>
@@ -1069,11 +1067,11 @@ you" in your responses.
             
             <p>In the academic literature, various aspects of this problem are referred to as <em>phrase detection, speech segmentation, and endpointing</em>. (The fact that there is academic literature about this is a clue that it's a non-trivial problem.)</p>
             
-            <p>We (humans) do turn detection every time we talk to anyone else. And we don't always get it right!<sup>[32]</sup></p>
+            <p>We (humans) do turn detection every time we talk to anyone else. And we don't always get it right!<sup>[27]</sup></p>
             
             <p>So turn detection is a hard problem, and there aren't any perfect solutions. But let's talk about the various approaches that are in common use.</p>
             
-            <h3>4.7.1 Voice activity detection</h3>
+            <h3 id="voice-activity-detection-4-7">4.7.1 Voice activity detection</h3>
             
             <p>Currently, the standard way to do turn detection for voice AI agents is to assume that a long pause means the user has finished speaking.</p>
             
@@ -1108,7 +1106,7 @@ you" in your responses.
             
             <p>Tuning these parameters can improve turn detection behavior a lot for specific use cases.</p>
             
-            <h3>4.7.2 Push-to-talk</h3>
+            <h3 id="push-to-talk">4.7.2 Push-to-talk</h3>
             
             <p>The obvious problem with basing turn detection on pauses in speech is that sometimes people pause but aren't finished talking.</p>
             
@@ -1122,7 +1120,7 @@ you" in your responses.
             
             <p>Push-to-talk isn't possible for telephone voice AI agents.</p>
             
-            <h3>4.7.3 Endpoint markers</h3>
+            <h3 id="endpoint-markers">4.7.3 Endpoint markers</h3>
             
             <p>You can also use specific words as end-of-turn markers. (Think of truckers talking on CB radios saying "over.")</p>
             
@@ -1132,7 +1130,7 @@ you" in your responses.
             
             <p>For example, we saw a nice demo last year of a writing assistant that someone had built for themselves as a side project. They used a variety of command phrases to indicate turn endpoints and to switch between modes.</p>
             
-            <h3>4.7.4 Context-aware turn detection</h3>
+            <h3 id="context-aware-turn-detection">4.7.4 Context-aware turn detection</h3>
             
             <p>When humans use turn detection, they use a variety of cues:</p>
             
@@ -1150,7 +1148,7 @@ you" in your responses.
             <p>There are two main approaches:</p>
             
             <ol class="list-decimal">
-              <li>Train a small turn detection model that can run in real time. Use this model in conjunction with VAD. Set a short VAD timeout, run the turn detection model in-line after the VAD, and only send user speech down the pipeline when the turn detection model has a high confidence that a phrase endpoint is identified. The Pipecat community has developed a small, open source, native audio model that performs well for specific phrase endpointing tasks in English.<sup>[34]</sup></li>
+              <li>Train a small turn detection model that can run in real time. Use this model in conjunction with VAD. Set a short VAD timeout, run the turn detection model in-line after the VAD, and only send user speech down the pipeline when the turn detection model has a high confidence that a phrase endpoint is identified. The Pipecat community has developed a small, open source, native audio model that performs well for specific phrase endpointing tasks in English.<sup>[28]</sup></li>
               <li>Use a large LLM and a few-shot prompt to perform turn detection. Large LLMs are usually too slow to use in-line, blocking the pipeline. To work around this, you can split the pipeline and do turn detection and "greedy" conversation inference in parallel. Perform conversation inference every time VAD identifies a short pause. But buffer the conversation output until a phrase endpoint is identified.</li>
             </ol>
             
@@ -1197,12 +1195,12 @@ you" in your responses.
             <p class="image-caption">Figure 4.x: A voice activity detection processing step, here configured to run just prior to speech-to-text</p>
           </div>
           <div class="chapter-footnotes" id="chapter-4-7-notes">
-            <div class="footnote" id="footnote-32">
-              <p>[32] Especially on audio calls, when we don't have visual cues to help us.</p>
+            <div class="footnote" id="footnote-30">
+              <p>[27] Especially on audio calls, when we don't have visual cues to help us.</p>
             </div>
    
-            <div class="footnote" id="footnote-34">
-              <p>[34] <a href="https://dub.sh/voice-agents-020" target="_blank">dub.sh/voice-agents-020</a></p>
+            <div class="footnote" id="footnote-32">
+              <p>[28] <a href="https://dub.sh/voice-agents-020" target="_blank">dub.sh/voice-agents-020</a></p>
             </div>
           </div>
         </div>
@@ -1224,11 +1222,11 @@ you" in your responses.
             <p>Several sources of unintended interruptions are worth noting.</p>
             
             <ol class="list-decimal">
-              <li>Transient noises classified as speech. In general, <a href="https://github.com/snakers4/silero-vad" target="_blank">Silero VAD</a><sup>[35]</sup> is very good at separating speech from "noise." But certain kinds of short, sharp, initial audio will have moderate speech confidence attached to them when they appear at the beginning of an utterance. Coughing and keyboard clicks both fall into this category. You can adjust the VAD start segment length and confidence level to try to minimize this source of interruptions. The trade-off is that lengthening the start segment length and raising the confidence threshold will create problems for very short phrases that you do want to detect as complete utterances. For example, Pipecat's standard VAD settings will sometimes miss a quick "yep" from some speakers.</li>
+              <li>Transient noises classified as speech. In general, <a href="https://github.com/snakers4/silero-vad" target="_blank">Silero VAD</a><sup>[29]</sup> is very good at separating speech from "noise." But certain kinds of short, sharp, initial audio will have moderate speech confidence attached to them when they appear at the beginning of an utterance. Coughing and keyboard clicks both fall into this category. You can adjust the VAD start segment length and confidence level to try to minimize this source of interruptions. The trade-off is that lengthening the start segment length and raising the confidence threshold will create problems for very short phrases that you do want to detect as complete utterances. For example, Pipecat's standard VAD settings will sometimes miss a quick "yep" from some speakers.</li>
               
-              <li>Echo cancellation failures. Echo cancellation algorithms aren't perfect. A transition from silence to speech playout is particularly challenging. If you've done a lot of voice agent testing, you've probably heard your bot interrupt itself right when it starts talking. The culprit is echo cancellation allowing a little bit of the initial speech audio to feed back into your microphone. The minimum VAD start segment length helps to avoid this problem. So does applying exponential smoothing<sup>[36]</sup> to the audio volume level to avoid sharp volume transitions.</li>
+              <li>Echo cancellation failures. Echo cancellation algorithms aren't perfect. A transition from silence to speech playout is particularly challenging. If you've done a lot of voice agent testing, you've probably heard your bot interrupt itself right when it starts talking. The culprit is echo cancellation allowing a little bit of the initial speech audio to feed back into your microphone. The minimum VAD start segment length helps to avoid this problem. So does applying exponential smoothing<sup>[30]</sup> to the audio volume level to avoid sharp volume transitions.</li>
               
-              <li>Background speech. The VAD model will not distinguish between user speech and background speech. If the background speech is louder than your volume threshold, background speech will trigger an interruption. A speaker isolation audio processing step can reduce spurious interruptions caused by background speech. See the discussion in the 4.5.5 Server-side noise processing and speaker isolation section, above, about the Krisp speaker isolation model.</li>
+              <li>Background speech. The VAD model will not distinguish between user speech and background speech. If the background speech is louder than your volume threshold, background speech will trigger an interruption. A speaker isolation audio processing step can reduce spurious interruptions caused by background speech. See the discussion in the <a href="#server-side-noise"> 4.5.5 Server-side noise processing and speaker isolation </a> section, above, about the Krisp speaker isolation model.</li>
             </ol>
 
             <h3 id="maintaining-accurate-context">4.8.2 Maintaining accurate context after an interruption</h3>
@@ -1237,7 +1235,7 @@ you" in your responses.
             
             <p>Usually, you want the conversation context to match what the user actually heard (rather than what your pipeline generated faster than realtime).</p>
             
-            <p>You are probably also saving the conversation context as text.<sup>[37]</sup></p>
+            <p>You are probably also saving the conversation context as text.<sup>[31]</sup></p>
             
             <p>So you need a way to figure out what text the user actually <em>heard!</em></p>
             
@@ -1251,14 +1249,14 @@ you" in your responses.
             <p class="image-caption">Figure 4.aa: Timestamp data from the Cartesia speech-to-text API.</p>
           </div>
           <div class="chapter-footnotes" id="chapter-4-8-notes">
+            <div class="footnote" id="footnote-33">
+              <p>[29] See 4.7.1 Voice activity detection, above</p>
+            </div>
+            <div class="footnote" id="footnote-34">
+              <p>[30] <a href="https://dub.sh/voice-agents-030" target="_blank">dub.sh/voice-agents-030</a></p>
+            </div>
             <div class="footnote" id="footnote-35">
-              <p>[35] See 4.7.1 Voice activity detection, above</p>
-            </div>
-            <div class="footnote" id="footnote-36">
-              <p>[36] <a href="https://dub.sh/voice-agents-030" target="_blank">dub.sh/voice-agents-030</a></p>
-            </div>
-            <div class="footnote" id="footnote-37">
-              <p>[37] The standard context structure is the user / assistant message list format developed by OpenAI.</p>
+              <p>[31] The standard context structure is the user / assistant message list format developed by OpenAI.</p>
             </div>
           </div>
         </div>
@@ -1339,7 +1337,7 @@ Turn 3:
             
             <p>There are third-party API gateways and software libraries that translate API calls into OpenAI's format. This is valuable, because being able to switch between different LLMs is useful. But these services can't always abstract the differences away properly. New features and features unique to each API aren't always supported. (And sometimes there are bugs.)</p>
             
-            <p>To abstract or not to abstract remains a question, in these relatively early days of AI engineering.<sup>[38]</sup></p>
+            <p>To abstract or not to abstract remains a question, in these relatively early days of AI engineering.<sup>[32]</sup></p>
             
             <p>Pipecat, for example, currently translates messages to and from OpenAI format when contexts are created or saved to persistent storage. But Pipecat does not (currently) try to automatically translate between tool definition formats.</p>
 
@@ -1413,8 +1411,8 @@ def from_standard_message(self, message):
         
         <div class="chapter-notes">
           <div class="chapter-footnotes" id="chapter-4-9-notes">
-            <div class="footnote" id="footnote-38">
-              <p>[38] Note to self: ask Claude to come up with a good Hamlet joke – ed.</p>
+            <div class="footnote" id="footnote-36">
+              <p>[32] Note to self: ask Claude to come up with a good Hamlet joke – ed.</p>
             </div>
           </div>
         </div>
@@ -1452,9 +1450,9 @@ def from_standard_message(self, message):
             
             <p>All of these attributes seem to be somewhat out of distribution relative to the data used to train current-generation LLMs.</p>
             
-            <p>Different LLMs and different updates of the same model — are differentially good at function calling, and differently good at different kinds of function calling in different circumstances.<sup>[39]</sup></p>
+            <p>Different LLMs and different updates of the same model — are differentially good at function calling, and differently good at different kinds of function calling in different circumstances.<sup>[33]</sup></p>
             
-            <p id="function-calling-eval"><em>It's important to develop evals that test the function calling performance of your app. See the 7. Voice AI evals section, below.</em></p>
+            <p id="function-calling-eval"><em>It's important to develop evals that test the function calling performance of your app. See the <a href="#evals">7. Voice AI evals</a> section, below.</em></p>
             
             <h3 id="latency-function-calls">4.10.2 Latency</h3>
             
@@ -1476,7 +1474,7 @@ def from_standard_message(self, message):
               <li>Set a watchdog timer, and output a message only if the function call loop hasn't completed before the timer fires. "Still working on this, please wait just another moment …"</li>
             </ul>
             
-            <p>Or both, of course. And you can play background music while executing long-running function calls.<sup>[40]</sup></p>
+            <p>Or both, of course. And you can play background music while executing long-running function calls.<sup>[34]</sup></p>
             
             <h3 id="handling-interruptions">4.10.3 Handling interruptions</h3>
             
@@ -1493,13 +1491,13 @@ def from_standard_message(self, message):
             
             <p>If you put a dangling function call request message into the context and then continue the multi-turn conversation, you are creating a context that diverges from how the LLM was trained. (Some APIs will not allow this at all.)</p>
             
-            <p>If you don't put a request/response pair into the context at all, you are teaching the LLM (via in-context learning) not to call the function.<sup>[41]</sup> Again, the results are unpredictable and probably not what you want.</p>
+            <p>If you don't put a request/response pair into the context at all, you are teaching the LLM (via in-context learning) not to call the function.<sup>[35]</sup> Again, the results are unpredictable and probably not what you want.</p>
             
             <h3 id="streaming-mode">4.10.4 Streaming mode and function call chunks</h3>
             
             <p>In voice AI agent code, you almost always execute conversation inference calls in streaming mode. This gives you the first few content chunks as quickly as possible, which is important for voice-to-voice response latency.</p>
             
-            <p>Streaming mode and function calling make for an awkward pairing, though. Streaming isn't helpful for function call chunks. You can't call a function until you've assembled the LLM's complete function call request message.<sup>[42]</sup></p>
+            <p>Streaming mode and function calling make for an awkward pairing, though. Streaming isn't helpful for function call chunks. You can't call a function until you've assembled the LLM's complete function call request message.<sup>[36]</sup></p>
             
             <p>Here's some feedback for inference providers as they continue to evolve their APIs: offer a mode that delivers function call chunks atomically, and isolated from any streamed content chunks. This would significantly reduce the complexity of client-side code.</p>
             
@@ -1509,7 +1507,7 @@ def from_standard_message(self, message):
             
             <ul class="arrow-list">
               <li>Execute a function call with the same name as the requested function, directly in your code. This is what you see in almost every LLM function calling docs example.</li>
-              <li>Map the request to an operation, based on arguments and context. Think of this as asking the LLM to do a generic function call, which you disambiguate in your code. The advantage of this pattern is that LLMs are usually better at function calling if you give them a small number of functions to choose between.<sup>[43]</sup></li>
+              <li>Map the request to an operation, based on arguments and context. Think of this as asking the LLM to do a generic function call, which you disambiguate in your code. The advantage of this pattern is that LLMs are usually better at function calling if you give them a small number of functions to choose between.<sup>[37]</sup></li>
               <li>Proxy the function call to the client. This pattern is available to you in an application (not telephony) context. For example, imagine a get_location() function. You want the current location of the user's device, so you need to hook into the geo lookup API on that device.</li>
               <li>Proxy the function call to a network endpoint. This is often a particularly useful pattern in enterprise contexts. Define a set of functions that interact with internal APIs. Then create an abstraction in your code that executes these function calls as HTTP requests.</li>
             </ul>
@@ -1576,20 +1574,20 @@ Tower on a cloudy day.
           </div>
     
           <div class="chapter-footnotes" id="chapter-4-10-notes">
+            <div class="footnote" id="footnote-37">
+              <p>[33] Sadly, not necessarily differentiably good at function calling. (groan — ed.)</p>
+            </div>
+            <div class="footnote" id="footnote-38">
+              <p>[34] Not the Jeopardy theme song though, please.</p>
+            </div>
             <div class="footnote" id="footnote-39">
-              <p>[39] Sadly, not necessarily differentiably good at function calling. (groan — ed.)</p>
+              <p>[35] See the paper, Language models are few-shot learners.</p>
             </div>
             <div class="footnote" id="footnote-40">
-              <p>[40] Not the Jeopardy theme song though, please.</p>
+              <p>[36] If you're using a voice AI framework, the framework probably hides this complexity from you.</p>
             </div>
             <div class="footnote" id="footnote-41">
-              <p>[41] See the paper, Language models are few-shot learners.</p>
-            </div>
-            <div class="footnote" id="footnote-42">
-              <p>[42] If you're using a voice AI framework, the framework probably hides this complexity from you.</p>
-            </div>
-            <div class="footnote" id="footnote-43">
-              <p>[43] Think of function call as a capacious category, here — function in the formal rather than colloquial sense. You can return a value from a lookup table. You can run a SQL query.</p>
+              <p>[37] Think of function call as a capacious category, here — function in the formal rather than colloquial sense. You can return a value from a lookup table. You can run a SQL query.</p>
             </div>
           </div>
         </div>
@@ -1602,17 +1600,17 @@ Tower on a cloudy day.
             
             <p>LLMs now consume and produce audio, images, and video in addition to text.</p>
             
-            <p>We talked earlier about speech-to-speech models.<sup>[44]</sup> These are models capable of taking audio as input and producing audio as output.</p>
+            <p>We talked earlier about speech-to-speech models.<sup>[38]</sup> These are models capable of taking audio as input and producing audio as output.</p>
             
             <p>The multimodal capabilities of SOTA models are advancing rapidly.</p>
             
             <p>GPT-4o, Gemini 2.0, and Claude Sonnet 3.5 all have very good vision capabilities – they all accept images as input. Vision support in these models started out focused on describing the image content and transcribing text that appears in images. Capabilities expand with each release. Counting objects, identifying bounding boxes, and better understanding of the relationship between objects in an image are all useful abilities that are available in newer releases.</p>
             
-            <p>Gemini 2.0 Flash can do inference on video input, including understanding both video and audio tracks.<sup>[45]</sup></p>
+            <p>Gemini 2.0 Flash can do inference on video input, including understanding both video and audio tracks.<sup>[39]</sup></p>
             
             <p>One interesting new class of voice-enabled applications is the assistant that can "see" your screen and help perform tasks on your local machine or a web browser. A number of people have built scaffolding for voice driven web browsing.</p>
             
-            <p>Several programmers we know talk as much as they type, these days. It's fairly easy to wire up voice input to drive Cursor or Windsurf.<sup>[46]</sup> It's a bit trickier to wire up screen capture so your AI programming assistant can see exactly what you see – code in your editor, UI state of the web app you're building, a Python stacktrace in your terminal. But this full loop with an AI programming assistant feels like another of the glimpses of the future we've talked about throughout this document.<sup>[47]</sup></p>
+            <p>Several programmers we know talk as much as they type, these days. It's fairly easy to wire up voice input to drive Cursor or Windsurf.<sup>[40]</sup> It's a bit trickier to wire up screen capture so your AI programming assistant can see exactly what you see – code in your editor, UI state of the web app you're building, a Python stacktrace in your terminal. But this full loop with an AI programming assistant feels like another of the glimpses of the future we've talked about throughout this document.<sup>[41]</sup></p>
             
             <p>Right now, all the SOTA models support multimodality in different combinations.</p>
             
@@ -1653,7 +1651,7 @@ Tower on a cloudy day.
             
             <p>Imagine a personal assistant agent that runs all the time on your computer and watches your screen as part of its work loop. You might like to be able to ask, "I was about to read a tweet an hour ago when I got that phone call, and then I forgot about it and closed the tab. What was that tweet?"</p>
             
-            <p><em>An hour ago equates to almost a million tokens.</em> Even if your model can accommodate a million tokens in its context<sup>[48]</sup>, the cost and the latency of doing a multi-turn conversation with that many tokens every turn are prohibitive.</p>
+            <p><em>An hour ago equates to almost a million tokens.</em> Even if your model can accommodate a million tokens in its context<sup>[42]</sup>, the cost and the latency of doing a multi-turn conversation with that many tokens every turn are prohibitive.</p>
             
             <p>You can summarize video as text, and keep only the summary in the context. You can calculate embeddings and do RAG-like lookup. LLMs are quite good at both feature summarization and using function-calling to trigger complex RAG queries. But both of those approaches are complicated to engineer.</p>
             
@@ -1663,20 +1661,20 @@ Tower on a cloudy day.
         
         <div class="chapter-notes">
           <div class="chapter-footnotes" id="chapter-4-11-notes">
+            <div class="footnote" id="footnote-42">
+              <p>[38] See 4.2.4 What about speech-to-speech models?</p>
+            </div>
+            <div class="footnote" id="footnote-43">
+              <p>[39] You can process video with both GPT-4o and Claude by extracting individual frames from video and embedding those frames in the context as images. This approach has limitations, but works well for some "video" use cases.</p>
+            </div>
             <div class="footnote" id="footnote-44">
-              <p>[44] See 4.2.4 What about speech-to-speech models?</p>
+              <p>[40] Two popular programming environments with deep AI integration and tooling.</p>
             </div>
             <div class="footnote" id="footnote-45">
-              <p>[45] You can process video with both GPT-4o and Claude by extracting individual frames from video and embedding those frames in the context as images. This approach has limitations, but works well for some "video" use cases.</p>
+              <p>[41] See swyx's talk at OpenAI Dev Day 2024 Singapore, "Engineering AI Agents" <a href="https://dub.sh/voice-agents-040" target="_blank">dub.sh/voice-agents-040</a>.</p>
             </div>
             <div class="footnote" id="footnote-46">
-              <p>[46] Two popular programming environments with deep AI integration and tooling.</p>
-            </div>
-            <div class="footnote" id="footnote-47">
-              <p>[47] See swyx's talk at OpenAI Dev Day 2024 Singapore, "Engineering AI Agents" <a href="https://dub.sh/voice-agents-040" target="_blank">dub.sh/voice-agents-040</a>.</p>
-            </div>
-            <div class="footnote" id="footnote-48">
-              <p>[48] Hello, Gemini!</p>
+              <p>[42] Hello, Gemini!</p>
             </div>
           </div>
         </div>
@@ -1687,7 +1685,7 @@ Tower on a cloudy day.
           <section id="multiple-models">
             <h1>5. Using multiple AI models</h1>
             
-            <p>Today's production voice AI agents use multiple deep learning models in combination.<sup>[49]</sup></p>
+            <p>Today's production voice AI agents use multiple deep learning models in combination.<sup>[43]</sup></p>
             
             <p>As we've discussed, the typical voice AI processing loop transcribes the user's voice with a speech-to-text model, passes the transcribed text to an LLM to generate a response, then performs a text-to-speech step to generate the agent's voice output.</p>
             
@@ -1695,7 +1693,7 @@ Tower on a cloudy day.
 
             <h2 id="fine-tuned-models">5.1. Using several fine-tuned models</h2>
             
-            <p>Most voice AI agents use a SOTA<sup>[50]</sup> model from OpenAI, Google, Anthropic, or Meta. Using the newest, best-performing models is important because voice AI workflows generally are right at the edge of the jagged <em>frontier of model capability.</em> Voice agents need to be able to follow complex instructions, participate in open-ended conversations with people in a natural way, and use functions and tools reliably.</p>
+            <p>Most voice AI agents use a SOTA<sup>[44]</sup> model from OpenAI, Google, Anthropic, or Meta. Using the newest, best-performing models is important because voice AI workflows generally are right at the edge of the jagged <em>frontier of model capability.</em> Voice agents need to be able to follow complex instructions, participate in open-ended conversations with people in a natural way, and use functions and tools reliably.</p>
             
             <p>But for some specialized use cases, it can make sense to fine-tune models for different states of a conversation. A fine-tuned model can be smaller, faster, and cheaper to run than a large model while still performing equally well (or better) on specific tasks.</p>
             
@@ -1723,14 +1721,14 @@ Tower on a cloudy day.
             
             <p><strong>One important note: don't jump straight to fine-tuning — start with prompt engineering.</strong></p>
             
-            <p>Prompting can almost always achieve the same task results as fine-tuning. The advantage of fine-tuning is the ability to use a smaller model, which can translate to faster inference and lower cost.<sup>[51]</sup></p>
+            <p>Prompting can almost always achieve the same task results as fine-tuning. The advantage of fine-tuning is the ability to use a smaller model, which can translate to faster inference and lower cost.<sup>[45]</sup></p>
             
-            <p>With prompting, you can get started much more easily and iterate much more quickly than you can with fine-tuning.<sup>[52]</sup></p>
+            <p>With prompting, you can get started much more easily and iterate much more quickly than you can with fine-tuning.<sup>[46]</sup></p>
             
             <p>When initially exploring how to use different models for different conversation states, think of your prompts as miniature "models." You are teaching the LLM what to do by crafting a large, context-specific prompt.</p>
             
             <ol class="list-decimal">
-              <li>For embedded knowledge, implement a search capability that can pull information from your knowledge base and assemble search results into an effective prompt. For more on this, see the 9. Rag and memory section, below.</li>
+              <li>For embedded knowledge, implement a search capability that can pull information from your knowledge base and assemble search results into an effective prompt. For more on this, see the <a href="#rag-memory"> 9. Rag and memory section </a>, below.</li>
               <li>For response patterns, embed examples of how you expect the model to respond to different questions. Sometimes, just a few examples are enough and a large model will generalize shockingly well. Sometimes, you will need lots of examples — 100 or more.</li>
             </ol>
 
@@ -1745,12 +1743,12 @@ Tower on a cloudy day.
             
             <p>If you're performing an inference task asynchronously, you might choose to use a different LLM for that specific task. (Since it's decoupled from the core conversation loop.) For example, you might use an LLM that is slower than would be acceptable for voice responses.</p>
             
-            <p>The amazing recent progress in reasoning models<sup>[53]</sup> expands what we can ask LLMs to do. Reasoning models are not a great fit for voice AI use cases, though, because they spend significant time producing thinking tokens before they emit usable output. Using these models as async parts of a multi model voice AI architecture can work well, though.</p>
+            <p>The amazing recent progress in reasoning models<sup>[47]</sup> expands what we can ask LLMs to do. Reasoning models are not a great fit for voice AI use cases, though, because they spend significant time producing thinking tokens before they emit usable output. Using these models as async parts of a multi model voice AI architecture can work well, though.</p>
             
             <p>Async inference is usually triggered by an LLM function call. A simple approach is to define two functions.</p>
             
             <ul class="arrow-list">
-              <li>perform_async_inference() — This is called by the LLM when it decides that any long-running inference task should run. You describe when to call this function in your tool definition and prompt. You can define more than one of these. Note that you need to start the async task and then immediately return a basic <em>started task successfully response,</em> so that the function call request and response messages are correctly ordered in the context.<sup>[54]</sup></li>
+              <li>perform_async_inference() — This is called by the LLM when it decides that any long-running inference task should run. You describe when to call this function in your tool definition and prompt. You can define more than one of these. Note that you need to start the async task and then immediately return a basic <em>started task successfully response,</em> so that the function call request and response messages are correctly ordered in the context.<sup>[48]</sup></li>
               <li>queue_async_context_insertion() — This is called by your orchestration layer when your async inference finishes. The tricky thing here is that how you insert results into the context will depend on what you're trying to do, and on what the LLM/API you are using allows. One approach is to wait until the end of any in-progress conversation turn (including the completion of all function calls), put the async inference results into a specially crafted user message, and then run another conversation turn.</li>
             </ul>
 
@@ -1809,8 +1807,8 @@ Tower on a cloudy day.
             
             <ul class="arrow-list">
               <li>Any time you reach for a regular expression, you can probably write a prompt instead.</li>
-              <li>Post-processing LLM output is often useful. For example, you might want to generate output in two formats: text for display in a UI and voice for the interactive conversation. You can prompt the conversation LLM to generate nicely formatted markdown text, then prompt the LLM again to shorten and reformat the text for voice generation.<sup>[57]</sup></li>
-              <li>Recursion is powerful.<sup>[58]</sup> You can do things like have an LLM generate a list, and then call the LLM again to perform operations on each element of the list.</li>
+              <li>Post-processing LLM output is often useful. For example, you might want to generate output in two formats: text for display in a UI and voice for the interactive conversation. You can prompt the conversation LLM to generate nicely formatted markdown text, then prompt the LLM again to shorten and reformat the text for voice generation.<sup>[49]</sup></li>
+              <li>Recursion is powerful.<sup>[50]</sup> You can do things like have an LLM generate a list, and then call the LLM again to perform operations on each element of the list.</li>
               <li>It turns out that you often want to summarize multi-turn conversations. LLMs are fantastic, steerable, summarizers. More on this in the 6. Scripting and instruction following section, below.</li>
             </ul>
             
@@ -1866,30 +1864,30 @@ interpreting phonemes or transcribed text as "MNI"
             <p class="image-caption">Figure 5.c: An example of an LLM adjusting behavior based on user feedback during a multi-turn session (in-context learning)</p>
           </div>
           <div class="chapter-footnotes" id="chapter-5-notes">
+            <div class="footnote" id="footnote-47">
+              <p>[43] Even the beta speech-to-speech APIs from OpenAI and Google use dedicated VAD models to do turn detection.</p>
+            </div>
+            <div class="footnote" id="footnote-48">
+              <p>[44] SOTA — state of the art — is a widely used AI engineering term that loosely means "the newest large models from the leading AI labs."</p>
+            </div>
             <div class="footnote" id="footnote-49">
-              <p>[49] Even the beta speech-to-speech APIs from OpenAI and Google use dedicated VAD models to do turn detection.</p>
+              <p>[45] If you're interested in digging deep into prompting vs fine-tuning, see these two classic papers: Language Models Are Few-shot Learners, and A Comprehensive Survey of Few-shot Learning.</p>
             </div>
             <div class="footnote" id="footnote-50">
-              <p>[50] SOTA — state of the art — is a widely used AI engineering term that loosely means "the newest large models from the leading AI labs."</p>
+              <p>[46] Follow the classic engineering advice: make it work, make it fast, make it cheap. Don't think about moving from prompt engineering to fine-tuning until somewhere in the middle of the make it <em>fast</em> part of the process. (If at all.)</p>
             </div>
             <div class="footnote" id="footnote-51">
-              <p>[51] If you're interested in digging deep into prompting vs fine-tuning, see these two classic papers: Language Models Are Few-shot Learners, and A Comprehensive Survey of Few-shot Learning.</p>
+              <p>[47] Examples of reasoning models include DeepSeek R1, Gemini Flash 2.0 Thinking, and OpenAI o3-mini.</p>
             </div>
             <div class="footnote" id="footnote-52">
-              <p>[52] Follow the classic engineering advice: make it work, make it fast, make it cheap. Don't think about moving from prompt engineering to fine-tuning until somewhere in the middle of the make it <em>fast</em> part of the process. (If at all.)</p>
-            </div>
-            <div class="footnote" id="footnote-53">
-              <p>[53] Examples of reasoning models include DeepSeek R1, Gemini Flash 2.0 Thinking, and OpenAI o3-mini.</p>
-            </div>
-            <div class="footnote" id="footnote-54">
-              <p>[54] See the 4.10.6 Asynchronouns function calls section.</p>
+              <p>[48] See the <a href="#async-function-calls"> 4.10.6 Asynchronouns function calls section. </a></p>
             </div>
 
-            <div class="footnote" id="footnote-57">
-              <p>[57] See also the 5.3 Guardrails section, above, regarding post-processing LLM output.</p>
+            <div class="footnote" id="footnote-55">
+              <p>[49] See also the 5.3 Guardrails section, above, regarding post-processing LLM output.</p>
             </div>
-            <div class="footnote" id="footnote-58">
-              <p>[58] We're programmers, of course we … — ed.</p>
+            <div class="footnote" id="footnote-56">
+              <p>[50] We're programmers, of course we … — ed.</p>
             </div>
           </div>
         </div>
@@ -1935,7 +1933,7 @@ interpreting phonemes or transcribed text as "MNI"
             
             <ul class="arrow-list">
               <li>Update the system instruction and tools list.</li>
-              <li>Summarize or modify the context.<sup>[59]</sup></li>
+              <li>Summarize or modify the context.<sup>[51]</sup></li>
             </ul>
             
             <p>The state machine approach works well because a shorter, more focused system instruction, tools list, and context significantly improves LLM instruction following.</p>
@@ -1962,8 +1960,8 @@ interpreting phonemes or transcribed text as "MNI"
         <div class="chapter-notes">
 
           <div class="chapter-footnotes" id="chapter-6-notes">
-            <div class="footnote" id="footnote-59">
-              <p>[59] Usually, you make an LLM inference call to perform context summarization. :-)</p>
+            <div class="footnote" id="footnote-57">
+              <p>[51] Usually, you make an LLM inference call to perform context summarization. :-)</p>
             </div>
           </div>
         </div>
@@ -1984,7 +1982,7 @@ interpreting phonemes or transcribed text as "MNI"
             
             <p>Voice AI requires tests that are different from traditional software engineering. Voice AI outputs are non-deterministic. The inputs for testing voice AI are complex, branching, multi-turn conversations.</p>
             
-            <p>Instead of testing that a specific input produces a specific output (f(x) = y), you will need to run probabilistic evals – lots of test runs to see how often a certain type of event happens.<sup>[61]</sup> For some tests, getting a class of cases right 8/10 times is acceptable, for others accuracy needs to be 9.99/10.</p>
+            <p>Instead of testing that a specific input produces a specific output (f(x) = y), you will need to run probabilistic evals – lots of test runs to see how often a certain type of event happens.<sup>[52]</sup> For some tests, getting a class of cases right 8/10 times is acceptable, for others accuracy needs to be 9.99/10.</p>
             
             <p>Instead of just having one input, you will have many: all of the user responses. This makes it very hard to test voice AI applications without attempting to simulate user behavior.</p>
             
@@ -2019,8 +2017,8 @@ interpreting phonemes or transcribed text as "MNI"
         <div class="chapter-notes">
 
           <div class="chapter-footnotes" id="chapter-7-notes">
-            <div class="footnote" id="footnote-61">
-              <p>[61] The user request was fulfilled, the agent interrupted the user, the agent went off topic, etc</p>
+            <div class="footnote" id="footnote-59">
+              <p>[52] The user request was fulfilled, the agent interrupted the user, the agent went off topic, etc</p>
             </div>
           </div>
         </div>
@@ -2057,7 +2055,7 @@ interpreting phonemes or transcribed text as "MNI"
             
             <p>Most of the fastest growing voice AI use cases today involve telephone calls. New, generative AI voice agents are answering phone calls and making phone calls at scale today.</p>
             
-            <p>Some of this is happening in traditional call centers. Call centers mostly view voice AI as a technology that can improve "deflection rates" – the percentage of calls that can be handled by automation rather than human agents. This makes the ROI for adopting voice AI clear. If the per-minute cost of an LLM is cheaper than the per-minute cost of a human agent, the buying decision is easy.<sup>[63]</sup></p>
+            <p>Some of this is happening in traditional call centers. Call centers mostly view voice AI as a technology that can improve "deflection rates" – the percentage of calls that can be handled by automation rather than human agents. This makes the ROI for adopting voice AI clear. If the per-minute cost of an LLM is cheaper than the per-minute cost of a human agent, the buying decision is easy.<sup>[53]</sup></p>
             
             <p>A couple of interesting things are happening that accelerate adoption, though, beyond the simple ROI calculation.</p>
             
@@ -2080,18 +2078,18 @@ interpreting phonemes or transcribed text as "MNI"
               
               <li>DTMF tones are the keypress sounds used to navigate telephone menus. Voice agents need to be able to send DTMF tones to interact with real-world telephone systems. LLMs are pretty good at dealing with phone trees. You just need to do a little bit of prompt engineering and define functions that send DTMF tones.</li>
               
-              <li>Voice agents often need to execute call transfers. In a simple transfer, the voice AI exits the session by calling a function that triggers a call transfer.<sup>[64]</sup> A <em>warm transfer</em> is a hand-off from one agent to another, in which the agents talk to each other before transferring the caller to the second agent. Voice AI agents can do warm transfers, just like humans can. The voice agent starts out talking to the human caller, then puts the human caller on hold and has a conversation with the new human agent being brought into the call, then connects the human caller to the human agent.</li>
+              <li>Voice agents often need to execute call transfers. In a simple transfer, the voice AI exits the session by calling a function that triggers a call transfer.<sup>[54]</sup> A <em>warm transfer</em> is a hand-off from one agent to another, in which the agents talk to each other before transferring the caller to the second agent. Voice AI agents can do warm transfers, just like humans can. The voice agent starts out talking to the human caller, then puts the human caller on hold and has a conversation with the new human agent being brought into the call, then connects the human caller to the human agent.</li>
             </ul>
           </section>
         </div>
         
         <div class="chapter-notes">
           <div class="chapter-footnotes" id="chapter-8-notes">
-            <div class="footnote" id="footnote-63">
-              <p>[63] Assuming, of course, that AI agent performance is good. Which, for a wide variety of customer support use cases today, it is.</p>
+            <div class="footnote" id="footnote-61">
+              <p>[53] Assuming, of course, that AI agent performance is good. Which, for a wide variety of customer support use cases today, it is.</p>
             </div>
-            <div class="footnote" id="footnote-64">
-              <p>[64] The actual transfer operation might be an API call to your telephony platform, or a SIP REFER action.</p>
+            <div class="footnote" id="footnote-62">
+              <p>[54] The actual transfer operation might be an API call to your telephony platform, or a SIP REFER action.</p>
             </div>
           </div>
         </div>
@@ -2129,7 +2127,7 @@ The patient has the following medical history: {user_info["summarized_history"]}
 </code></pre>
             <p class="image-caption">Figure 9.a: Simple RAG – perform a lookup at the beginning of the session</p>
             
-            <p>RAG is a deep topic and an area of rapid change.<sup>[65]</sup> Techniques range from the relatively simple approach above that just uses basic lookups and string interpolation, to systems that organize very large amounts of semi-structured data using embeddings and vector databases.</p>
+            <p>RAG is a deep topic and an area of rapid change.<sup>[55]</sup> Techniques range from the relatively simple approach above that just uses basic lookups and string interpolation, to systems that organize very large amounts of semi-structured data using embeddings and vector databases.</p>
             
             <p>Often, an 80/20 approach gets you a very long way. If you have an existing knowledge base, use the APIs you already have. Write simple evals so you can test a few different formats for injecting lookup results into the conversation context. Deploy to production, then monitor how well this works with real-world users.</p>
             
@@ -2173,18 +2171,18 @@ llm.register_function("query_order_system",
             <ol class="list-decimal">
               <li>Save each conversation to persistent storage. Test a few approaches to loading conversations into the context. For example, a strategy that works well for the personal assistant use case: always load the most recent conversation in full at agent startup, load summaries of the most recent N conversations, and define a lookup function the LLM can use to load older conversations dynamically as needed.</li>
               
-              <li>Save each message in the conversation history separately in a database, along with metadata about the message graph. Index every message (perhaps using semantic embeddings). This allows you to build branching conversation histories dynamically. You might want to do this if your app makes heavy use of image input (LLM vision). Images take up a lot of context space!<sup>[66]</sup> This approach also allows you to build branching UIs, which is a direction that AI app designers are just starting to explore.</li>
+              <li>Save each message in the conversation history separately in a database, along with metadata about the message graph. Index every message (perhaps using semantic embeddings). This allows you to build branching conversation histories dynamically. You might want to do this if your app makes heavy use of image input (LLM vision). Images take up a lot of context space!<sup>[56]</sup> This approach also allows you to build branching UIs, which is a direction that AI app designers are just starting to explore.</li>
             </ol>
           </section>
         </div>
         
         <div class="chapter-notes">
           <div class="chapter-footnotes" id="chapter-9-notes">
-            <div class="footnote" id="footnote-65">
-              <p>[65] Hmm. This sounds like every other area of generative AI, these days.</p>
+            <div class="footnote" id="footnote-63">
+              <p>[55] Hmm. This sounds like every other area of generative AI, these days.</p>
             </div>
-            <div class="footnote" id="footnote-66">
-              <p>[66] See 4.11 Multimodality, above.</p>
+            <div class="footnote" id="footnote-64">
+              <p>[56] See 4.11 Multimodality, above.</p>
             </div>
           </div>
         </div>
@@ -2354,7 +2352,7 @@ llm.register_function("query_order_system",
               <li>The dependencies between components.</li>
             </ul>
             
-            <p>OpenTelemetry<sup>[67]</sup> is a good framework for implementing tracing in your voice AI agent.</p>
+            <p><a href="https://opentelemetry.io" target="_blank">OpenTelemetry</a> is a good framework for implementing tracing in your voice AI agent.</p>
             
             <table class="data-table">
               <tr>
@@ -2510,7 +2508,7 @@ llm.register_function("query_order_system",
             <h2 id="lead-author">Lead Author</h2>
             <p>Kwindla Hultman Kramer</p>
             
-            <h2 id="contributing-authors">Contributing Authors<sup>[1]</sup></h2>
+            <h2 id="contributing-authors">Contributing Authors<sup>[57]</sup></h2>
             <p>Aleix Conchillo Flaqué, Mark Backman, Moishe Lettvin, Kwindla Hultman Kramer, Jon Taylor,
             Vaibhav159, chadbailey59, allenmylath, Filipi Fuchter, TomTom101, Mert Sefa AKGUN, marcus-daily, vipyne, Adrian Cowham, Lewis Wolfgang, Filipi da Silva Fuchter, Vanessa Pyne, Chad
             Bailey, Dominic, joachimchauvet, Jin Kim, Sharvil Nanavati, sahil suman, James Hush, Paul
@@ -2530,7 +2528,7 @@ llm.register_function("query_order_system",
         <div class="chapter-notes">
           <div class="chapter-footnotes" id="chapter-12-notes">
             <div class="footnote" id="footnote-1">
-              <p>[1] Pipecat GitHub usernames, <a href="https://github.com/pipecat-ai/pipecat/graphs/contributors" target="_blank">github.com/pipecat-ai/pipecat/graphs/contributors</a></p>
+              <p>[57] Pipecat GitHub usernames, <a href="https://github.com/pipecat-ai/pipecat/graphs/contributors" target="_blank">github.com/pipecat-ai/pipecat/graphs/contributors</a></p>
             </div>
           </div>
         </div>
@@ -2541,6 +2539,7 @@ llm.register_function("query_order_system",
 
     <footer>
       <p>This book is available under the CC0 license. The authors have waived all their copyright and related rights in their works to the fullest extent allowed by law. You may use this work however you want and no attribution is required.</p>
+      <p class="github-link">View and contribute to this guide on <a href="https://github.com/pipecat-ai/voice-ai-primer" target="_blank">GitHub</a>.</p>
     </footer>
   </div>
 

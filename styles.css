@@ -116,6 +116,28 @@ header {
   margin-bottom: 0.5rem;
 }
 
+/* New table of contents styling for better hierarchy */
+#table-of-contents > ol > li > a {
+  font-size: 1.1rem;
+  font-weight: 500;
+}
+
+#table-of-contents > ol > li > ul > li > a {
+  font-size: 0.95rem;
+  font-weight: 400;
+}
+
+#table-of-contents > ol > li > ul > li > ul > li > a {
+  font-size: 0.9rem;
+  font-weight: 400;
+  color: var(--muted);
+}
+
+#table-of-contents ul {
+  margin-top: 0.3rem;
+  margin-bottom: 0.5rem;
+}
+
 /* Content */
 section {
   margin-bottom: 0;
@@ -186,6 +208,26 @@ footer {
   border-top: 1px solid var(--border);
   font-size: 0.9rem;
   color: var(--muted);
+}
+
+footer p {
+  margin-bottom: 0.5rem;
+}
+
+.github-link {
+  margin-top: 1rem;
+  font-family: var(--font-dm-sans);
+}
+
+.github-link a {
+  color: var(--foreground);
+  font-weight: 500;
+  border-bottom: 1px solid var(--foreground);
+  transition: opacity 0.2s ease;
+}
+
+.github-link a:hover {
+  opacity: 0.7;
 }
 
 /* Chapter Row Layout */
