@@ -307,9 +307,9 @@
         <div class="chapter-notes">
           <div class="chapter-image">
             <img src="images/Figure 0100 horizontal.svg" alt="The basic conversational AI loop" class="basic-loop-image" width="250" style="margin-top: 2rem">
-            <p class="image-caption">Figure 3.a — the basic "job to be done" by a voice AI agent</p>
+            <p class="image-caption">Figure 3.a: the basic conversational AI loop</p>
             <img src="images/Figure 0200.svg" alt="The basic conversational AI loop" class="basic-loop-image" width="250" style="margin-top: 4em">
-            <p class="image-caption">Figure 3.b — the architecture of almost all production voice AI agents today</p>
+            <p class="image-caption">Figure 3.b: the architecture of almost all production voice AI agents today</p>
           </div>
           <div class="chapter-footnotes" id="chapter-3-notes">
             <div class="footnote" id="footnote-4">
@@ -351,6 +351,8 @@
             <p>Measuring true voice-to-voice latency is challenging to do programmatically. Some of the latency happens deep inside the operating system. So most observability tools just measure time-to-first-(audio)-byte. This is a reasonable proxy for total voice-to-voice latency, but again please note that things you don't measure — like phrase endpointing variation and network round-trip time — can become problematic if you have no way to track them.</p>
             
             <p><strong>If you are building conversational AI applications, 800ms voice-to-voice latency is a good target to aim for.</strong> This is challenging, though not impossible, to consistently achieve with today's LLMs.</p>
+
+            <p><strong>[ NEED TABLE HERE - FIGURE 4.b IN THE PDF ]</strong></p>
             
             <p>Because latency is so important for voice use cases, latency will come up often throughout this guide.</p>
             
@@ -369,13 +371,13 @@
               <li>Cost.</li>
             </ul>
             
-            <p>But GPT-4o is also better than GPT-4! Especially at instruction following, function calling, and reduced rates of hallucination.</p>
+            <p>But today's GPT-4o is also better than the original GPT-4! Especially at instruction following, function calling, and reduced rates of hallucination.</p>
             
-            <p>Voice AI use cases are demanding enough that it generally makes sense to use the best available model. At some point this will change, and models that are not state of the art will be good enough for broad adoption in voice AI use cases. But that's not true, yet.</p>
+            <p><strong>Voice AI use cases are demanding enough that it generally makes sense to use the best available model.</strong> At some point this will change, and models that are not state of the art will be good enough for broad adoption in voice AI use cases. But that's not true, yet.</p>
             
             <p>We do expect, though, that Google's Gemini 2.0 Flash, which was released on February 6th, will be widely used for voice AI. Gemini 2.0 Flash is fast, roughly as good as GPT-4o at instruction following, possibly better than GPT-4o at function calling, and priced aggressively.</p>
             
-            <h3 id="latency-llm">4.2.1 Latency</h3>
+            <h3 id="latency-llm">4.2.1 LLM Latency</h3>
             
             <p>The current version of Claude Sonnet 3.5 would be an excellent choice for voice AI, except that inference latency (time to first token) has not been an Anthropic priority. Claude Sonnet median latency is typically double the latency of GPT-4o and Gemini Flash, with a much bigger P95 spread as well.</p>
             
@@ -394,7 +396,7 @@
                   <td>1,360</td>
                 </tr>
                 <tr>
-                  <td>Claude Sonnet 3.5</td>
+                  <td>Claude Sonnet 3.5 (Anthropic)</td>
                   <td>840</td>
                   <td>1,960</td>
                 </tr>
@@ -445,7 +447,7 @@
                 </tr>
               </tbody>
             </table>
-            <p class="table-caption">Figure 4.d: Session costs for multi-turn conversations grow super-linearly with duration. A 30-minute session is roughly 100x more expensive than a 3-minute session. You can reduce the cost of long sessions with caching, context summari- zation, and other techniques.</p>
+            <p class="table-caption">Figure 4.d: Session costs for multi-turn conversations grow super-linearly with duration. A 30-minute session is roughly 100x more expensive than a 3-minute session. You can reduce the cost of long sessions with caching, context summarization, and other techniques.</p>
             
             <p>Note that cost increases super linearly as a function of session length. Unless you trim or summarize the context during a session, cost becomes an issue for long sessions. This is particularly true for speech-to-speech models (see below).</p>
             
