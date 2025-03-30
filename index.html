@@ -513,7 +513,7 @@
                   <td>$0.75</td>
                 </tr>
                 <tr>
-                  <td>Claude Sonnet 3.5</td>
+                  <td>Claude Sonnet 3.5 (Anthropic)</td>
                   <td>$0.012</td>
                   <td>$0.11</td>
                   <td>$0.90</td>
@@ -540,9 +540,9 @@
             
             <p>Llama 3.3 70B is promising. This open weights model from Meta performs better than the original GPT-4 on relevant benchmarks. But it is not good enough to supplant the current versions of GPT-4o and Gemini for commercial use cases, yet, unless you must run your LLM locally rather than use an API.<sup>[10]</sup></p>
             
-            <p>Note that Meta does not offer a first-party, hosted Llama 3.3 70B. Many smaller providers offer Llama inference endpoints, and serverless GPU platforms offer a range of options for deploying your own Llama.</p>
+            <p>Note that Meta does not offer a first-party, hosted Llama 3.3 70B. Many providers offer Llama inference endpoints, and serverless GPU platforms offer a range of options for deploying your own Llama.</p>
             
-            <p>We do expect to see a lot of progress in open source / open weights models in 2025. Llama 4 and future open weights models from Alibaba (Qwen), DeepSeek, Google (Gemma), and Microsoft (Phi) seem likely to be good models for voice AI use cases.</p>
+            <p>We do expect to see a lot of progress in open source / open weights models in 2025. It seems likely that future LLama models, along with open weights models from Alibaba (Qwen), DeepSeek, Google (Gemma), and Microsoft (Phi), will be good options for voice AI use cases.</p>
             
             <h3 id="speech-to-speech">4.2.4 What about speech-to-speech models?</h3>
             
@@ -560,21 +560,21 @@
             
             <p>However, current speech to speech models and APIs are not yet good enough for most production voice AI use cases.</p>
             
-            <p>Today's best speech-to-speech models definitely sound more natural than today's best text-to-speech models. OpenAI's <a href="https://platform.openai.com/docs/guides/audio" target="_blank">gpt4o-audio-preview</a> <sup>[13]</sup> model really does sound like a preview of the voice AI future.</p>
+            <p>Today's best speech-to-speech models definitely sound more natural than today's best text-to-speech models. OpenAI's <a href="https://platform.openai.com/docs/guides/audio" target="_blank">gpt4o-audio-preview</a> <sup>[11]</sup> model really does sound like a preview of the voice AI future.</p>
             
             <p>Speech-to-speech models aren't yet as mature and reliable as text-mode LLMs, though.</p>
             
             <ul class="arrow-list">
-              <li>Lower latency is possible in theory, but audio uses more tokens than text. Larger token contexts are slower for the LLM to process. In practice, today, audio models are slower for multi-turn conversation than text models.<sup>[11]</sup></li>
-              <li>Better understanding does seem to be a real benefit, today, of these models. This is particularly apparent for Gemini 2.0 Flash audio input. The story is a bit less clear today for gpt 4o audio preview, which is a smaller and somewhat less capable model than the text-mode GPT-4o.</li>
+              <li>Lower latency is possible in theory, but audio uses more tokens than text. Larger token contexts are slower for the LLM to process. In practice, today, audio models are slower for multi-turn conversation than text models.<sup>[12]</sup></li>
+              <li>Better understanding does seem to be a real benefit of these models. This is particularly apparent for Gemini 2.0 Flash audio input. The story is a bit less clear today for gpt 4o-audio-preview, which is a smaller and somewhat less capable model than the text-mode GPT-4o.</li>
               <li>Better natural voice output is clearly perceptible, today. But the audio LLMs do have some odd output patterns in audio mode that don't happen in text mode as often: word repetition, discourse markers that sometimes fall into the uncanny valley, and occasional failure to complete sentences.</li>
             </ul>
             
             <p>The biggest of these issues is the larger context size required for multi-turn audio. One approach to squaring the circle and getting the benefits of native audio without the context-size drawbacks is to process each conversation turn as a mixture of text and audio. Use audio for the most recent user message; use text for the rest of the conversation history.</p>
             
-            <p>The beta speech to speech offering from OpenAI — the OpenAI Realtime API — is fast and the voice quality is amazing. But the model behind that API is the smaller gpt-4o-audio-preview rather than the full GPT-4o. So instruction following and function calling are not as good. The API also does not have all of the features needed to manage conversation context, and has a variety of early-product bugs and quirks. See detailed notes about the OpenAI Realtime API here.<sup>[12]</sup></p>
+            <p>The beta speech-to-speech offering from OpenAI — the OpenAI Realtime API — is fast and the voice quality is amazing. But the model behind that API is the smaller gpt-4o-audio-preview rather than the full GPT-4o. So instruction following and function calling are not as good. The API also does not have all of the features needed to manage conversation context, and has a variety of early-product bugs and quirks. See detailed notes about the OpenAI Realtime API here.<sup>[13]</sup></p>
             
-            <p>The Google Multimodal Live API is another promising — and also currently beta — speech-to-speech service. This API offers a view into the near-future of the Gemini models: long context windows, excellent vision capabilities, fast inference, strong audio understanding, code execution, and search grounding. Like the OpenAI Realtime API, this beta product is not yet a good choice for production voice AI.</p>
+            <p>The Google Multimodal Live API is another promising — and also currently beta — speech-to-speech service. This API offers a view into the near-future of the Gemini models: long context windows, excellent vision capabilities, fast inference, strong audio understanding, code execution, and search grounding. Like the OpenAI Realtime API, this beta product is not yet a good choice for most production voice AI applications.</p>
             
             <p>We expect to see lots of progress on the speech-to-speech front in 2025. But whether production voice AI applications will begin to use speech-to-speech APIs this year is still an open question.</p>
           </section>
@@ -600,18 +600,19 @@
               <p>[9] <a href="https://community.openai.com/t/new-realtime-api-voices-and-cache-pricing/998238" target="_blank">Announcement: New Realtime API Voices and Cache Pricing</a></p>
 
             </div>
-              <p>[10] If you plan to fine-tune an LLM for your use case, Llama 3.3 70B is a very good starting point. More on fine-tuning below in 5.1 Using several fine-tuned models.</p>
+              <p>[10] If you plan to fine-tune an LLM for your use case, Llama 3.3 70B is a very good starting point. More on fine-tuning below.</p>
             <div class="footnote" id="footnote-10">
             </div>
             <div class="footnote" id="footnote-11">
-              <p>[11] This latency issue for audio models is clearly fixable through a combination of caching, clever API design, and architectural evolution of the models themselves.</p>
+              <p>[11] <a href="https://platform.openai.com/docs/guides/audio" target="_blank">platform.openai.com/docs/guides/audio</a></p>
             </div>
             <div class="footnote" id="footnote-12">
-              <p>[12] <a href="https://latent.space/p/realtime-api" target="_blank">latent.space/p/realtime-api</a></p>
+              <p>[12] This latency issue for audio models is clearly fixable through a combination of caching, clever API design, and architectural evolution of the models themselves.</p>
             </div>
             <div class="footnote" id="footnote-13">
-              <p>[13] <a href="https://platform.openai.com/docs/guides/audio" target="_blank">platform.openai.com/docs/guides/audio</a></p>
+              <p>[13] <a href="https://latent.space/p/realtime-api" target="_blank">latent.space/p/realtime-api</a></p>
             </div>
+
           </div>
         </div>
       </div>
@@ -625,7 +626,7 @@
             
             <p>For voice AI use cases, we need very low transcription latency and very low word error rate. Sadly, optimizing a speech model for low latency has a negative impact on accuracy.</p>
             
-            <p>Today there are several very good transcription models that are not architected for low latency. Whisper is an open source model that is used in many products and services. It's very good, but with a time-to-first-token of 800ms or so, is rarely used for conversational voice AI use cases.</p>
+            <p>Today there are several very good transcription models that are not architected for low latency. Whisper is an open source model that is used in many products and services. It's very good, but with a time-to-first-token of 500ms or more, is rarely used for conversational voice AI use cases.</p>
             
             <h3 id="deepgram">4.3.1 Deepgram</h3>
             
@@ -663,6 +664,16 @@ Your output will be directly converted to speech, so your response should be nat
 </code></pre>
             <p class="image-caption">Figure 4.g: Example prompt language for a voice AI agent.</p>
             <h3 id="other-stt-options">4.3.3 Other speech-to-text options</h3>
+
+            <p>We expect to see lots of new developments in the speech-to-text space in 2025. Some new developments we are tracking, as of early April 2025:</p>
+
+            <ul class="arrow-list">
+              <li>OpenAI <a href="https://openai.com/index/introducing-our-next-generation-audio-models/">just released</a> two new speech-to-text models, gpt-4o-transcribe and gpt-4o-mini-transcribe.</li>
+              <li>Audio model and infrastructure company <a href="https://gladia.io/">Gladia</a> is widely used for French-language voice AI, and is gaining mind share outside France now as well.</li>
+              <li>Two other well-regarded speech technology companies, <a href="https://speechmatics.com/">Speechmatics</a> and <a href="https://assembly.ai/">AssemblyAI</a>, have begun to focus more on conversational voice use cases, shipping streaming APIs and models with faster TTFTs.</li>
+              <li>NVIDIA is shipping <a href="https://developer.nvidia.com/blog/new-standard-for-speech-recognition-and-translation-from-the-nvidia-nemo-canary-model/">open source speech models</a> that perform extremely well on benchmarks.</li>
+              <li>Inference company <a href="https://groq.com/">Groq</a>'s hosted version of Whisper now has a median TTFT under 300ms, which puts it into the range of being an option for conversational voice applications. This is the first Whisper API service that we have seen achieve this latency.</li>
+            </ul>
             
             <p>All of the big cloud services have speech-to-text APIs. None of them are as good as Deepgram, today, for low-latency, general-purpose English language transcription.</p>
             
@@ -676,13 +687,19 @@ Your output will be directly converted to speech, so your response should be nat
             
             <h3 id="gemini-transcribing">4.3.4 Transcribing with Google Gemini</h3>
             
-            <p>One way to leverage Gemini's strengths as a low-cost, native audio model is to run two parallel inference processes.</p>
+            <p>One way to leverage Gemini 2.0 Flash's strengths as a low-cost, native audio model is to use Gemini 2.0 for both conversation generation and transcription.</p>
             
-            <p>One inference process generates the conversation response. The other inference process transcribes the user's speech.</p>
-            
-            <p>Each audio input is used for just one turn. The full conversation context is always the audio of the most recent user speech, plus the text transcription of all previous inputs and outputs.</p>
-            
-            <p>This gives you the best of both worlds: native audio understanding for the current user utterance; reduced token count for the whole context.<sup>[14]</sup></p>
+            <p>To do this we need to run two parallel inference processes.</p>
+
+            <ul class="arrow-list">
+              <li>One inference process generates the conversation response.</li>
+              <li>The other inference process transcribes the user's speech.</li>
+              <li>Each audio input is used for just one turn. The full conversation context is always the audio of the most recent user speech, plus the text transcription of all previous inputs and outputs.</li>
+              <li>This gives you the best of both worlds: native audio understanding for the current user utterance; reduced token count for the whole context.<sup>[14]</sup></li>
+            </ul>
+
+            <p>Here is code to implement these parallel inference processes as a Pipecat pipeline.</p>
+
             <pre class="language-python"><code>
   pipeline = Pipeline( 
     [   
@@ -706,16 +723,27 @@ Your output will be directly converted to speech, so your response should be nat
   )            
             </code></pre>
 
-            <p>See Pipecat pipeline above for a code-level view of this approach. The logic is as follows.</p>
+            <p>The logic is as follows.</p>
             
             <ol class="list-decimal">
               <li>The conversation LLM receives the conversation history as text, plus each new turn of user speech as native audio, and outputs a conversation response.</li>
               <li>The input transcription LLM receives the same input, but outputs a literal transcription of the most recent user speech.</li>
               <li>At the end of each conversation turn, the user audio context entry is replaced with the transcription of that audio.</li>
             </ol>
+
+            <p>Gemini's per-token costs are so low that this approach is actually cheaper than using Deepgram for transcription.</p>
+
+            <p>It's important to understand that we are not using Gemini 2.0 Flash here as a full speech-to-speech model, but we <em>are</em> using its native audio understanding capabilities. We are prompting the model so that it runs in two different "modes", conversation and transcription. </p>
+
+            <p>Using an LLM in this way shows the power of SOTA LLM architectures and capabilities. This approach is new enough that it is still experimental, but early testing suggests that it can yield both better conversation understanding and more accurate transcription than any other current technique. There are drawbacks, however. Transcription latency is not as good as using a specialized speech-to-text model. The complexity of running two inference processes and swapping context elements is substantial. A general-purpose LLM will be vulnerable to prompt injection and context following errors that a specialized transcription model isn't vulnerable to.</p>
+
+            <p>Here is a system instruction (a prompt) for transcription.</p>
+
             <pre><code>
-You are an audio transcriber. You are receiving audio from a user. Your job is to transcribe the input au- dio to text exactly as it was said by the user.
+You are an audio transcriber. You are receiving audio from a user. Your job is to transcribe the input audio to text exactly as it was said by the user.
+
 You will receive the full conversation history before the audio input, to help with context. Use the full history only to help improve the accuracy of your transcription.
+
 Rules:
 - Respond with an exact transcription of the audio input.
 - Do not include any text other than the transcrip- tion.
@@ -724,14 +752,14 @@ Rules:
 - If the audio is not clear, emit the special string "".
 - No response other than exact transcription, or "", is allowed.
             </code></pre>
-            <p>Gemini's per-token costs are so low that this approach is actually cheaper than using Deepgram for transcription.</p>
+
           </section>
         </div>
         
         <div class="chapter-notes">
           <div class="chapter-image-inline">
             <img src="images/Figure 0800.svg" alt="Pipecat pipeline diagram" class="pipeline-image" width="300">
-            <p class="image-caption">Figure 4.f</p>
+            <p class="image-caption">Figure 4.f: The speech-to-text stage of a voice AI pipeline.</p>
           </div>
           <div class="chapter-footnotes" id="chapter-4-3-notes">
             <div class="footnote" id="footnote-15">

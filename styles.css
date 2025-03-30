@@ -460,6 +460,10 @@ pre code {
 }
 
 /* Specific styling for cost and latency tables */
+.model-comparison {
+  font-size: 80%;
+}
+
 .model-comparison td:first-child {
   font-weight: 500;
 }
