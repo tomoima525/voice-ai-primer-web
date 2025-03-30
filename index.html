@@ -350,10 +350,89 @@
             
             <p>Measuring true voice-to-voice latency is challenging to do programmatically. Some of the latency happens deep inside the operating system. So most observability tools just measure time-to-first-(audio)-byte. This is a reasonable proxy for total voice-to-voice latency, but again please note that things you don't measure — like phrase endpointing variation and network round-trip time — can become problematic if you have no way to track them.</p>
             
-            <p><strong>If you are building conversational AI applications, 800ms voice-to-voice latency is a good target to aim for.</strong> This is challenging, though not impossible, to consistently achieve with today's LLMs.</p>
+            <p><strong>If you are building conversational AI applications, 800ms voice-to-voice latency is a good target to aim for.</strong> Here's a breakdown of a voice-to-voice round trip from a user's microphone, to the cloud, and back. These numbers are fairly typical, and the total is about 950ms. 800ms is challenging, though not impossible, to consistently achieve with today's LLMs! </p>
 
-            <p><strong>[ NEED TABLE HERE - FIGURE 4.b IN THE PDF ]</strong></p>
+            <table class="data-table latency-breakdown">
+              <thead>
+                <tr>
+                  <th>Stage</th>
+                  <th>Time (ms)</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>macOS mic input</td>
+                  <td>40</td>
+                </tr>
+                <tr>
+                  <td>opus encoding</td>
+                  <td>21</td>
+                </tr>
+                <tr class="network-row">
+                  <td>network stacks and transit</td>
+                  <td>10</td>
+                </tr>
+                <tr>
+                  <td>packet handling</td>
+                  <td>2</td>
+                </tr>
+                <tr>
+                  <td>jitter buffer</td>
+                  <td>40</td>
+                </tr>
+                <tr>
+                  <td>opus decoding</td>
+                  <td>1</td>
+                </tr>
+                <tr>
+                  <td>transcription and endpointing</td>
+                  <td>300</td>
+                </tr>
+                <tr>
+                  <td>llm ttfb</td>
+                  <td>350</td>
+                </tr>
+                <tr>
+                  <td>sentence aggregation</td>
+                  <td>50</td>
+                </tr>
+                <tr>
+                  <td>tts ttfb</td>
+                  <td>80</td>
+                </tr>
+                <tr>
+                  <td>opus encoding</td>
+                  <td>21</td>
+                </tr>
+                <tr>
+                  <td>packet handling</td>
+                  <td>2</td>
+                </tr>
+                <tr class="network-row">
+                  <td>network stacks and transit</td>
+                  <td>10</td>
+                </tr>
+                <tr>
+                  <td>jitter buffer</td>
+                  <td>40</td>
+                </tr>
+                <tr>
+                  <td>opus decoding</td>
+                  <td>1</td>
+                </tr>
+                <tr>
+                  <td>macOS speaker output</td>
+                  <td>15</td>
+                </tr>
+                <tr>
+                  <td>Total ms</td>
+                  <td>983</td>
+                </tr>
+              </tbody>
+            </table>
             
+            <p class="table-caption">Table 4.b: A voice-to-voice conversation round trip — latency breakdown.</p>
+
             <p>Because latency is so important for voice use cases, latency will come up often throughout this guide.</p>
             
             <h2 id="llms-for-voice">4.2. LLMs for voice use cases</h2>
@@ -700,9 +779,7 @@ Rules:
             <p>Some services offer the ability to steer pronunciation. This is helpful if you know in advance that your text output will include specific proper nouns. If your voice service does not support phonetic steering, you can prompt your LLM to output "sounds-like" spellings of specific words. For example, in-vidia instead of NVIDIA.</p>
             
 
-          <div class="latency-table">
-            <h4>Voice-to-voice conversation roundtrip – latency breakdown</h4>
-            <table class="data-table latency-breakdown">
+            <table class="data-table voice-model-breakdown">
               <thead>
                 <tr>
                   <th>Col1</th>
@@ -739,8 +816,8 @@ Rules:
               </tbody>
             </table>
             <p class="table-caption">Figure 4.l: Approximate cost per minute and time to first byte metrics – February 2025. Note that cost depends on committed volume and features used.</p>
-          </div>
-          <p>We expect voice model progress to continue in 2025. Several of the companies listed above have hinted at new models coming in the first half of the year!</p>
+
+            <p>We expect voice model progress to continue in 2025. Several of the companies listed above have hinted at new models coming in the first half of the year!</p>
         </section>
         </div>
         

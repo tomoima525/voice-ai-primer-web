@@ -396,21 +396,11 @@ pre code {
   word-break: keep-all;
 }
 
-/* Table styles moved from inline CSS */
-.latency-table {
-  margin-top: 20px;
-  font-size: 0.9em;
-}
-
-.latency-table h4 {
-  font-size: 1em;
-  margin-bottom: 10px;
-  font-weight: 500;
-}
 
 .data-table {
   width: 100%;
   border-collapse: collapse;
+  margin-top: 1em;
   margin-bottom: 1em;
   box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
   font-size: 0.85em;
@@ -422,12 +412,12 @@ pre code {
   color: #333;
   font-weight: 600;
   text-align: left;
-  padding: 8px 12px;
+  padding: 0.75em 0.5em;
   border: 1px solid #ddd;
 }
 
 .data-table td {
-  padding: 8px 12px;
+  padding: 0.25em 0.5em;
   border: 1px solid #ddd;
   vertical-align: middle;
 }
@@ -438,6 +428,27 @@ pre code {
 
 .data-table tr:hover {
   background-color: #f0f0f0;
+}
+
+.latency-breakdown {
+  font-size: 60%;
+}
+
+.latency-breakdown th:last-child {
+  text-align: right;
+}
+
+.latency-breakdown tr {
+  background-color: #f8f8f8
+}
+
+.latency-breakdown .network-row {
+  background-color: #f2f2f2;
+}
+
+.latency-breakdown td:last-child {
+  text-align: right;
+  font-family: "DM Mono", monospace;
 }
 
 .table-caption {
@@ -457,10 +468,7 @@ pre code {
   text-align: center;
 }
 
-.latency-breakdown td:last-child {
-  text-align: right;
-  font-family: "DM Mono", monospace;
-}
+
 
 .total-row {
   border-top: 2px solid #ccc;
