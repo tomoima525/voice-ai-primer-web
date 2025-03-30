@@ -238,7 +238,7 @@
             
             <p>As more and more developers jump into building realtime, conversational AI applications, materials to help people get started are important.</p>
             
-            <p>This guide was directly inspired by Sean DuBois' open-source book WebRTC For the Curious. That book has helped numerous developers get up to speed with WebRTC since it was first released four years ago.<sup>[2]</sup></p>
+            <p>This guide was directly inspired by Sean DuBois' open-source book <a href="https://webrtcforthecurious.com" target="_blank">WebRTC For the Curious</a>. That book has helped numerous developers get up to speed with WebRTC since it was first released four years ago.<sup>[2]</sup></p>
             
             <p>Building production-ready voice agents is complicated. Many elements are non-trivial to implement from scratch. If you build voice AI apps, you'll likely rely on a framework for many of the things discussed in this document. But we think it's useful to understand how the pieces fit together, whether you are building them all from scratch or not.</p>
             
@@ -258,7 +258,7 @@
         <div class="chapter-notes">
           <div class="chapter-footnotes" id="chapter-2-notes">
             <div class="footnote" id="footnote-2">
-              <p>[2] <a href="https://webrtcforthecurious.com" target="_blank">webrtcforthecurious.com</a> If you're interested in WebRTC, go read it! WebRTC is relevant to voice AI, as we'll discuss later in section 4.6.1.</p>
+              <p>[2] <a href="https://webrtcforthecurious.com" target="_blank">webrtcforthecurious.com</a> — WebRTC is relevant to voice AI, as we'll discuss later in section 4.6.1.</p>
             </div>
             <div class="footnote" id="footnote-3">
               <p>[3] Pipecat has integrations for more than 40 AI models and services, along with state of-the-art implementations of things like turn detection and interruption handling. You can write code with Pipecat that uses WebSockets, WebRTC, HTTP, and telephony to communicate with users. Pipecat includes transport implementations for a variety of infrastructure platforms including Twilio, Telnyx, LiveKit, Daily, and others.</p>
@@ -293,7 +293,7 @@
               <li>The majority of commercial voice AI agents today are communicating with users via phone calls. For a phone call, there is no end-user device — at least, not one that you can run any code on!</li>
             </ol>
             
-            <p>Let's dive into this agent orchestration world and answer questions like:</p>
+            <p>Let's dive<sup>[5]</sup> into this agent orchestration world and answer questions like:</p>
             
             <ol class="list-decimal">
               <li>What LLMs work best for voice AI agents?</li>
@@ -306,17 +306,17 @@
         
         <div class="chapter-notes">
           <div class="chapter-image">
-            <img src="images/Figure 0100.svg" alt="The basic conversational AI loop" class="basic-loop-image" width="150">
-            <p class="image-caption">Figure 3.a</p>
-            <img src="images/Figure 0200.svg" alt="The basic conversational AI loop" class="basic-loop-image" width="250">
-            <p class="image-caption">Figure 3.b</p>
+            <img src="images/Figure 0100 horizontal.svg" alt="The basic conversational AI loop" class="basic-loop-image" width="250" style="margin-top: 2rem">
+            <p class="image-caption">Figure 3.a — the basic "job to be done" by a voice AI agent</p>
+            <img src="images/Figure 0200.svg" alt="The basic conversational AI loop" class="basic-loop-image" width="250" style="margin-top: 4em">
+            <p class="image-caption">Figure 3.b — the architecture of almost all production voice AI agents today</p>
           </div>
           <div class="chapter-footnotes" id="chapter-3-notes">
             <div class="footnote" id="footnote-4">
               <p>[4] For example, to detect common LLM errors and safety issues.</p>
             </div>
             <div class="footnote" id="footnote-5">
-              <p>[5] Let's delve —— ed.</p>
+              <p>[5] Let's delve — ed.</p>
             </div>
             <div class="footnote" id="footnote-6">
               <p>[6] For example, CRMs, proprietary knowledge bases, and call center systems.</p>
