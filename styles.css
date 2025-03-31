@@ -391,6 +391,10 @@ pre code {
   width: 100%;
 }
 
+pre code .pre-highlight {
+  background-color: #f2f2f2;
+}
+
 .nobreak {
   white-space: nowrap;
   word-break: keep-all;

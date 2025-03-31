@@ -103,7 +103,7 @@
               </ul>
             </li>
             <li>
-              <a href="#managing-conversation-context">4.9. Managing the conversation context</a>
+              <a href="#managing-conversation-context">4.9. Managing conversation context</a>
               <ul>
                 <li><a href="#differences-between-llm-apis">4.9.1. Differences between LLM APIs</a></li>
                 <li><a href="#modifying-context-between-turns">4.9.2. Modifying the context between turns</a></li>
@@ -849,6 +849,22 @@ Rules:
 
             <p>For conversational voice use cases, being able to track what text the user heard is important for maintaining accurate conversation context. This requires that a TTS model output word-level timestamp metadata for the generated audio, and that the timestamp data be reconstructible backwards to the original input text. This is a relatively new capability for voice models. All of the above services support word-level timestamps.</p>
 
+            <pre><code>
+{
+  "type": "timestamps",
+  "context_id": "test-01",
+  "status_code": 206,
+  "done": false,
+  "word_timestamps": {
+    "words": ["What's", "the", "capital", "of", "France?"],
+    "start": [0.02, 0.3, 0.48, 0.6, 0.8],
+    "end": [0.3, 0.36, 0.6, 0.8, 1]
+  }
+}
+                    </code></pre>
+
+                    <p class="image-caption">Word-level timestamps from the Cartesia API.</p>
+
             <p>In addition, a really solid realtime streaming API is helpful. Conversational voice applications often trigger multiple audio inferences in parallel. Voice agent code needs to be able to interrupt in-progress inference and to correlate each inference request to an output stream. Streaming APIs from voice model providers are all relatively new and still evolving. Currently, Cartesia and Rime have the most mature streaming support in Pipecat.</p>
 
             <p>We expect voice model progress to continue in 2025.</p>
@@ -1339,22 +1355,22 @@ you" in your responses.
           <section id="interruption-handling">
             <h2 id="interruption-handling">4.8. Interruption handling</h2>
             
-            <p><em>Interruption handling is allowing the user to interrupt the</em> bot. Interruptions are a normal part of conversation, so handling interruptions gracefully is important.</p>
+            <p><em>Interruption handling</em> is allowing the user to interrupt the voice AI agent. Interruptions are a normal part of conversation, so handling interruptions gracefully is important.</p>
             
             <p>To implement interruption handling, you need every part of your pipeline to be cancellable. You also need to be able to stop audio playout on the client very quickly.</p>
             
-            <p>Generally, the framework you're building with will take care of stopping all processing when an interruption is triggered. But if you're directly using an API that sends <strong>you raw audio frames faster than realtime, you'll probably have to stop playout and flush audio buffers manually.</strong></p>
+            <p>Generally, the framework you're building with will take care of stopping all processing when an interruption is triggered. <strong>But if you're directly using an API that sends you raw audio frames faster than realtime, you'll have to manually stop playout and flush audio buffers.</strong></p>
 
             <h3 id="avoiding-spurious-interruptions">4.8.1 Avoiding spurious interruptions</h3>
             
             <p>Several sources of unintended interruptions are worth noting.</p>
             
             <ol class="list-decimal">
-              <li>Transient noises classified as speech. In general, <a href="https://github.com/snakers4/silero-vad" target="_blank">Silero VAD</a><sup>[29]</sup> is very good at separating speech from "noise." But certain kinds of short, sharp, initial audio will have moderate speech confidence attached to them when they appear at the beginning of an utterance. Coughing and keyboard clicks both fall into this category. You can adjust the VAD start segment length and confidence level to try to minimize this source of interruptions. The trade-off is that lengthening the start segment length and raising the confidence threshold will create problems for very short phrases that you do want to detect as complete utterances. For example, Pipecat's standard VAD settings will sometimes miss a quick "yep" from some speakers.</li>
+              <li>Transient noises classified as speech. Good VAD models do an excellent job separating speech from "noise." But certain kinds of short, sharp, initial audio will have moderate speech confidence attached to them when they appear at the beginning of an utterance. Coughing and keyboard clicks both fall into this category. You can adjust the VAD start segment length and confidence level to try to minimize this source of interruptions. The trade-off is that lengthening the start segment length and raising the confidence threshold will create problems for very short phrases that you do want to detect as complete utterances. For example, Pipecat's standard VAD settings will sometimes miss a quick "yep" from some speakers.</li>
               
               <li>Echo cancellation failures. Echo cancellation algorithms aren't perfect. A transition from silence to speech playout is particularly challenging. If you've done a lot of voice agent testing, you've probably heard your bot interrupt itself right when it starts talking. The culprit is echo cancellation allowing a little bit of the initial speech audio to feed back into your microphone. The minimum VAD start segment length helps to avoid this problem. So does applying exponential smoothing<sup>[30]</sup> to the audio volume level to avoid sharp volume transitions.</li>
               
-              <li>Background speech. The VAD model will not distinguish between user speech and background speech. If the background speech is louder than your volume threshold, background speech will trigger an interruption. A speaker isolation audio processing step can reduce spurious interruptions caused by background speech. See the discussion in the <a href="#server-side-noise"> 4.5.5 Server-side noise processing and speaker isolation </a> section, above, about the Krisp speaker isolation model.</li>
+              <li>Background speech. The VAD model will not distinguish between user speech and background speech. If the background speech is louder than your volume threshold, background speech will trigger an interruption. A speaker isolation audio processing step can reduce spurious interruptions caused by background speech. See the discussion in the <a href="#server-side-noise"> 4.5.5 Server-side noise processing and speaker isolation </a> section, above.</li>
             </ol>
 
             <h3 id="maintaining-accurate-context">4.8.2 Maintaining accurate context after an interruption</h3>
@@ -1367,15 +1383,11 @@ you" in your responses.
             
             <p>So you need a way to figure out what text the user actually <em>heard!</em></p>
             
-            <p>The best speech-to-text services can report word-level timestamp data. Use these word-level timestamps to buffer and assemble assistant message text that matches the audio heard by the user.</p>
+            <p>The best speech-to-text services can report word-level timestamp data. Use these word-level timestamps to buffer and assemble assistant message text that matches the audio heard by the user. See the discussion of word-level timestamps in the <a href="#text-to-speech"> 4.4 Text-to-speech </a> section, above.</p>
           </section>
         </div>
         
         <div class="chapter-notes">
-          <div class="chapter-image">
-            <img src="images/Figure 0300.svg" alt="Latency breakdown diagram" class="latency-image" width="250">
-            <p class="image-caption">Figure 4.aa: Timestamp data from the Cartesia speech-to-text API.</p>
-          </div>
           <div class="chapter-footnotes" id="chapter-4-8-notes">
             <div class="footnote" id="footnote-33">
               <p>[29] See 4.7.1 Voice activity detection, above</p>
@@ -1393,11 +1405,32 @@ you" in your responses.
       <div class="chapter-row">
         <div class="chapter-content">
           <section id="managing-conversation-context">
-            <h2 id="managing-conversation-context">4.9. Managing the conversation context</h2>
+            <h2 id="managing-conversation-context">4.9. Managing conversation context</h2>
             
             <p>LLMs are stateless. This means that for a multi-turn conversation, you need to feed all of the previous user and agent messages — and other configuration elements — back into the LLM each time you generate a new response.</p>
+
+            <pre><code>Turn 1:
+  <strong>User:</strong> What's the capital of France?
+  <strong>LLM:</strong> The capital of France is Paris.
+
+Turn 2:
+  <strong>User:</strong> What's the capital of France?
+  <strong>LLM:</strong> The capital of France is Paris.
+  <strong>User:</strong> Is the Eiffel Tower there?
+  <strong>LLM:</strong> Yes, the Eiffel Tower is in Paris.
+  
+Turn 3:
+  <strong>User:</strong> What's the capital of France?
+  <strong>LLM:</strong> The capital of France is Paris.
+  <strong>User:</strong> Is the Eiffel Tower there?
+  <strong>LLM:</strong> Yes, the Eiffel Tower is in Paris.
+  <strong>User:</strong> How tall is it?
+  <strong>LLM:</strong> The Eiffel Tower is about 330 meters tall.
+</code></pre>
+<p class="image-caption">Figure 4.ab: Sending the entire conversation history to an LLM every turn.</p>
+              
             
-            <p>For each inference operation, you can send the LLM:</p>
+            <p>For each inference operation — each conversation turn — you can send the LLM:</p>
             
             <ul class="arrow-list">
               <li>System instructions</li>
@@ -1406,56 +1439,8 @@ you" in your responses.
               <li>Configuration parameters (for example, temperature)</li>
             </ul>
 
-            <pre class="language-python"><code>
-      {
-      "type": "timestamps",
-      "context_id": "test-01",
-      "status_code": 206,
-      "done": false,
-      "word_timestamps": {
-        "words": [
-        "What's",
-        "the",
-        "capital",
-        "of",
-        "France?"
-        ],
-        "start": [
-        0.02,
-        0.3,
-        0.48,
-        0.6,
-        0.8
-        ],
-        "end": [
-        0.3,
-        0.36,
-        0.6,
-        0.8,
-        1
-        ]
-      }
-      }
-            </code></pre>
 
-            <pre><code>
-Turn 1:
-  User: What's the capital of France?
-  LLM: The capital of France is Paris.
-Turn 2:
-  User: What's the capital of France?
-  LLM: The capital of France is Paris.
-  User: Is the Eiffel Tower there?
-  LLM: Yes, the Eiffel Tower is in Paris.
-Turn 3:
-  User: What's the capital of France?
-  LLM: The capital of France is Paris.
-  User: Is the Eiffel Tower there?
-  LLM: Yes, the Eiffel Tower is in Paris.
-  User: How tall is it?
-  LLM: It is about 330 meters tall.
-            </code></pre>
-            <p class="image-caption">Figure 4.ab: Sending the entire conversation history to an LLM every turn.</p>
+
 
             <h3 id="differences-between-llm-apis">4.9.1 Differences between LLM APIs</h3>
             
@@ -1463,77 +1448,19 @@ Turn 3:
             
             <p>But there are differences between the various providers' APIs. OpenAI, Google, and Anthropic all have different message formats, differences in the structure of tools/functions definitions, and differences in how system instructions are specified.</p>
             
-            <p>There are third-party API gateways and software libraries that translate API calls into OpenAI's format. This is valuable, because being able to switch between different LLMs is useful. But these services can't always abstract the differences away properly. New features and features unique to each API aren't always supported. (And sometimes there are bugs.)</p>
+            <p>There are third-party API gateways and software libraries that translate API calls into OpenAI's format. This is valuable, because being able to switch between different LLMs is useful. But these services can't always abstract the differences away properly. New features, and features unique to each API, aren't always supported. (And sometimes there are bugs in the translation layer.)</p>
             
             <p>To abstract or not to abstract remains a question, in these relatively early days of AI engineering.<sup>[32]</sup></p>
             
-            <p>Pipecat, for example, currently translates messages to and from OpenAI format when contexts are created or saved to persistent storage. But Pipecat does not (currently) try to automatically translate between tool definition formats.</p>
+            <p>Pipecat, for example, translates messages to and from OpenAI format for both context messages and tool definitions. But whether and how to do this was a subject of considerable community debate!</p>
 
             <h3 id="modifying-context-between-turns">4.9.2 Modifying the context between turns</h3>
             
-            <p>Having to manage multi-turn context adds to the complexity of developing a voice AI agent. On the other hand, it can be useful to retroactively modify the context!</p>
+            <p>Having to manage multi-turn context adds to the complexity of developing a voice AI agent. On the other hand, it can be useful to retroactively modify the context. For each conversation turn, you can decide exactly what to send the LLM.</p>
             
             <p>LLMs don't always need the full conversation context. Shortening or summarizing the context can reduce latency and cost. And carefully tailoring the context during the course of a session can significantly increase the reliability of a voice AI agent. More on this topic in the <strong>Scripting and instruction following</strong> section, below.</p>
 
-            <pre class="language-python"><code>
-def from_standard_message(self, message):
- """Convert standard format message to Anthropic format.
- Handles conversion of text content, tool calls, and tool results.
- Empty text content is converted to "(empty)".
- Args:
-  message: Message in standard format:
-   {
-    "role": "user/assistant/tool",
-    "content": str | [{"type": "text", ...}],
-    "tool_calls": [{"id": str, "function": {"name": str, "arguments": str}}]
-   }
- Returns:
-  Message in Anthropic format:
-  {
-   "role": "user/assistant",
-   "content": str | [
-    {"type": "text", "text": str} |
-    {"type": "tool_use", "id": str, "name": str, "input": dict} |
-    {"type": "tool_result", "tool_use_id": str, "content": str}
-   ]
-  }
- """
- if message["role"] == "tool":
-  return {
-   "role": "user",
-   "content": [
-    {
-     "type": "tool_result",
-     "tool_use_id": message["tool_call_id"],
-    },
-   ],
-  }
- if message.get("tool_calls"):
-  tc = message["tool_calls"]
-  ret = {"role": "assistant", "content": []}
-  for tool_call in tc:
-   function = tool_call["function"]
-   arguments = json.loads(function["arguments"])
-   new_tool_use = {
-    "type": "tool_use",
-    "id": tool_call["id"],
-    "name": function["name"],
-    "input": arguments,
-   }
-   ret["content"].append(new_tool_use)
-  return ret
- # check for empty text strings
- content = message.get("content")
- if isinstance(content, str):
-  if content == "":
-   content = "(empty)"
- elif isinstance(content, list):
-  for item in content:
-   if item["type"] == "text" and item["text"] == "":
-    item["text"] = "(empty)"
- return message
-            </code></pre>
-            <p class="image-caption">Figure 4.ac: Pipecat code that converts context messages from OpenAI to Anthropic format.</p>
+
           </section>
         </div>
         
@@ -1576,11 +1503,11 @@ def from_standard_message(self, message):
               <li>Call functions several times during a session.</li>
             </ul>
             
-            <p>All of these attributes seem to be somewhat out of distribution relative to the data used to train current-generation LLMs.</p>
+            <p>We heavily test all of the major AI model releases and talk frequently to people who are training these models. It's clear that all of the above attributes are somewhat out of distribution relative to the data used to train current-generation LLMs.</p>
+
+            <p>This means that current-generation LLMs struggle with voice AI use cases even when they do well on general function calling benchmarks. Different LLMs and different updates of the same model are differentially good at function calling, and differently good at different kinds of function calling in different circumstances.<sup>[33]</sup></p>
             
-            <p>Different LLMs and different updates of the same model — are differentially good at function calling, and differently good at different kinds of function calling in different circumstances.<sup>[33]</sup></p>
-            
-            <p id="function-calling-eval"><em>It's important to develop evals that test the function calling performance of your app. See the <a href="#evals">7. Voice AI evals</a> section, below.</em></p>
+            <p id="function-calling-eval"><strong>If you are building voice AI agents, t's important to develop your own evals to test the function calling performance of your app. See the <a href="#evals">7. Voice AI evals</a> section, below.</strong></p>
             
             <h3 id="latency-function-calls">4.10.2 Latency</h3>
             
@@ -1617,17 +1544,62 @@ def from_standard_message(self, message):
             
             <p><strong>The rule here is that if the LLM calls a function, you need to put a request/response pair of messages into the context.</strong></p>
             
-            <p>If you put a dangling function call request message into the context and then continue the multi-turn conversation, you are creating a context that diverges from how the LLM was trained. (Some APIs will not allow this at all.)</p>
+            <ul class="arrow-list">
+              <li>If you put a dangling function call request message into the context and then continue the multi-turn conversation, you are creating a context that diverges from how the LLM was trained. Some APIs will not allow this at all.</li>
+              <li>If you don't put a request/response pair into the context at all, you are teaching the LLM (via in-context learning) not to call the function.<sup>[35]</sup> Again, the results are unpredictable and probably not what you want.</li>
+            </ul>
+
+            <p>Pipecat helps you follow these context management rules by inserting a request/response message pair into the context whenever a function call is initiated. (Of course, you can override this behavior and manage function call context messages directly.)</p>
             
-            <p>If you don't put a request/response pair into the context at all, you are teaching the LLM (via in-context learning) not to call the function.<sup>[35]</sup> Again, the results are unpredictable and probably not what you want.</p>
+            <p>Here's what the pattern looks like, for function calls that are configured in two different ways: run-to-completion and interruptible.</p>
             
+            <pre><code><strong>User:</strong>  Please look up the price of 1000 widgets.
+<strong>LLM:</strong> Please wait while I look up the price for 1000 widgets. 
+<strong>function call request:</strong> { name: "price_lookup", args: { item: "widget", quantity: 1000 } }
+<strong>function call response:</strong> { status: IN_PROGRESS }
+</code></pre>
+<p class="image-caption">Initial context messages. A function call request message and a function call response placeholder.</p>
+
+            <pre><code><strong>User:</strong>  Please look up the price of 1000 widgets.
+<strong>function call request:</strong> { name: "price_lookup", args: { item: "widget", quantity: 1000 } }
+<strong>function call response:</strong> { result: { price: 12.35 } }
+</code></pre>
+<p class="image-caption">Context when the function call completes.</p>
+
+            <pre><code><strong>User:</strong>  Please look up the price of 1000 widgets.
+<strong>LLM:</strong> Please wait while I look up the price for 1000 widgets. 
+<strong>function call request:</strong> { name: "price_lookup", args: { item: "widget", quantity: 1000 } }
+<strong>function call response:</strong> { status: IN_PROGRESS }
+
+<strong>User:</strong> Please lookup the price of 1000 pre-assembled modules.
+<strong>LLM:</strong> Please wait while I also look up the price for 1000 pre-assembled modules. 
+<strong>function call request:</strong> { name: "price_lookup", args: { item: "pre_assembled_module", quantity: 1000 } }
+<strong>function call response:</strong> { status: IN_PROGRESS }
+</code></pre>
+<p class="image-caption">Placeholders allow the conversation to continue while function calls run, without "confusing" the LLM.
+</p>
+
+            <pre><code><strong>User:</strong>  "Please look up the price of 1000 widgets."
+<strong>LLM:</strong> "Please wait while I look up the price for 1000 widgets." 
+<strong>function call request:</strong> { name: "price_lookup", args: { item: "widget", quantity: 1000 } }
+<span class="pre-highlight"><strong>function call response:</strong> { status: CANCELLED }</span>
+
+<strong>User:</strong> Please lookup the price of 1000 pre-assembled modules.
+<strong>LLM:</strong> Please wait while I look up the price for 1000 pre-assembled modules.
+<strong>function call request:</strong> { name: "price_lookup", args: { item: "pre_assembled_module", quantity: 1000 } }
+<strong>function call response:</strong> { status: IN_PROGRESS }
+</code></pre>
+<p class="image-caption">If the function call is configured as <strong>interruptible</strong>, it will be canceled if the User speaks while the function call is in progress.</p>
+            
+
+
             <h3 id="streaming-mode">4.10.4 Streaming mode and function call chunks</h3>
             
             <p>In voice AI agent code, you almost always execute conversation inference calls in streaming mode. This gives you the first few content chunks as quickly as possible, which is important for voice-to-voice response latency.</p>
             
             <p>Streaming mode and function calling make for an awkward pairing, though. Streaming isn't helpful for function call chunks. You can't call a function until you've assembled the LLM's complete function call request message.<sup>[36]</sup></p>
             
-            <p>Here's some feedback for inference providers as they continue to evolve their APIs: offer a mode that delivers function call chunks atomically, and isolated from any streamed content chunks. This would significantly reduce the complexity of client-side code.</p>
+            <p>Here's some feedback for inference providers as they continue to evolve their APIs: please offer a mode that delivers function call chunks atomically, and isolated from any streamed content chunks. This would significantly reduce the complexity of client-side code.</p>
             
             <h3 id="execute-function-calls">4.10.5 How and where to execute function calls</h3>
             
@@ -1649,18 +1621,20 @@ def from_standard_message(self, message):
             
             <p>Imagine a walking tour app that lets the user express interest in things they might see during the tour. "If we pass by any places where famous writers have lived, I'd particularly like to hear about those." One nice architecture for this would be for the LLM to call a function whenever a user expresses a specific interest. That function would start a background process, injecting information into the context when anything relevant to the interest is found.</p>
             
-            <p><strong>You can't do this directly, today, using LLM function calling. Functions have to return immediately. Inference has to block until function calls complete.</strong></p>
+            <p><strong>You can't do this directly, today, using LLM function calling. Function call request/response messages have to appear together in the context.</strong></p>
             
             <p>So instead of defining a function with this shape:</p>
             
             <ul class="arrow-list">
-              <li>register_interest_generator(interest: string) -> Iterator[Message]</li>
+              <li><pre><code>register_interest_generator(interest: string) -> Iterator[Message]</code></pre></li>
             </ul>
             
             <p>You need to do something like this:</p>
             
             <ul class="arrow-list">
-              <li>create_interest_task_and_return_success_immediately(interest: string, context_queue_callback: Callable[Message]) -> Literal["success", "failure"]</li>
+              <li><pre><code>create_interest_task_and_return_success_immediately
+  (interest: string, context_queue_callback: Callable[Message]) -> 
+    Literal["in_progress", "canceled", "success", "failure"]</code></pre></li>
             </ul>
             
             <p>For more discussion of this topic, see 5.2 Performing async inference tasks, below.</p>
@@ -1675,21 +1649,20 @@ def from_standard_message(self, message):
             
             <p>But they also add to the variability of voice agent behavior. Which means you need to develop evals and monitoring that tests whether parallel and composite function calling is working as expected in real-world conversations.</p>
             
-            <pre><code>
-user: Claude, load the most recent picture I have of the Eiffel Tower.
-function call request: &lt;list_files()&gt;
-function call response: &lt;['eiffel_tower_1735838843.jpg', 'empire_state_building_1736374013.jpg', 'eiffel_tower_1737814100.jpg', 'eiffel_tower_1737609270.jpg',
-'burj_khalifa_1737348929.jpg']
-function call request: &lt;load_resource('eiffel_tower_1737814100.jpg')&gt;
-function call response: &lt;{ 'success': 'Image loaded successfully', 'image': … }&gt;
-assistant: I have loaded an image of the Eiffel Tower. The image shows the Eiffel
-Tower on a cloudy day.
-</code></pre>
-            <p class="image-caption">Figure 4.af: Composite function calling. Here, the LLM figures out how to chain two functions – list_files() and load_resource() – to respond to a specific instruction. The two functions are described in a tools list. But this chaining behavior is not prompted for.</p>
-            
-            <p>Handling parallel function calling also makes your agent code more complex. We often recommend that people disable parallel function calling unless there is a specific use for it</p>
+            <p>Handling parallel function calling makes your agent code more complex. We often recommend that people disable parallel function calling unless there is a specific use for it.</p>
             
             <p>Composite function calling feels like magic when it works well. One of our favorite early glimpses of composite function calling was seeing Claude Sonnet 3.5 chain together functions to load resources from files based on filename and timestamp.</p>
+            
+            <pre><code><strong>User:</strong> Claude, load the most recent picture I have of the Eiffel Tower.
+<strong>function call request:</strong> &lt;list_files()&gt;
+<strong>function call response:</strong> &lt;['eiffel_tower_1735838843.jpg', 'empire_state_building_1736374013.jpg', 'eiffel_tower_1737814100.jpg', 'eiffel_tower_1737609270.jpg',
+'burj_khalifa_1737348929.jpg']
+<strong>function call request:</strong> &lt;load_resource('eiffel_tower_1737814100.jpg')&gt;
+<strong>function call response:</strong> &lt;{ 'success': 'Image loaded successfully', 'image': … }&gt;
+<strong>LLM:</strong> I have loaded an image of the Eiffel Tower. The image shows the Eiffel
+Tower on a cloudy day.
+</code></pre>
+            <p class="image-caption">The LLM figures out how to chain two functions – <strong> list_files()</strong> and <strong>load_resource()</strong> – to respond to a specific instruction. The two functions are described in a tools list. But this chaining behavior is not prompted for.</p>
             
             <p>Composite function calling is a relatively new capability of SOTA LLMs. Performance is "jagged" – surprisingly good, but frustratingly inconsistent.</p>
           </section>
@@ -1976,13 +1949,12 @@ Tower on a cloudy day.
         <div class="chapter-notes">
 
           <div class="chapter-image">
-            <pre><code>
- user: How has MNI performed recently?
- agent: The Miami Dolphins won their game yesterday 21
+            <pre><code><strong>User:</strong> How has MNI performed recently?
+<strong>Agent:</strong> The Miami Dolphins won their game yesterday 21
 to 3 and now lead the AFC East with two games remain-
  ing in the regular season.
- user: No, I meant the stock MNI.
- agent: Ah, my apologies! You're asking about the
+<strong>User:</strong> No, I meant the stock MNI.
+<strong>Agent:</strong> Ah, my apologies! You're asking about the
 stock performance of MNI, which is the ticker symbol
  for McClatchy Company …
  From this point on, the model will bias towards
