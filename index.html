@@ -812,7 +812,7 @@ Rules:
             <table class="data-table voice-model-breakdown">
               <thead>
                 <tr>
-                  <th>Col1</th>
+                  <th> </th>
                   <th>Cost per minute (approx)</th>
                   <th>Median TTFB (ms)</th>
                   <th>P95 TTFB (ms)</th>
@@ -913,7 +913,7 @@ you" in your responses.
             
             <p>Echo cancellation is very sensitive to latency, so echo cancellation has to run on the device (not in the cloud). Today, excellent echo cancellation is built into telephony stacks, web browsers, and WebRTC native mobile SDKs.<sup>[19]</sup></p>
             
-            <p>So if you're using a voice AI, WebRTC, or telephony SDK, you should have echo cancellation that you can count on "just working" in almost all real-world scenarios. If you are rolling your own voice AI capture pipeline, you will need to figure out how to integrate echo cancellation logic.</p>
+            <p>So if you're using a voice AI, WebRTC, or telephony SDK, you should have echo cancellation that you can count on "just working" in almost all real-world scenarios. If you are rolling your own voice AI capture pipeline, you will need to figure out how to integrate echo cancellation logic. For example, if you are building a WebSocket-based React Native application, you won't have any echo cancellation by default.<sup>[20]</sup></p>
 
             <h3 id="noise-suppression">4.5.3 Noise suppression, speech and music</h3>
             
@@ -921,7 +921,7 @@ you" in your responses.
             
             <p>Many telephony platforms only support 8khz audio. This is noticeably low-quality by modern standards. If you are routing through a system with this limitation, there's nothing you can do about it. Your users may or may not notice the quality — most people have low expectations for phone call audio.</p>
             
-            <p>WebRTC supports very high-quality audio.<sup>[20]</sup> Default WebRTC settings are usually 48khz sample rate, single channel, 32 kbs Opus encoding, and a moderate noise suppression algorithm. These settings are optimized for speech. They work across a wide range of devices and environments and are generally the right choice for voice AI.</p>
+            <p>WebRTC supports very high-quality audio.<sup>[21]</sup> Default WebRTC settings are usually 48khz sample rate, single channel, 32 kbs Opus encoding, and a moderate noise suppression algorithm. These settings are optimized for speech. They work across a wide range of devices and environments and are generally the right choice for voice AI.</p>
             
             <p>Music will not sound good with these settings!</p>
             
@@ -936,7 +936,7 @@ you" in your responses.
 
             <h3 id="encoding">4.5.4 Encoding</h3>
             
-            <p>Encoding is the general term for how audio data is formatted for sending over a network connection.<sup>[21]</sup></p>
+            <p>Encoding is the general term for how audio data is formatted for sending over a network connection.<sup>[22]</sup></p>
             
             <p>Common encodings for real-time communication include:</p>
             
@@ -986,7 +986,7 @@ you" in your responses.
 
             <h3 id="server-side-noise">4.5.5 Server-side noise processing and speaker isolation</h3>
             
-            <p>Speech-to-text models can usually ignore general ambient noise – street sounds, dogs barking, loud fans close to a mic, keyboard clicks. So the traditional "noise suppression" algorithms that are critical for many human-to-human use cases are not as critical for voice AI.</p>
+            <p>Speech-to-text and voice activity detection models can usually ignore general ambient noise – street sounds, dogs barking, loud fans close to a mic, keyboard clicks. So the traditional "noise suppression" algorithms that are critical for many human-to-human use cases are not as critical for voice AI.</p>
             
             <p>But one kind of audio processing is particularly valuable for voice AI: primary speaker isolation. Primary speaker isolation suppresses background speech. This can significantly improve transcription accuracy.</p>
             
@@ -994,7 +994,9 @@ you" in your responses.
             
             <p>Or imagine the user who is in their living room with the TV or radio on in the background. Because humans are generally pretty good at filtering out low-volume background speech, people won't necessarily think to turn off their TV or radio before they call into a customer support line.</p>
             
-            <p>The best available speaker isolation model is sold by <a href="https://krisp.ai" target="_blank">Krisp</a>. Licenses are targeted at enterprise users and are not inexpensive. But for commercial use cases at scale, the improvement in voice agent performance justifies the cost.</p>
+            <p>The best available speaker isolation model that you can use in your own voice AI pipeline is sold by <a href="https://krisp.ai" target="_blank">Krisp</a>. Licenses are targeted at enterprise users and are not inexpensive. But for commercial use cases at scale, the improvement in voice agent performance justifies the cost.</p>
+
+            <p>OpenAI recently shipped a new noise reduction feature as part of their Realtime API. Reference docs are <a href="https://platform.openai.com/docs/guides/realtime-transcription#realtime-transcription-sessions" target="_blank">here</a>. </p>
 
             <pre class="language-python"><code>
   pipeline = Pipeline(
@@ -1026,6 +1028,9 @@ you" in your responses.
             </div>
             <div class="footnote" id="footnote-20">
               <p>[19] Note that Firefox echo cancellation is not very good. We recommend that voice AI developers build with Chrome and Safari as primary platforms, and only test on Firefox as a secondary platform, time permitting.</p>
+            </div>
+            <div class="footnote" id="footnote-20">
+              <p>[20] We recently helped someone debug their React Native app's audio issues. The root cause was that they didn't realize they needed to implement echo cancellation, since they were not using a voice AI or WebRTC SDK.</p>
             </div>
             <div class="footnote" id="footnote-21">
               <p>[20] Some use cases for high-quality audio:<br>
