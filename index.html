@@ -672,7 +672,7 @@ Your output will be directly converted to speech, so your response should be nat
               <li>Audio model and infrastructure company <a href="https://gladia.io/">Gladia</a> is widely used for French-language voice AI, and is gaining mind share outside France now as well.</li>
               <li>Two other well-regarded speech technology companies, <a href="https://speechmatics.com/">Speechmatics</a> and <a href="https://assembly.ai/">AssemblyAI</a>, have begun to focus more on conversational voice use cases, shipping streaming APIs and models with faster TTFTs.</li>
               <li>NVIDIA is shipping <a href="https://developer.nvidia.com/blog/new-standard-for-speech-recognition-and-translation-from-the-nvidia-nemo-canary-model/">open source speech models</a> that perform extremely well on benchmarks.</li>
-              <li>Inference company <a href="https://groq.com/">Groq</a>'s hosted version of Whisper now has a median TTFT under 300ms, which puts it into the range of being an option for conversational voice applications. This is the first Whisper API service that we have seen achieve this latency.</li>
+              <li>Inference company <a href="https://groq.com/">Groq</a>'s hosted version of Whisper Large v3 Turbo now has a median TTFT under 300ms, which puts it into the range of being an option for conversational voice applications. This is the first Whisper API service that we have seen achieve this latency.</li>
             </ul>
             
             <p>All of the big cloud services have speech-to-text APIs. None of them are as good as Deepgram, today, for low-latency, general-purpose English language transcription.</p>
@@ -758,7 +758,7 @@ Rules:
         
         <div class="chapter-notes">
           <div class="chapter-image-inline">
-            <img src="images/Figure 0800.svg" alt="Pipecat pipeline diagram" class="pipeline-image" width="300">
+            <img src="images/Figure 0800.svg" alt="Pipecat pipeline diagram" class="pipeline-image" width="200">
             <p class="image-caption">Figure 4.f: The speech-to-text stage of a voice AI pipeline.</p>
           </div>
           <div class="chapter-footnotes" id="chapter-4-3-notes">
@@ -779,10 +779,12 @@ Rules:
             <p>Voice AI developers choose a voice model/service based on:</p>
             
             <ul class="arrow-list">
-              <li>How natural the voices sound<sup>[15]</sup></li>
+              <li>How natural the voices sound (overall quality)<sup>[15]</sup></li>
               <li>Latency<sup>[16]</sup></li>
               <li>Cost</li>
               <li>Language support</li>
+              <li>Word-level timestamp support</li>
+              <li>Ability to customize voices, accents, and pronunciations</li>
             </ul>
             
             <p>Voice options expanded markedly in 2024. New startups appeared on the scene. Best-in-class voice quality went way up. And every provider improved latency.</p>
@@ -799,7 +801,7 @@ Rules:
             </ul>
             
             <p>All four companies have strong models, engineering teams, and stable and performant APIs. Deepgram and Rime models can be deployed on your own infrastructure.</p>
-            
+
             <p>As with speech-to-text, there is wide variance in quality and support for non-English voice models. If you are building voice AI for non-English use cases, you will likely need to do more extensive testing — test more services and more voices to find a solution that you are happy with.</p>
             
             <p>All voice models will mispronounce words some of the time, and will not necessarily know how to pronounce proper nouns or unusual words.</p>
@@ -830,10 +832,10 @@ Rules:
                   <td>1,840</td>
                 </tr>
                 <tr>
-                  <td>ElevenLabs</td>
+                  <td>ElevenLabs Multilingual v2</td>
                   <td>$0.03</td>
-                  <td>190</td>
-                  <td>460</td>
+                  <td>700</td>
+                  <td>1,100</td>
                 </tr>
                 <tr>
                   <td>Rime</td>
@@ -845,14 +847,24 @@ Rules:
             </table>
             <p class="table-caption">Figure 4.l: Approximate cost per minute and time to first byte metrics – February 2025. Note that cost depends on committed volume and features used.</p>
 
-            <p>We expect voice model progress to continue in 2025. Several of the companies listed above have hinted at new models coming in the first half of the year!</p>
+            <p>For conversational voice use cases, being able to track what text the user heard is important for maintaining accurate conversation context. This requires that a TTS model output word-level timestamp metadata for the generated audio, and that the timestamp data be reconstructible backwards to the original input text. This is a relatively new capability for voice models. All of the above services support word-level timestamps.</p>
+
+            <p>In addition, a really solid realtime streaming API is helpful. Conversational voice applications often trigger multiple audio inferences in parallel. Voice agent code needs to be able to interrupt in-progress inference and to correlate each inference request to an output stream. Streaming APIs from voice model providers are all relatively new and still evolving. Currently, Cartesia and Rime have the most mature streaming support in Pipecat.</p>
+
+            <p>We expect voice model progress to continue in 2025.</p>
+            
+            <ul class="arrow-list">
+              <li>Several of the companies listed above have hinted at new models coming in the first half of the year.</li>
+              <li>OpenAI <a href="https://openai.com/index/introducing-our-next-generation-audio-models/" target="_blank">recently shipped</a> a new text-to-speech mode, gpt-4o-mini-tts. This model is fully steerable, which opens up new possibilities for telling a voice model not just <em>what</em> to say but <em>how</em> to speak. You can experiment with steering gpt-4o-mini-tts at <a href="https://openai.fm" target="_blank">openai.fm</a>. </li>
+              <li><a href="https://groq.com/" target="_blank">Groq  </a> and <a href="https://play.ai/" target="_blank">PlayAI</a> recently <a href="https://groq.com/build-fast-with-text-to-speech/" target="_blank">announced a partnership</a>. Groq is known for fast inference, and PlayAI offers a low-latency voice model that supports more than 30 languages.</li>
+            </ul>
         </section>
         </div>
         
         <div class="chapter-notes">
           <div class="chapter-image">
-            <img src="images/Figure 0300.svg" alt="Latency breakdown diagram" class="latency-image" width="300">
-            <p class="image-caption">Figure 4.k</p>
+            <img src="images/Figure 1300.svg" alt="Pipecat pipeline diagram" class="latency-image" width="200">
+            <p class="image-caption">Figure 4.k: The text-to-speech stage of a voice AI pipeline.</p>
           </div>
 
           <pre ><code class="nobreak">
