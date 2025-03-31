@@ -582,7 +582,7 @@
         
         <div class="chapter-notes">
           <div class="chapter-image-positioned image-position-adjust" style="--position-offset: 120px;">
-            <img src="images/Figure 0300.svg" alt="Latency breakdown diagram" class="latency-image" width="300">
+            <img src="images/Figure 0300.svg" alt="Latency breakdown diagram" class="latency-image" width="250">
             <p class="image-caption">Figure 4.a</p>
           </div>
           <div class="chapter-footnotes" id="chapter-4-notes">
@@ -1072,13 +1072,6 @@ you" in your responses.
               <li>WebSocket reconnection logic is quite hard to implement robustly. You will have to build a ping/ack framework (or fully test and understand the framework that your WebSocket library provides). TCP timeouts and connection events behave differently on different platforms.</li>
               <li>Finally, good WebRTC implementations today come with very good echo cancellation, noise reduction, and automatic gain control.</li>
             </ul>
-            <div class="chapter-image">
-              <img src="images/Figure 2000-2Percent-DelaySimulation.png" alt="WebSocket latency diagram" class="network-image" width="600">
-              <img src="images/Figure 2000-4Percent-DelaySimulation.png" alt="WebSocket latency diagram" class="network-image" width="600">
-              <p class="image-caption">Figure 4.r: WebSocket latency caused by head-of-line blocking</p>
-              <p class="image-caption">One-way audio latency rises to 500 milliseconds during a simulated 5-minute session with 2% packet loss.</p>
-              <p class="image-caption">One-way audio latency rises to 4 seconds during a simulated 5-minute session with 4% packet loss. It's likely that in a real session with this amount of packet loss, the WebSocket connection would drop at some point because of underlying TCP timeouts.</p>
-            </div>
 
             <h3 id="http">4.6.2 HTTP</h3>
             
@@ -1088,9 +1081,9 @@ you" in your responses.
             
             <p>Voice agents also use HTTP when integrating with external services and internal APIs. One useful technique is proxying LLM function calls to HTTP endpoints. This decouples voice AI agent code and devops from function implementations.</p>
             
-            <p>Client apps will often want to implement both HTTP and WebRTC code paths in a client app. (There's usually more complexity on the server side. Imagine a chat app that supports both a text mode and a voice mode. Conversation state needs to be accessible via either connection path, which has ramifications for how things like Kubernetes pods and Docker containers are architected.)</p>
+            <p>Multimodal AI applications will often want to implement both HTTP and WebRTC code paths. Imagine a chat app that supports both a text mode and a voice mode. Conversation state needs to be accessible via either connection path, which has ramifications for both client and server-side code (for example, how things like Kubernetes pods and Docker containers are architected.)</p>
             
-            <p>The drawback to HTTP is, of course, latency.</p>
+            <p>The two drawbacks to HTTP are latency and the difficulty of implementing long-lived, bidirectional connections.</p>
             
             <ul class="arrow-list">
               <li>Setting up an encrypted HTTP connection requires multiple network round trips. It's reasonably hard to achieve media connection setup times much lower than 30ms, and realistic time-to-send-first-byte is closer to 100ms even for heavily optimized servers.</li>
@@ -1156,16 +1149,16 @@ you" in your responses.
         
         <div class="chapter-notes">
           <div class="chapter-image-positioned image-position-adjust" style="--position-offset: 100px;">
-            <img src="images/Figure 1900.svg" alt="WebSocket vs WebRTC diagram" class="network-image" width="300">
+            <img src="images/Figure 1900.svg" alt="WebSocket vs WebRTC diagram" class="network-image" width="250">
             <p class="image-caption">Figure 4.q</p>
           </div>
 
           <div class="chapter-image-positioned image-position-adjust" style="--position-offset: 800px;">
-            <img src="images/Figure 2100.svg" alt="HTTP API diagram" class="network-image" width="300">
+            <img src="images/Figure 2100.svg" alt="HTTP API diagram" class="network-image" width="250">
             <p class="image-caption">Figure 4.s: A voice AI agent using HTTP requests to do LLM inference</p>
           </div>
           <div class="chapter-image-positioned image-position-adjust" style="--position-offset: 100px;">
-            <img src="images/Figure 2200.svg" alt="HTTP API diagram" class="network-image" width="300">
+            <img src="images/Figure 2200.svg" alt="HTTP API diagram" class="network-image" width="250">
             <p class="image-caption">Figure 4.t: A voice AI agent using HTTP requests to do LLM inference</p>
           </div>
 
@@ -1209,13 +1202,13 @@ you" in your responses.
             
             <p>Voice AI agent pipelines identify pauses using a small, specialized voice activity detection model. A VAD model has been trained to classify audio segments as speech or non-speech. (This is much more robust than trying to identify pauses based only on volume level.)</p>
             
-            <p>You can run VAD on either the client-side of a voice AI connection, or on the server. If you need to do significant audio processing on the client anyway, you'll probably need to run VAD on the client to facilitate that. For example, maybe you are identifying wake words on an embedded device, and only sending audio over the network if you detect a wake word at the beginning of a phrase. Hey, Siri …</p>
+            <p>You can run VAD on either the client-side of a voice AI connection, or on the server. If you need to do significant audio processing on the client anyway, you'll probably need to run VAD on the client to facilitate that. For example, maybe you are identifying wake words on an embedded device, and only sending audio over the network if you detect a wake word at the beginning of a phrase. <em>Hey, Siri …</em></p>
             
             <p>Generally, though, it's a bit simpler to just run VAD as part of the voice AI agent processing loop. And if your users are connecting via telephone, you don't have a client where you can run VAD, so you have to do it on the server.</p>
             
             <p>The VAD model used most often for voice AI is <a href="https://github.com/snakers4/silero-vad" target="_blank">Silero VAD</a>. This open source model runs efficiently on CPU, supports multiple languages, works well for both 8khz and 16khz audio, and is available as wasm packages for use in web browsers. Running Silero on a realtime, mono audio stream normally takes less than 1/8th of a typical virtual machine CPU core.</p>
             
-            <p>A turn detection algorithm will typically have a few configuration parameters:</p>
+            <p>A turn detection algorithm will have a few configuration parameters:</p>
             
             <ul class="arrow-list">
               <li>Length of pause required for end of turn.</li>
@@ -1232,7 +1225,7 @@ you" in your responses.
   VAD_START_SECS = 0.2
   VAD_CONFIDENCE = 0.7
   VAD_MIN_VOLUME = 0.6
-  ...
+  
 </code></pre>
             <p class="image-caption">Figure 4.y</p>
             
@@ -1256,15 +1249,15 @@ you" in your responses.
             
             <p>You can also use specific words as end-of-turn markers. (Think of truckers talking on CB radios saying "over.")</p>
             
-            <p>The easiest way to identify the specified endpoint markers is to run a regular expression match against each transcription fragment.</p>
+            <p>The easiest way to identify specific endpoint markers is to run a regular expression match against each transcription fragment. But you can also use a small language model to detect endpoint words or phrases.</p>
             
-            <p>Using explicit endpoint markers is fairly uncommon, because users have to learn to talk this way. But it can work very well for specialized use cases.</p>
+            <p>Voice AI apps that use explicit endpoint markers are fairly uncommon. Users have to learn to talk to these apps. But this approach can work very well for specialized use cases.</p>
             
             <p>For example, we saw a nice demo last year of a writing assistant that someone had built for themselves as a side project. They used a variety of command phrases to indicate turn endpoints and to switch between modes.</p>
             
             <h3 id="context-aware-turn-detection">4.7.4 Context-aware turn detection</h3>
             
-            <p>When humans use turn detection, they use a variety of cues:</p>
+            <p>When humans do turn detection, they use a variety of cues:</p>
             
             <ul class="arrow-list">
               <li>Identification of filler words like "um" as being likely to indicate continued speech.</li>
@@ -1273,15 +1266,15 @@ you" in your responses.
               <li>Intonation and pronunciation patterns like drawing out the final word before a pause.</li>
             </ul>
             
-            <p>Deep learning models are very good at identifying patterns. LLMs have a lot of latent grammatical knowledge and can be prompted to do phrase endpointing. Smaller audio classification models can be trained on intonation and pronunciation patterns.</p>
+            <p>Deep learning models are very good at identifying patterns. LLMs have a lot of latent grammatical knowledge and can be prompted to do phrase endpointing. Smaller, specialized classification models can be trained on language, intonation, and pronunciation patterns.</p>
             
-            <p>As voice agents become more and more commercially important, we expect to see new models that are trained to perform context-aware turn detection for voice AI.</p>
+            <p>As voice agents become more and more commercially important, we expect to see new models for context-aware voice AI turn detection.</p>
             
             <p>There are two main approaches:</p>
             
             <ol class="list-decimal">
               <li>Train a small turn detection model that can run in real time. Use this model in conjunction with VAD. Set a short VAD timeout, run the turn detection model in-line after the VAD, and only send user speech down the pipeline when the turn detection model has a high confidence that a phrase endpoint is identified. The Pipecat community has developed a small, open source, native audio model that performs well for specific phrase endpointing tasks in English.<sup>[28]</sup></li>
-              <li>Use a large LLM and a few-shot prompt to perform turn detection. Large LLMs are usually too slow to use in-line, blocking the pipeline. To work around this, you can split the pipeline and do turn detection and "greedy" conversation inference in parallel. Perform conversation inference every time VAD identifies a short pause. But buffer the conversation output until a phrase endpoint is identified.</li>
+              <li>Use a large LLM and a few-shot prompt to perform turn detection. Large LLMs are usually too slow to use in-line, blocking the pipeline. To work around this, you can split the pipeline and do turn detection and "greedy" conversation inference in parallel.</li>
             </ol>
             
             <pre class="language-python"><code> 
@@ -1317,13 +1310,16 @@ you" in your responses.
     ],
 
 </code></pre>
-            <p class="image-caption">Figure 4.z: Pipecat pipeline code for context-aware turn detection using Gemini 2.0 Flash native audio input. Turn detection and greedy conversation inference run in parallel. Output is gated until the turn detection inference detects a phrase endpoint.</p>
+            <p class="image-caption">Figure 4.z: Pipecat pipeline <a href="https://github.com/pipecat-ai/pipecat/blob/main/examples/foundational/22d-natural-conversation-gemini-audio.py" target="_blank">code for context-aware turn detection</a> using Gemini 2.0 Flash native audio input. Turn detection and greedy conversation inference run in parallel. Output is gated until the turn detection inference detects a phrase endpoint.</p>
+
+            <p>OpenAI recently shipped a new context-aware turn detection capability for their Realtime API. They call this feature <em>semantic VAD</em>, in contrast to the simpler <em>server VAD</em> (pause-based turn detection). Docs are <a href="https://platform.openai.com/docs/guides/realtime-vad#semantic-vad" target="_blank">here</a>.  </p>
           </section>
         </div>
         
+
         <div class="chapter-notes">
           <div class="chapter-image">
-            <img src="images/4x.svg" alt="VAD processing step" class="vad-image" width="300">
+            <img src="images/4x.svg" alt="VAD processing step" class="vad-image" width="250">
             <p class="image-caption">Figure 4.x: A voice activity detection processing step, here configured to run just prior to speech-to-text</p>
           </div>
           <div class="chapter-footnotes" id="chapter-4-7-notes">
@@ -1377,7 +1373,7 @@ you" in your responses.
         
         <div class="chapter-notes">
           <div class="chapter-image">
-            <img src="images/Figure 0300.svg" alt="Latency breakdown diagram" class="latency-image" width="300">
+            <img src="images/Figure 0300.svg" alt="Latency breakdown diagram" class="latency-image" width="250">
             <p class="image-caption">Figure 4.aa: Timestamp data from the Cartesia speech-to-text API.</p>
           </div>
           <div class="chapter-footnotes" id="chapter-4-8-notes">
@@ -1701,7 +1697,7 @@ Tower on a cloudy day.
         
         <div class="chapter-notes">
           <div class="chapter-image-positioned" data-align-with="function-calling-eval">
-            <img src="images/4ad.svg" alt="TTFT for inference that includes a function call" class="latency-image" width="300">
+            <img src="images/4ad.svg" alt="TTFT for inference that includes a function call" class="latency-image" width="250">
             <p class="image-caption">Figure 4.ad: TTFT for inference that includes a function call. Our LLM has a TTFT of 450ms and produces 100 tokens per second. If the function call request chunk is 100 tokens, it takes 1s to output the function call request. Then we execute the function and run inference again. This time, we can stream the output, so after 450ms we have tokens we can use. TTFT for the full inference is 1,450 (not including the time it takes to execute the function itself ).</p>
           </div>
     
