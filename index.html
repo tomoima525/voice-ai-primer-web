@@ -188,7 +188,7 @@
             <li><a href="#broader-adoption">11.6. Broader adoption</a></li>
             <li><a href="#conclusion">11.7. Conclusion</a></li>
           </ul>
-        </li>
+        </li> 
         <li><a href="#contributors">Contributors</a></li>
       </ol>
     </nav>
@@ -1711,14 +1711,15 @@ Tower on a cloudy day.
             
             <p>One interesting new class of voice-enabled applications is the assistant that can "see" your screen and help perform tasks on your local machine or a web browser. A number of people have built scaffolding for voice driven web browsing.</p>
             
-            <p>Several programmers we know talk as much as they type, these days. It's fairly easy to wire up voice input to drive Cursor or Windsurf.<sup>[40]</sup> It's a bit trickier to wire up screen capture so your AI programming assistant can see exactly what you see – code in your editor, UI state of the web app you're building, a Python stacktrace in your terminal. But this full loop with an AI programming assistant feels like another of the glimpses of the future we've talked about throughout this document.<sup>[41]</sup></p>
+            <p>Several programmers we know talk as much as they type, these days. It's fairly easy to wire up voice input to drive Cursor or Windsurf.<sup>[40]</sup> It's also possible to wire up screen capture so your AI programming assistant can see exactly what you see – code in your editor, UI state of the web app you're building, a Python stacktrace in your terminal. This kind offully multimodal AI programming assistant feels like another of the glimpses of the future we've talked about throughout this document.<sup>[41]</sup></p>
             
             <p>Right now, all the SOTA models support multimodality in different combinations.</p>
             
             <ul class="arrow-list">
               <li>GPT-4o (gpt-4o-2024-08-06) has text and image input, and text output.</li>
               <li>gpt-4o-audio-preview has text and audio input, and text and audio output. (No image input.)</li>
-              <li>Gemini Flash 2.0 has text, audio, image, and video input, but only offers text output.</li>
+              <li>Gemini 2.0 Flash has text, audio, image, and video input, but only text output.</li>
+              <li>OpenAI's new speech-to-text and text-to-speech models are fully steerable and built on the gpt-4o foundation, but are specialized for converting between text and audio: gpt-4o-transcribe, gpt-4o-mini-transcribe, and gpt-4o-mini-tts. </li>
             </ul>
             
             <p>Multimodal support is evolving rapidly, and we expect the above list to be out of date soon!</p>
@@ -1748,7 +1749,7 @@ Tower on a cloudy day.
               </tr>
             </table>
             
-            <p>For some applications, maintaining latency while also keeping images in the conversational context presents a really difficult engineering challenge.</p>
+            <p>For some applications, a big engineering challenge is achieving conversational latency while also handling large numbers of images. Conversational latency requires either keeping the context small or relying on vendor-specific caching APIs. Images add a lot of tokens to the context.</p>
             
             <p>Imagine a personal assistant agent that runs all the time on your computer and watches your screen as part of its work loop. You might like to be able to ask, "I was about to read a tweet an hour ago when I got that phone call, and then I forgot about it and closed the tab. What was that tweet?"</p>
             
