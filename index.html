@@ -324,8 +324,12 @@
 
       <div class="chunk-row">
         <div class="chunk-content">
-          <h1 id="core-tech">4. Core technologies and best practices</h1>
-            
+           <h1 id="core-tech">4. Core technologies and best practices</h1>
+        </div>
+      </div>
+      
+      <div class="chunk-row">
+        <div class="chunk-content">  
             <h2 id="latency">4.1. Latency</h2>
             
             <p>Building voice agents is similar in most ways to other kinds of AI engineering. If you have experience building text-based, multi-turn AI agents, much of your experience from that domain will be useful in voice, as well.</p>
@@ -430,7 +434,11 @@
             <p class="table-caption">Table 4.b: A voice-to-voice conversation round trip — latency breakdown.</p>
 
             <p>Because latency is so important for voice use cases, latency will come up often throughout this guide.</p>
-            
+        </div>
+      </div>
+      
+      <div class="chunk-row">
+        <div class="chunk-content">
             <h2 id="llms-for-voice">4.2. LLMs for voice use cases</h2>
             
             <p>The release of GPT-4 in March 2023 kicked off the current era of voice AI. GPT-4 was the first LLM that could both sustain a flexible, multi-turn conversation and be prompted precisely enough to perform useful work. Today, GPT-4's successor – GPT-4o – is still the dominant model for conversational voice AI.</p>
@@ -452,6 +460,11 @@
             
             <p>We do expect, though, that Google's Gemini 2.0 Flash, which was released on February 6th, will be widely used for voice AI. Gemini 2.0 Flash is fast, roughly as good as GPT-4o at instruction following, possibly better than GPT-4o at function calling, and priced aggressively.</p>
             
+        </div>
+      </div>
+      
+      <div class="chunk-row">
+        <div class="chunk-content">
             <h3 id="latency-llm">4.2.1 LLM Latency</h3>
             
             <p>The current version of Claude Sonnet 3.5 would be an excellent choice for voice AI, except that inference latency (time to first token) has not been an Anthropic priority. Claude Sonnet median latency is typically double the latency of GPT-4o and Gemini Flash, with a much bigger P95 spread as well.</p>
@@ -488,6 +501,11 @@
             
             <p>Note that GPT-4o mini is not faster than GPT-4o. This often surprises people, because the general expectation is that small models are faster than big models.</p>
             
+        </div>
+      </div>
+      
+      <div class="chunk-row">
+        <div class="chunk-content">
             <h3 id="cost-comparison">4.2.2 Cost comparison</h3>
             
             <p>Inference cost has been dropping regularly and rapidly. So, in general, LLM cost has been the least important factor in choosing which LLM to use. Gemini 2.0 Flash's newly announced pricing offers a 10x cost reduction compared to GPT-4o. We'll see what impact this has on the voice AI landscape.</p>
@@ -532,6 +550,11 @@
             
             <p>We built <a href="https://dub.sh/voice-agents-010" target="_blank">a calculator for the OpenAI Realtime API</a> that shows how cost scales with session length, factoring in caching.</p>
             
+        </div>
+      </div>
+      
+      <div class="chunk-row">
+        <div class="chunk-content">
             <h3 id="open-source">4.2.3 Open source / open weights</h3>
             
             <p>Llama 3.3 70B is promising. This open weights model from Meta performs better than the original GPT-4 on relevant benchmarks. But it is not good enough to supplant the current versions of GPT-4o and Gemini for commercial use cases, yet, unless you must run your LLM locally rather than use an API.<sup>[10]</sup></p>
@@ -540,6 +563,11 @@
             
             <p>We do expect to see a lot of progress in open source / open weights models in 2025. It seems likely that future LLama models, along with open weights models from Alibaba (Qwen), DeepSeek, Google (Gemma), and Microsoft (Phi), will be good options for voice AI use cases.</p>
             
+        </div>
+      </div>
+      
+      <div class="chunk-row">
+        <div class="chunk-content">
             <h3 id="speech-to-speech">4.2.4 What about speech-to-speech models?</h3>
             
             <p>Speech-to-speech models are an exciting, relatively new, development. A speech-to-speech LLM can be prompted with audio, rather than text, and can produce audio output directly. This eliminates the speech-to-text and text-to-speech parts of the voice agent orchestration loop.</p>
@@ -623,6 +651,11 @@
             
             <p>Today there are several very good transcription models that are not architected for low latency. Whisper is an open source model that is used in many products and services. It's very good, but with a time-to-first-token of 500ms or more, is rarely used for conversational voice AI use cases.</p>
             
+        </div>
+      </div>
+      
+      <div class="chunk-row">
+        <div class="chunk-content">
             <h3 id="deepgram">4.3.1 Deepgram</h3>
             
             <p>Most production voice AI agents today use <a href="https://deepgram.com" target="_blank">Deepgram</a> for text-to-speech. Deepgram is a commercial speech-to-text AI lab and API platform with a long track record of delivering a very good combination of low latency, low word error rate, and low cost.</p>
@@ -640,6 +673,11 @@
             
             <p>Deepgram offers fine-tuning services, which can help lower word error rates if your use case includes relatively unusual vocabularies, speech styles, or accents.</p>
             
+        </div>
+      </div>
+      
+      <div class="chunk-row">
+        <div class="chunk-content">
             <h3 id="prompting-help">4.3.2 Prompting can help the LLM.</h3>
             
             <p>A large percentage of Deepgram transcription errors result from the very small amount of context that the transcription model has available in a realtime stream.</p>
@@ -658,6 +696,11 @@ When you receive a transcribed user request:
 Your output will be directly converted to speech, so your response should be natural-sounding and appropriate for a spoken conversation.
 </code></pre>
             <p class="image-caption">Figure 4.g: Example prompt language for a voice AI agent.</p>
+        </div>
+      </div>
+      
+      <div class="chunk-row">
+        <div class="chunk-content">
             <h3 id="other-stt-options">4.3.3 Other speech-to-text options</h3>
 
             <p>We expect to see lots of new developments in the speech-to-text space in 2025. Some new developments we are tracking, as of early April 2025:</p>
@@ -680,6 +723,11 @@ Your output will be directly converted to speech, so your response should be nat
               <li>You have a lot of startup credits to spend!</li>
             </ul>
             
+        </div>
+      </div>
+      
+      <div class="chunk-row">
+        <div class="chunk-content">
             <h3 id="gemini-transcribing">4.3.4 Transcribing with Google Gemini</h3>
             
             <p>One way to leverage Gemini 2.0 Flash's strengths as a low-cost, native audio model is to use Gemini 2.0 for both conversation generation and transcription.</p>
@@ -902,7 +950,19 @@ you" in your responses.
           <h2 id="audio-processing">4.5. Audio processing</h2>
             
             <p>A good voice AI platform or library will mostly hide the complexities of audio capture and processing. But if you build complex voice agents, at some point you'll bump up against bugs and corner cases in audio handling.<sup>[18]</sup> So it's worth taking a quick tour of the audio input pipeline.</p>
+        </div>
+        
+        <div class="chunk-notes">
+          <div class="chunk-footnotes" id="chapter-4-5-notes">
+            <div class="footnote" id="footnote-19">
+              <p>[18] … this generalizes to all things in software, and perhaps most things in life.</p>
+            </div>
+          </div>
+        </div>
+      </div>
 
+      <div class="chunk-row">
+        <div class="chunk-content">
             <h3 id="avoiding-spurious-interruptions">4.5.1 Microphones and automatic gain control</h3>
             
             <p>Microphones today are extremely sophisticated hardware devices coupled to large amounts of low-level software. This is usually great — we get terrific audio from tiny microphones built into mobile devices, laptops, and bluetooth earpieces.</p>
@@ -914,7 +974,11 @@ you" in your responses.
               <p class="image-caption">Figure 4.n</p>
             </div>
             <p>Most audio capture pipelines will apply some amount of automatic gain control to the input signal. Again, this is usually what you want, because this compensates for things like the user's distance from the microphone. You can often disable some automatic gain control, but on consumer-class devices you usually can't disable it completely.</p>
+        </div>
+      </div>
 
+      <div class="chunk-row">
+        <div class="chunk-content">
             <h3 id="echo-cancellation">4.5.2 Echo cancellation</h3>
             
             <p>If a user is holding a phone up to their ear, or wearing headphones, you don't need to worry about feedback between the local microphone and speaker. But if a user is talking on a speakerphone, or using a laptop without headphones, then good echo cancellation is extremely important.</p>
@@ -922,7 +986,22 @@ you" in your responses.
             <p>Echo cancellation is very sensitive to latency, so echo cancellation has to run on the device (not in the cloud). Today, excellent echo cancellation is built into telephony stacks, web browsers, and WebRTC native mobile SDKs.<sup>[19]</sup></p>
             
             <p>So if you're using a voice AI, WebRTC, or telephony SDK, you should have echo cancellation that you can count on "just working" in almost all real-world scenarios. If you are rolling your own voice AI capture pipeline, you will need to figure out how to integrate echo cancellation logic. For example, if you are building a WebSocket-based React Native application, you won't have any echo cancellation by default.<sup>[20]</sup></p>
+        </div>
+        
+        <div class="chunk-notes">
+          <div class="chunk-footnotes">
+            <div class="footnote">
+              <p>[19] Note that Firefox echo cancellation is not very good. We recommend that voice AI developers build with Chrome and Safari as primary platforms, and only test on Firefox as a secondary platform, time permitting.</p>
+            </div>
+            <div class="footnote">
+              <p>[20] We recently helped someone debug their React Native app's audio issues. The root cause was that they didn't realize they needed to implement echo cancellation, since they were not using a voice AI or WebRTC SDK.</p>
+            </div>
+          </div>
+        </div>
+      </div>
 
+      <div class="chunk-row">
+        <div class="chunk-content">
             <h3 id="noise-suppression">4.5.3 Noise suppression, speech and music</h3>
             
             <p>Audio capture pipelines for telephony and WebRTC almost always default to "speech mode." Speech can be compressed much more than music, and noise reduction and echo cancellation algorithms are easier to implement for narrower band signals.</p>
@@ -941,7 +1020,22 @@ you" in your responses.
               <li>Optionally, enable stereo.</li>
               <li>Increase the Opus encoding bitrate (64 kbs is a good target for mono, 96 kbs or 128 kbs for stereo).</li>
             </ul>
+        </div>
+        
+        <div class="chunk-notes">
+          <div class="chunk-footnotes">
+            <div class="footnote">
+              <p>[21] Some use cases for high-quality audio:<br>
+              A music lesson with an LLM teacher.<br>
+              Recording a podcast that includes background sound or music.<br>
+              Generating AI music interactively.</p>
+            </div>
+          </div>
+        </div>
+      </div>
 
+      <div class="chunk-row">
+        <div class="chunk-content">
             <h3 id="encoding">4.5.4 Encoding</h3>
             
             <p>Encoding is the general term for how audio data is formatted for sending over a network connection.<sup>[22]</sup></p>
@@ -991,7 +1085,19 @@ you" in your responses.
             <p>Opus is by far the best of these three options. Opus is built into web browsers, designed from the ground up to be a low-latency codec, and very efficient. It also performs well across a wide range of bitrates, and supports both speech and high-fidelity use cases.</p>
             
             <p>16-bit PCM is "raw audio." You can send PCM audio frames directly to a software sound channel (assuming that the sample rate and data type are correctly specified). Note, however, that this uncompressed audio is not something you generally want to send over an Internet connection. 24khz PCM has a bitrate of 384 kbs. That's a large enough bitrate that many real-world connections from end-user devices will struggle to deliver the bytes in real time.</p>
+        </div>
+        
+        <div class="chunk-notes">
+          <div class="chunk-footnotes">
+            <div class="footnote">
+              <p>[22] (Or for saving in a file.)</p>
+            </div>
+          </div>
+        </div>
+      </div>
 
+      <div class="chunk-row">
+        <div class="chunk-content">
             <h3 id="server-side-noise">4.5.5 Server-side noise processing and speaker isolation</h3>
             
             <p>Speech-to-text and voice activity detection models can usually ignore general ambient noise – street sounds, dogs barking, loud fans close to a mic, keyboard clicks. So the traditional "noise suppression" algorithms that are critical for many human-to-human use cases are not as critical for voice AI.</p>
@@ -1022,35 +1128,14 @@ you" in your responses.
   )
             </code></pre>
             <p class="image-caption">Figure 4.p: Pipecat pipeline with a Krisp processing element</p>
+        </div>
+      </div>
 
+      <div class="chunk-row">
+        <div class="chunk-content">
             <h3 id="voice-activity-detection">4.5.6 Voice activity detection</h3>
             
             <p>A voice activity detection stage is part of almost every voice AI pipeline. VAD classifies audio segments as "speech" and "not speech." We will talk in detail about VAD in 4.7 Turn Detection, below.</p>
-
-        </div>
-        
-        <div class="chunk-notes">
-          <div class="chunk-footnotes" id="chapter-4-5-notes">
-            <div class="footnote" id="footnote-19">
-              <p>[18] … this generalizes to all things in software, and perhaps most things in life.</p>
-            </div>
-            <div class="footnote" id="footnote-20">
-              <p>[19] Note that Firefox echo cancellation is not very good. We recommend that voice AI developers build with Chrome and Safari as primary platforms, and only test on Firefox as a secondary platform, time permitting.</p>
-            </div>
-            <div class="footnote" id="footnote-20">
-              <p>[20] We recently helped someone debug their React Native app's audio issues. The root cause was that they didn't realize they needed to implement echo cancellation, since they were not using a voice AI or WebRTC SDK.</p>
-            </div>
-            <div class="footnote" id="footnote-21">
-              <p>[20] Some use cases for high-quality audio:<br>
-              A music lesson with an LLM teacher.<br>
-              Recording a podcast that includes background sound or music.<br>
-              Generating AI music interactively.</p>
-            </div>
-            <div class="footnote" id="footnote-22">
-              <p>[21] (Or for saving in a file.)</p>
-            </div>
-      
-          </div>
         </div>
       </div>
 
@@ -1058,6 +1143,11 @@ you" in your responses.
         <div class="chunk-content">
           <h2 id="network-transport">4.6. Network transport</h2>
             
+        </div>
+      </div>
+      
+      <div class="chunk-row">
+        <div class="chunk-content">
             <h3 id="websockets-webrtc">4.6.1 WebSockets and WebRTC</h3>
             
             <p>Both WebSockets and WebRTC are used by AI services for audio streaming.</p>
@@ -1080,6 +1170,11 @@ you" in your responses.
               <li>Finally, good WebRTC implementations today come with very good echo cancellation, noise reduction, and automatic gain control.</li>
             </ul>
 
+        </div>
+      </div>
+      
+      <div class="chunk-row">
+        <div class="chunk-content">
             <h3 id="http">4.6.2 HTTP</h3>
             
             <p>HTTP is still useful and important for voice AI, too! HTTP is the lingua franca for service interconnection on the Internet. REST APIs are HTTP. Webhooks are HTTP.</p>
@@ -1101,6 +1196,11 @@ you" in your responses.
             
             <p>Which brings us to QUIC …</p>
 
+        </div>
+      </div>
+      
+      <div class="chunk-row">
+        <div class="chunk-content">
             <h3 id="quic-moq">4.6.3 QUIC and MoQ</h3>
             
             <p>QUIC is a new network protocol designed to be the transport layer for the latest version of HTTP (HTTP/3) — and to flexibly support other Internet-scale use cases, too.</p>
@@ -1113,6 +1213,11 @@ you" in your responses.
             
             <p>Realtime voice AI use cases are growing at just the right time to influence the development of the MoQ standard.</p>
 
+        </div>
+      </div>
+      
+      <div class="chunk-row">
+        <div class="chunk-content">
             <h3 id="network-routing">4.6.4 Network routing</h3>
             
             <p>Long-haul network connections are problematic for latency and real-time media reliability, no matter what the underlying network protocol is.</p>
@@ -1202,6 +1307,11 @@ you" in your responses.
             
             <p>So turn detection is a hard problem, and there aren't any perfect solutions. But let's talk about the various approaches that are in common use.</p>
             
+        </div>
+      </div>
+      
+      <div class="chunk-row">
+        <div class="chunk-content">
             <h3 id="voice-activity-detection-4-7">4.7.1 Voice activity detection</h3>
             
             <p>Currently, the standard way to do turn detection for voice AI agents is to assume that a long pause means the user has finished speaking.</p>
@@ -1222,7 +1332,11 @@ you" in your responses.
               <li>The confidence level for classifying each audio segment as speech.</li>
               <li>Minimum volume for speech segments.</li>
             </ul>
-            
+        </div>
+      </div>
+      
+      <div class="chunk-row">
+        <div class="chunk-content">
             <pre class="language-python"><code>
   # Pipecat's names and default values
   # for the four configurable VAD
@@ -1236,7 +1350,11 @@ you" in your responses.
             <p class="image-caption">Figure 4.y</p>
             
             <p>Tuning these parameters can improve turn detection behavior a lot for specific use cases.</p>
-            
+        </div>
+      </div>
+      
+      <div class="chunk-row">
+        <div class="chunk-content">
             <h3 id="push-to-talk">4.7.2 Push-to-talk</h3>
             
             <p>The obvious problem with basing turn detection on pauses in speech is that sometimes people pause but aren't finished talking.</p>
@@ -1251,6 +1369,11 @@ you" in your responses.
             
             <p>Push-to-talk isn't possible for telephone voice AI agents.</p>
             
+        </div>
+      </div>
+      
+      <div class="chunk-row">
+        <div class="chunk-content">
             <h3 id="endpoint-markers">4.7.3 Endpoint markers</h3>
             
             <p>You can also use specific words as end-of-turn markers. (Think of truckers talking on CB radios saying "over.")</p>
@@ -1261,6 +1384,11 @@ you" in your responses.
             
             <p>For example, we saw a nice demo last year of a writing assistant that someone had built for themselves as a side project. They used a variety of command phrases to indicate turn endpoints and to switch between modes.</p>
             
+        </div>
+      </div>
+      
+      <div class="chunk-row">
+        <div class="chunk-content">
             <h3 id="context-aware-turn-detection">4.7.4 Context-aware turn detection</h3>
             
             <p>When humans do turn detection, they use a variety of cues:</p>
@@ -1350,6 +1478,11 @@ you" in your responses.
             
             <p>Generally, the framework you're building with will take care of stopping all processing when an interruption is triggered. <strong>But if you're directly using an API that sends you raw audio frames faster than realtime, you'll have to manually stop playout and flush audio buffers.</strong></p>
 
+        </div>
+      </div>
+      
+      <div class="chunk-row">
+        <div class="chunk-content">
             <h3 id="avoiding-spurious-interruptions">4.8.1 Avoiding spurious interruptions</h3>
             
             <p>Several sources of unintended interruptions are worth noting.</p>
@@ -1362,6 +1495,11 @@ you" in your responses.
               <li>Background speech. The VAD model will not distinguish between user speech and background speech. If the background speech is louder than your volume threshold, background speech will trigger an interruption. A speaker isolation audio processing step can reduce spurious interruptions caused by background speech. See the discussion in the <a href="#server-side-noise"> 4.5.5 Server-side noise processing and speaker isolation </a> section, above.</li>
             </ol>
 
+        </div>
+      </div>
+      
+      <div class="chunk-row">
+        <div class="chunk-content">
             <h3 id="maintaining-accurate-context">4.8.2 Maintaining accurate context after an interruption</h3>
             
             <p>Because LLMs generate output faster than realtime, when an interruption occurs you will often have LLM output queued up to send to the user.</p>
@@ -1433,6 +1571,11 @@ Turn 3:
 
 
 
+        </div>
+      </div>
+      
+      <div class="chunk-row">
+        <div class="chunk-content">
             <h3 id="differences-between-llm-apis">4.9.1 Differences between LLM APIs</h3>
             
             <p>This general design is the same for all the major LLMs today.</p>
@@ -1445,6 +1588,11 @@ Turn 3:
             
             <p>Pipecat, for example, translates messages to and from OpenAI format for both context messages and tool definitions. But whether and how to do this was a subject of considerable community debate!</p>
 
+        </div>
+      </div>
+      
+      <div class="chunk-row">
+        <div class="chunk-content">
             <h3 id="modifying-context-between-turns">4.9.2 Modifying the context between turns</h3>
             
             <p>Having to manage multi-turn context adds to the complexity of developing a voice AI agent. On the other hand, it can be useful to retroactively modify the context. For each conversation turn, you can decide exactly what to send the LLM.</p>
@@ -1479,6 +1627,11 @@ Turn 3:
               <li>Script following – function calls that implement workflow state transitions.</li>
             </ul>
             
+        </div>
+      </div>
+      
+      <div class="chunk-row">
+        <div class="chunk-content">
             <h3 id="function-calling-reliability">4.10.1 Function calling reliability in the voice AI context</h3>
             
             <p>As voice AI agents are deployed for increasingly complex use cases, reliable function calling has become more and more critical.</p>
@@ -1499,6 +1652,11 @@ Turn 3:
             
             <p id="function-calling-eval"><strong>If you are building voice AI agents, t's important to develop your own evals to test the function calling performance of your app. See the <a href="#evals">7. Voice AI evals</a> section, below.</strong></p>
             
+        </div>
+      </div>
+      
+      <div class="chunk-row">
+        <div class="chunk-content">
             <h3 id="latency-function-calls">4.10.2 Latency</h3>
             
             <p>Function calls add latency — potentially a lot of latency — for four reasons:</p>
@@ -1521,6 +1679,11 @@ Turn 3:
             
             <p>Or both, of course. And you can play background music while executing long-running function calls.<sup>[34]</sup></p>
             
+        </div>
+      </div>
+      
+      <div class="chunk-row">
+        <div class="chunk-content">
             <h3 id="handling-interruptions">4.10.3 Handling interruptions</h3>
             
             <p>LLMs are trained to expect function call request messages and function call response messages as matched pairs.</p>
@@ -1583,6 +1746,11 @@ Turn 3:
             
 
 
+        </div>
+      </div>
+      
+      <div class="chunk-row">
+        <div class="chunk-content">
             <h3 id="streaming-mode">4.10.4 Streaming mode and function call chunks</h3>
             
             <p>In voice AI agent code, you almost always execute conversation inference calls in streaming mode. This gives you the first few content chunks as quickly as possible, which is important for voice-to-voice response latency.</p>
@@ -1591,6 +1759,11 @@ Turn 3:
             
             <p>Here's some feedback for inference providers as they continue to evolve their APIs: please offer a mode that delivers function call chunks atomically, and isolated from any streamed content chunks. This would significantly reduce the complexity of client-side code.</p>
             
+        </div>
+      </div>
+      
+      <div class="chunk-row">
+        <div class="chunk-content">
             <h3 id="execute-function-calls">4.10.5 How and where to execute function calls</h3>
             
             <p>When the LLM emits a function call request, what do you do? Here are some commonly used patterns:</p>
@@ -1605,6 +1778,11 @@ Turn 3:
               <img src="images/4ae.svg" alt="Function calling patterns" class="latency-image" width="350">
               <p class="image-caption">Figure 4.ae: Function calling patterns</p>
             </div>
+        </div>
+      </div>
+      
+      <div class="chunk-row">
+        <div class="chunk-content">
             <h3 id="async-function-calls">4.10.6 Asynchronous function calls</h3>
             
             <p>Sometimes you don't want to return from a function call right away. You know your function will take an unpredictably long time to complete. Maybe it won't complete at all. Maybe you even want to kick off a long-running process that can add to the context in an open-ended way over time.</p>
@@ -1631,6 +1809,11 @@ Turn 3:
             
             <p>As LLMs and APIs evolve to better support multimodal conversational use cases, we'd love to see LLM researchers explore ideas around asynchronous functions and long-running functions that act as generators.</p>
             
+        </div>
+      </div>
+      
+      <div class="chunk-row">
+        <div class="chunk-content">
             <h3 id="parallel-composite-function-calling">4.10.7 Parallel and composite function calling</h3>
             
             <p><em>Parallel function calling means that the LLM</em> can request multiple function calls in a single inference response. <em>Composite function calling</em> means that the LLM can flexibly call several functions in a row, chaining functions together to perform complex operations.</p>
@@ -1780,7 +1963,11 @@ Tower on a cloudy day.
             <p>As we've discussed, the typical voice AI processing loop transcribes the user's voice with a speech-to-text model, passes the transcribed text to an LLM to generate a response, then performs a text-to-speech step to generate the agent's voice output.</p>
             
             <p>In addition, many production voice agents today use multiple models in complex and varied ways.</p>
+        </div>
+      </div>
 
+      <div class="chunk-row">
+        <div class="chunk-content">
             <h2 id="fine-tuned-models">5.1. Using several fine-tuned models</h2>
             
             <p>Most voice AI agents use a SOTA<sup>[44]</sup> model from OpenAI or Google (and sometimes Anthropic or Meta). Using the newest, best-performing models is important because voice AI workflows generally are right at the edge of the <em>jagged frontier</em> of model capability. Voice agents need to be able to follow complex instructions, participate in open-ended conversations with people in a natural way, and use functions and tools reliably.</p>
@@ -1822,6 +2009,11 @@ Tower on a cloudy day.
               <li>For response patterns, embed examples of how you expect the model to respond to different questions. Sometimes, just a few examples are enough and a large model will generalize shockingly well. Sometimes, you will need lots of examples — 100 or more.</li>
             </ol>
 
+        </div>
+      </div>
+
+      <div class="chunk-row">
+        <div class="chunk-content">
             <h2 id="async-inference-tasks">5.2. Performing async inference tasks</h2>
             
             <p>Sometimes you want to use an LLM for a task that will take a relatively long time to run. Remember that in our core conversation loop we're aiming for response times under a second. If a task will take longer than that, you have two choices:</p>
@@ -1850,6 +2042,11 @@ Tower on a cloudy day.
               <li><code>queue_async_context_insertion()</code> — This is called by your orchestration layer when your async inference finishes. The tricky thing here is that how you insert results into the context will depend on what you're trying to do, and on what the LLM/API you are using allows. One approach is to wait until the end of any in-progress conversation turn (including the completion of all function calls), put the async inference results into a specially crafted user message, and then run another conversation turn.</li>
             </ul>
 
+        </div>
+      </div>
+
+      <div class="chunk-row">
+        <div class="chunk-content">
             <h2 id="content-guardrails">5.3. Content guardrails</h2>
             
             <p>Voice AI agents have several vulnerabilities that cause major issues for some use cases.</p>
@@ -1898,6 +2095,11 @@ Tower on a cloudy day.
             
             <p>As a very, very general guideline: today in voice AI use cases you are unlikely to see occurrences of accidental prompt injection caused by normal user behavior. But it is definitely possible to steer LLM behavior in ways that subvert system instructions, solely through user input. It's important to test your agents with this in mind. <strong>In particular, it's very important to sanitize and cross-check LLM-generated input to any functions that access backend systems.</strong></p>
 
+        </div>
+      </div>
+
+      <div class="chunk-row">
+        <div class="chunk-content">
             <h2 id="single-inference-actions">5.4. Performing single inference actions</h2>
             
             <p>For AI engineers, learning how to leverage LLMs is an ongoing process. Part of that process is a mental shift in how we think about these new tools. When we first started using LLMs, most of us thought about them through the lens, <em>what are language models uniquely capable of?</em> But LLMs are general-purpose tools. They are good at a very broad range of information processing tasks.</p>
@@ -1916,7 +2118,11 @@ Tower on a cloudy day.
             <p>Many of these emerging code patterns look like a language model using either itself, or another language model, as a tool.</p>
             
             <p>This is such a powerful idea that we expect to see lots of people work on this in 2025. Agent frameworks can build support for this into their library-level APIs. Models can also be trained to perform inference recursively in a way roughly analogous to training them to call functions and perform code execution.</p>
+        </div>
+      </div>
 
+      <div class="chunk-row">
+        <div class="chunk-content">
             <h2 id="self-improving-systems">5.5. Towards self-improving systems</h2>
             
             <p>When we access a SOTA "model" via an API, we are not accessing a single artifact. The systems behind the APIs use various routing, multi-stage processing, and distributed systems techniques to perform inference fast, flexibly, reliably, and at extraordinary scale. These systems are always being tweaked. Weights are updated. Low-level inference implementations get more efficient all the time. Systems architectures evolve.</p>
@@ -2058,7 +2264,11 @@ interpreting phonemes or transcribed text as "MNI"
             <p>One very important type of tooling is the eval, short for evaluation.</p>
             
             <p><em>Eval</em> is a machine learning term for a tool or process that assesses the capabilities of a system and judges its quality.</p>
+        </div>
+      </div>
 
+      <div class="chunk-row">
+        <div class="chunk-content">
             <h2 id="evals-different">7.1. Voice AI evals are different from software unit tests</h2>
             
             <p>If you're coming from a traditional software engineering background, you're used to thinking about testing as a (mostly) deterministic exercise.</p>
@@ -2070,7 +2280,11 @@ interpreting phonemes or transcribed text as "MNI"
             <p>Instead of just having one input, you will have many: all of the user responses. This makes it very hard to test voice AI applications without attempting to simulate user behavior.</p>
             
             <p>Finally, voice AI tests have non-binary results and will rarely yield a definitive ✅ or ❌ like traditional unit tests do. Instead, you will need to review results and decide on tradeoffs.</p>
+        </div>
+      </div>
 
+      <div class="chunk-row">
+        <div class="chunk-content">
             <h2 id="failure-modes">7.2. Failure modes</h2>
             
             <p>Voice AI apps have particular shapes and failure modes that influence how we design and run evals. Latency is critical (so latency that would be acceptable in a text-mode system is a failure for a voice system). They are multi-model (poor performance could be caused by TTS instability rather than LLM behavior, for example).</p>
@@ -2083,7 +2297,11 @@ interpreting phonemes or transcribed text as "MNI"
               <li>Understanding and verbalizing addresses, emails, names, phone numbers</li>
               <li>Interruptions</li>
             </ul>
+        </div>
+      </div>
 
+      <div class="chunk-row">
+        <div class="chunk-content">
             <h2 id="eval-strategy">7.3. Crafting an eval strategy</h2>
             
             <p>A rudimentary eval process can be as simple as a spreadsheet with prompts and test cases.</p>
@@ -2349,10 +2567,18 @@ llm.register_function("query_order_system", query_order_system)
       <div class="chunk-row">
         <div class="chunk-content">
           <h1 id="contributors">Contributors</h1>
-            
+        </div>
+      </div>
+
+      <div class="chunk-row">
+        <div class="chunk-content">
             <h2 id="lead-author">Lead Author</h2>
             <p>Kwindla Hultman Kramer</p>
-            
+        </div>
+      </div>
+
+      <div class="chunk-row">
+        <div class="chunk-content">
             <h2 id="contributing-authors">Contributing Authors<sup>[57]</sup></h2>
             <p>Aleix Conchillo Flaqué, Mark Backman, Moishe Lettvin, Kwindla Hultman Kramer, Jon Taylor,
             Vaibhav159, chadbailey59, allenmylath, Filipi Fuchter, TomTom101, Mert Sefa AKGUN, marcus-daily, vipyne, Adrian Cowham, Lewis Wolfgang, Filipi da Silva Fuchter, Vanessa Pyne, Chad
@@ -2364,7 +2590,11 @@ llm.register_function("query_order_system", query_order_system)
             Paul Vilchez, RonakAgarwalVani, Sahil Suman, Sameer Vohra, Soof Golan, Vaibhav-Lodha,
             Yash Narayan, duyalei, eddieoz, mercuryyy, rahulunair, roey, vatsal, vengadanathan srinivasan,
             weedge, wtlow003, zzz</p>
-            
+        </div>
+      </div>
+
+      <div class="chunk-row">
+        <div class="chunk-content">
             <h2 id="design">Design</h2>
             <p>Sascha Mombartz</p>
             <p>Akhil K G</p>
