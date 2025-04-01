@@ -248,6 +248,7 @@ footer p {
   display: flex;
   flex-direction: column;
   position: relative;
+  min-width: 300px;
 }
 
 /* Footnotes aligned at the bottom of chapter content */

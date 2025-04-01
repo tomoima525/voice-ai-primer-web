@@ -1366,7 +1366,7 @@ you" in your responses.
             <p>Several sources of unintended interruptions are worth noting.</p>
             
             <ol class="list-decimal">
-              <li>Transient noises classified as speech. Good VAD models do an excellent job separating speech from "noise." But certain kinds of short, sharp, initial audio will have moderate speech confidence attached to them when they appear at the beginning of an utterance. Coughing and keyboard clicks both fall into this category. You can adjust the VAD start segment length and confidence level to try to minimize this source of interruptions. The trade-off is that lengthening the start segment length and raising the confidence threshold will create problems for very short phrases that you do want to detect as complete utterances. For example, Pipecat's standard VAD settings will sometimes miss a quick "yep" from some speakers.</li>
+              <li>Transient noises classified as speech. Good VAD models do an excellent job separating speech from "noise." But certain kinds of short, sharp, initial audio will have moderate speech confidence attached to them when they appear at the beginning of an utterance. Coughing and keyboard clicks both fall into this category. You can adjust the VAD start segment length and confidence level to try to minimize this source of interruptions. The trade-off is that lengthening the start segment length and raising the confidence threshold will create problems for very short phrases that you do want to detect as complete utterances.<sup>[32]</sup></li>
               
               <li>Echo cancellation failures. Echo cancellation algorithms aren't perfect. A transition from silence to speech playout is particularly challenging. If you've done a lot of voice agent testing, you've probably heard your bot interrupt itself right when it starts talking. The culprit is echo cancellation allowing a little bit of the initial speech audio to feed back into your microphone. The minimum VAD start segment length helps to avoid this problem. So does applying exponential smoothing<sup>[30]</sup> to the audio volume level to avoid sharp volume transitions.</li>
               
@@ -1397,6 +1397,9 @@ you" in your responses.
             </div>
             <div class="footnote" id="footnote-35">
               <p>[31] The standard context structure is the user / assistant message list format developed by OpenAI.</p>
+            </div>
+            <div class="footnote" id="footnote-36">
+              <p>[32] Pipecat's standard pipeline configuration combines VAD and transcription events to try to avoid both spurious interruptions and missed utterances. There are subtleties to getting this right. If you're interested in this topic, please consider joining the <a href="https://discord.gg/pipecat" target="_blank">Pipecat Discord</a> and participating in the conversation there!</p>
             </div>
           </div>
         </div>
@@ -1791,11 +1794,11 @@ Tower on a cloudy day.
             
             <p>As we've discussed, the typical voice AI processing loop transcribes the user's voice with a speech-to-text model, passes the transcribed text to an LLM to generate a response, then performs a text-to-speech step to generate the agent's voice output.</p>
             
-            <p>Many production voice agents today use multiple models in much more complex ways than just this simple, linear loop.</p>
+            <p>In addition, many production voice agents today use multiple models in complex and varied ways.</p>
 
             <h2 id="fine-tuned-models">5.1. Using several fine-tuned models</h2>
             
-            <p>Most voice AI agents use a SOTA<sup>[44]</sup> model from OpenAI, Google, Anthropic, or Meta. Using the newest, best-performing models is important because voice AI workflows generally are right at the edge of the jagged <em>frontier of model capability.</em> Voice agents need to be able to follow complex instructions, participate in open-ended conversations with people in a natural way, and use functions and tools reliably.</p>
+            <p>Most voice AI agents use a SOTA<sup>[44]</sup> model from OpenAI or Google (and sometimes Anthropic or Meta). Using the newest, best-performing models is important because voice AI workflows generally are right at the edge of the <em>jagged frontier</em> of model capability. Voice agents need to be able to follow complex instructions, participate in open-ended conversations with people in a natural way, and use functions and tools reliably.</p>
             
             <p>But for some specialized use cases, it can make sense to fine-tune models for different states of a conversation. A fine-tuned model can be smaller, faster, and cheaper to run than a large model while still performing equally well (or better) on specific tasks.</p>
             
@@ -1843,15 +1846,23 @@ Tower on a cloudy day.
               <li>Perform the longer task asynchronously, allowing the conversation to continue while it's happening in the background. <em>"I'll look that up for you. While I do that, do you have any other questions?"</em></li>
             </ol>
             
-            <p>If you're performing an inference task asynchronously, you might choose to use a different LLM for that specific task. (Since it's decoupled from the core conversation loop.) For example, you might use an LLM that is slower than would be acceptable for voice responses.</p>
+            <p>If you're performing an inference task asynchronously, you might choose to use a different LLM for that specific task. (Since it's decoupled from the core conversation loop.) You might use an LLM that is slower than would be acceptable for voice responses, or an LLM you have fine-tuned for a specific task.</p>
+
+            <p>A few examples of async inference tasks:</p>
             
-            <p>The amazing recent progress in reasoning models<sup>[47]</sup> expands what we can ask LLMs to do. Reasoning models are not a great fit for voice AI use cases, though, because they spend significant time producing thinking tokens before they emit usable output. Using these models as async parts of a multi model voice AI architecture can work well, though.</p>
+            <ul class="arrow-list">
+              <li>Implementing content "guardrails". (See next section.)</li>
+              <li>Creating an image.</li>
+              <li>Generating code to run in a sandbox.</li>
+            </ul>
+            
+            <p>The amazing recent progress in reasoning models<sup>[47]</sup> expands what we can ask LLMs to do. You can't use these models for a voice AI conversation loop, though, because they will often spend significant time producing thinking tokens before they emit usable output. Using reasoning models as async parts of a multi-model voice AI architecture can work well, though.</p>
             
             <p>Async inference is usually triggered by an LLM function call. A simple approach is to define two functions.</p>
             
             <ul class="arrow-list">
-              <li>perform_async_inference() — This is called by the LLM when it decides that any long-running inference task should run. You describe when to call this function in your tool definition and prompt. You can define more than one of these. Note that you need to start the async task and then immediately return a basic <em>started task successfully response,</em> so that the function call request and response messages are correctly ordered in the context.<sup>[48]</sup></li>
-              <li>queue_async_context_insertion() — This is called by your orchestration layer when your async inference finishes. The tricky thing here is that how you insert results into the context will depend on what you're trying to do, and on what the LLM/API you are using allows. One approach is to wait until the end of any in-progress conversation turn (including the completion of all function calls), put the async inference results into a specially crafted user message, and then run another conversation turn.</li>
+              <li><code>perform_async_inference()</code> — This is called by the LLM when it decides that any long-running inference task should run. You describe in your prompt and tool definitions when to call this function. You can define more than one of these. [todo: Move all of this to a footnote that points to 4.10.3 Handling interruptions.] Note that you need to start the async task and then immediately return a basic <em>started task successfully response,</em> so that the function call request and response messages are correctly ordered in the context.<sup>[48]</sup></li>
+              <li><code>queue_async_context_insertion()</code> — This is called by your orchestration layer when your async inference finishes. The tricky thing here is that how you insert results into the context will depend on what you're trying to do, and on what the LLM/API you are using allows. One approach is to wait until the end of any in-progress conversation turn (including the completion of all function calls), put the async inference results into a specially crafted user message, and then run another conversation turn.</li>
             </ul>
 
             <h2 id="content-guardrails">5.3. Content guardrails</h2>
@@ -1865,7 +1876,7 @@ Tower on a cloudy day.
               <li>Production of inappropriate or unsafe content</li>
             </ul>
             
-            <p><em>Content guardrails is a general term for trying to detect</em> all of these — protecting the LLM from both accidental and malicious prompt injection; catching bad LLM output before it is sent to users.</p>
+            <p><em>Content guardrails</em> is a general term for code that tries to detect any of these — protecting the LLM from both accidental and malicious prompt injection; catching bad LLM output before it is sent to users.</p>
             
             <p>Using a specific model (or models) for guardrails has a couple of potential advantages:</p>
             
@@ -1889,21 +1900,24 @@ Tower on a cloudy day.
             
             <p><strong>It's worth noting that LLMs are much, much better at avoiding all of these issues than they were a year ago.</strong></p>
             
-            <p>Hallucination in general is not a major issue any more with the newest models from the large labs. The only category of hallucination we still regularly see is the LLM "pretending" to call a function, but not actually doing so. And that's mostly addressable with prompting. (Though you need good evals to be sure there aren't cases where this happens with your prompts. Multi-turn conversations <em>really stress LLM function calling abilities).</em></p>
+            <p>Hallucination in general is not a major issue any more with the newest models from the large labs. We only see two categories of hallucination regularly, these days.</p>
             
-            <p>Google's APIs offer search grounding as a built-in tool, and we expect other labs to follow suit this year. Search grounding eliminates most out-of-date knowledge issues.</p>
+            <ul class="arrow-list">
+              <li>The LLM "pretending" to call a function, but not actually doing so. This is fixable through prompting. You need good evals to be sure there aren't cases where this happens with your prompts. When you see function call hallucination in your evals, iterate on your prompt until you don't see it any more. (Remember that multi-turn conversations <em>really</em> stress LLM function calling abilities, so your evals need to mirror your real-world, multi-turn conversations.)</li>
+              <li>The LLM hallucinating when you expect it to do a web search. Built-in search grounding is a relatively new feature of LLM APIs. It's a little bit unpredictable, still, whether LLMs will choose to perform a search. If they don't search, they may respond with (older) knowledge embedded in their weights, or a hallucination. Unlike function call hallucination, this is not particularly easy to fix with prompting. But it is easy to know whether a search was actually performed. So you can display that information in an application UI or inject it into the voice conversation. If your app relies on web search, doing this is a good idea. You're pushing the problem to the user to understand and deal with, but that's better than hiding the "searched" or "didn't search" distinction from the user. On the positive side, when search grounding does work, it can largely eliminate out-of-date knowledge issues.</li>
+            </ul>
             
             <p>All of the APIs from the major labs have very good content safety filters.</p>
             
             <p>Prompt injection mitigation is also much better than it was a year ago, but the surface area of potential prompt injection attacks expands as LLMs gain new capabilities. For example, prompt injection from text in images is now an issue.</p>
             
-            <p>As a very, very general guideline: today in voice AI use cases you are unlikely to see occurrences of accidental prompt injection caused by normal user behavior. But it is definitely possible to steer LLM behavior in ways that subvert system instructions, solely through user input. It's important to test your agents with this in mind. In particular, it's very important to sanitize and cross-check LLM-generated input to any functions that access backend systems.</p>
+            <p>As a very, very general guideline: today in voice AI use cases you are unlikely to see occurrences of accidental prompt injection caused by normal user behavior. But it is definitely possible to steer LLM behavior in ways that subvert system instructions, solely through user input. It's important to test your agents with this in mind. <strong>In particular, it's very important to sanitize and cross-check LLM-generated input to any functions that access backend systems.</strong></p>
 
             <h2 id="single-inference-actions">5.4. Performing single inference actions</h2>
             
-            <p>For AI engineers, learning how to leverage LLMs is an ongoing process. Part of that process is a mental shift in how we think about these new tools. When we first started using LLMs, most of us thought about them through the lens, what are language models uniquely capable of? But LLMs are general-purpose tools. They are good at a very broad range of information processing tasks.</p>
+            <p>For AI engineers, learning how to leverage LLMs is an ongoing process. Part of that process is a mental shift in how we think about these new tools. When we first started using LLMs, most of us thought about them through the lens, <em>what are language models uniquely capable of?</em> But LLMs are general-purpose tools. They are good at a very broad range of information processing tasks.</p>
             
-            <p>In a voice agent context, we always have a code path set up to perform LLM inference! We don't need to limit ourselves to using the LLM only for the core conversation loop.</p>
+            <p>In a voice agent context, we always have a code path set up to perform LLM inference. We don't need to limit ourselves to using the LLM only for the core conversation loop.</p>
             
             <p>For example:</p>
             
@@ -1914,32 +1928,23 @@ Tower on a cloudy day.
               <li>It turns out that you often want to summarize multi-turn conversations. LLMs are fantastic, steerable, summarizers. More on this in the 6. Scripting and instruction following section, below.</li>
             </ul>
             
-            <p>Many of these emerging code patterns look like either:</p>
-            
-            <ol class="list-decimal">
-              <li><code class="subtle-code">(λx. LLM(prompt_B, LLM(prompt_A, x)))(context)</code>, or</li>
-              <li><code class="subtle-code">(λx. LLM(prompt_B, f(LLM(prompt_A, x))))(context)</code></li>
-            </ol>
-            
-            <p>Or, in plain language, the model using the model as a tool.</p>
+            <p>Many of these emerging code patterns look like a language model using either itself, or another language model, as a tool.</p>
             
             <p>This is such a powerful idea that we expect to see lots of people work on this in 2025. Agent frameworks can build support for this into their library-level APIs. Models can also be trained to perform inference recursively in a way roughly analogous to training them to call functions and perform code execution.</p>
 
             <h2 id="self-improving-systems">5.5. Towards self-improving systems</h2>
             
-            <p>When we access a SOTA "model" via an API, we are not accessing a single artifact. The systems behind the APIs use various routing, multi-stage processing, and distributed systems techniques to perform inference fast, flexibly, reliably, and at extraordinary scale. These systems are always being tweaked. Weights are updated, of course. But also, low level inference implementations get more efficient all the time. Systems architectures evolve.</p>
+            <p>When we access a SOTA "model" via an API, we are not accessing a single artifact. The systems behind the APIs use various routing, multi-stage processing, and distributed systems techniques to perform inference fast, flexibly, reliably, and at extraordinary scale. These systems are always being tweaked. Weights are updated. Low-level inference implementations get more efficient all the time. Systems architectures evolve.</p>
             
             <p>The big labs are continually shortening the feedback loop between how users use their APIs and how they implement inference and other capabilities.</p>
             
             <p>These ever-faster feedback loops are a big part of the amazing macro-level AI progress happening these days.</p>
             
-            <p>Taking inspiration from this, what could micro-level feedback loops in our agent-level code look like?</p>
-            
-            <p>Can we also build specific scaffolding that improves agent performance during a conversation?</p>
+            <p>Taking inspiration from this, what could micro-level feedback loops in our agent-level code look like?Can we build specific scaffolding that improves agent performance during a conversation?</p>
             
             <ul class="arrow-list">
-              <li>Monitor how often the agent interrupts the user before they are finished talking, and adjust the VAD timeout dynamically.</li>
-              <li>Monitor how often the user interrupts the agent and adjust LLM response length dynamically.</li>
+              <li>Monitor how often the agent interrupts the user before they are finished talking, and dynamically adjust parameters like VAD timeouts.</li>
+              <li>Monitor how often the user interrupts the agent and dynamically adjust LLM response length.</li>
               <li>Look for patterns that indicate a user is having trouble understanding the conversation — maybe the user is not a native speaker. Adjust the conversation style or offer to switch languages.</li>
             </ul>
             
@@ -1999,11 +2004,9 @@ interpreting phonemes or transcribed text as "MNI"
           <section id="scripting">
             <h1>6. Scripting and instruction following</h1>
             
-            <p>A year ago, it was pretty exciting just to be able to build voice agents capable of open-ended conversations at natural human latency.</p>
+            <p>A year ago, just being able to build voice agents capable of open-ended conversations at natural human latency was exciting.</p>
             
-            <p>Now we're deploying voice AI agents to do complicated, real-world tasks.</p>
-            
-            <p>We need to instruct the LLM to accomplish specific goals during a session. Often, we also need the LLM to perform sub-tasks in a specific order.</p>
+            <p>Now we're deploying voice AI agents to do complicated, real-world tasks. For today's use cases, we need to instruct the LLM to focus on specific goals during a session. Often, we need the LLM to perform sub-tasks in a specific order.</p>
             
             <p>For example, in a healthcare patient intake workflow, we want the agent to:</p>
             
@@ -2014,19 +2017,15 @@ interpreting phonemes or transcribed text as "MNI"
               <li>Etc …</li>
             </ul>
             
-            <p>We refer to crafting step-by-step workflows as <em>scripting</em>.</p>
-            
-            <p><em>Instruction following is the ability of the LLM to reliably</em> execute tasks based on information in the system prompt and context.</p>
-            
-            <p>One lesson from the last year of voice AI development is that it's often impossible to achieve agent reliability with <em>prompt engineering alone.</em></p>
+            <p>We refer to crafting step-by-step workflows as <em>scripting</em>. One lesson from the last year of voice AI development is that it's hard to achieve scripting reliability with <em>prompt engineering</em> alone.</p>
             
             <p>There's only so much detail that can be packed into a single prompt. Relatedly, as the context grows in a multi-turn conversation, the LLM has more and more information to keep track of, and instruction following accuracy declines.</p>
             
-            <p>Many voice AI developers are moving towards a <em>state machine approach to building complex workflows.</em> Instead of writing a long, detailed system instruction to guide the LLM, we can design a series of states. Each state is:</p>
+            <p>Many voice AI developers are moving towards a state machine approach to building complex workflows. Instead of writing a long, detailed system instruction to guide the LLM, we can define a series of states. Each state is:</p>
             
             <ul class="arrow-list">
-              <li>A system instruction and tools list</li>
-              <li>A conversation context</li>
+              <li>A system instruction and tools list.</li>
+              <li>A conversation context.</li>
               <li>One or more exits from the current state to another state.</li>
             </ul>
             
@@ -2039,7 +2038,7 @@ interpreting phonemes or transcribed text as "MNI"
             
             <p>The state machine approach works well because a shorter, more focused system instruction, tools list, and context significantly improves LLM instruction following.</p>
             
-            <p>The challenge is to find the right balance between on the one hand leveraging the LLM's ability to have an open-ended, natural conversation, and on the other to make sure the LLM reliably executes the important parts of the job to be done.</p>
+            <p>The challenge is to find the right balance between, on the one hand, leveraging the LLM's ability to have an open-ended, natural conversation, and on the other, making sure the LLM reliably executes the important parts of the job to be done.</p>
             
             <p><a href="https://github.com/pipecat-ai/pipecat-flows" target="_blank">Pipecat Flows</a> is a library built on top of Pipecat that helps developers create workflow state machines.</p>
             
@@ -2075,7 +2074,7 @@ interpreting phonemes or transcribed text as "MNI"
             
             <p>One very important type of tooling is the eval, short for evaluation.</p>
             
-            <p><em>Eval is a machine learning term for a tool or process that assesses the capabilities of a system and judges its quality.</em></p>
+            <p><em>Eval</em> is a machine learning term for a tool or process that assesses the capabilities of a system and judges its quality.</p>
 
             <h2 id="evals-different">7.1. Voice AI evals are different from software unit tests</h2>
             
@@ -2083,11 +2082,11 @@ interpreting phonemes or transcribed text as "MNI"
             
             <p>Voice AI requires tests that are different from traditional software engineering. Voice AI outputs are non-deterministic. The inputs for testing voice AI are complex, branching, multi-turn conversations.</p>
             
-            <p>Instead of testing that a specific input produces a specific output (f(x) = y), you will need to run probabilistic evals – lots of test runs to see how often a certain type of event happens.<sup>[52]</sup> For some tests, getting a class of cases right 8/10 times is acceptable, for others accuracy needs to be 9.99/10.</p>
+            <p>Instead of testing that a specific input produces a specific output <code>(f(x) = y)</code>, you will need to run probabilistic evals – lots of test runs to see how often a certain type of event happens.<sup>[52]</sup> For some tests, getting a class of cases right 8/10 times is acceptable, for others accuracy needs to be 9.99/10.</p>
             
             <p>Instead of just having one input, you will have many: all of the user responses. This makes it very hard to test voice AI applications without attempting to simulate user behavior.</p>
             
-            <p>Finally, voice AI tests have non-binary results and will rarely yield a definitive green check or red x like traditional unit tests do. Instead, you will need to review results and decide on tradeoffs.</p>
+            <p>Finally, voice AI tests have non-binary results and will rarely yield a definitive ✅ or ❌ like traditional unit tests do. Instead, you will need to review results and decide on tradeoffs.</p>
 
             <h2 id="failure-modes">7.2. Failure modes</h2>
             
@@ -2107,10 +2106,7 @@ interpreting phonemes or transcribed text as "MNI"
             <p>A rudimentary eval process can be as simple as a spreadsheet with prompts and test cases.</p>
             
             <p>One typical approach is to run each prompt whenever you test a new model or change a major part of your system, using an LLM to judge whether the responses fall within some definition of expected parameters.</p>
-            <div class="chapter-image">
-              <img src="images/7a.jpg" alt="A screenshot from the Coval evals platform UI" class="footnote-image" width="600">
-              <p class="image-caption">Figure 7.a: A screenshot from the Coval evals platform UI</p>
-            </div>
+
             <p>Having a basic eval is much better than not having any evals at all. But investing in evals – having really good evals – becomes critical as you start to operate at scale.</p>
           </section>
         </div>
@@ -2128,13 +2124,18 @@ interpreting phonemes or transcribed text as "MNI"
       <div class="chapter-row">
         <div class="chapter-content">
           <section id="eval-platforms">
-            <p>Evaluation platforms that offer sophisticated tooling for voice AI evals are just beginning to emerge. <a href="https://coval.dev" target="_blank">Coval</a> is a startup building testing and eval tools for voice and chat agents. Coval's simulation-oriented approachis strongly influencing the evolution of evals in the voice AI ecosystem.</p>
+            <p>Evaluation platforms that offer sophisticated tooling for voice AI evals are just beginning to emerge. <a href="https://coval.dev" target="_blank">Coval</a> is a startup building testing and eval tools for voice and chat agents. Coval's simulation-oriented approach is strongly influencing the evolution of evals in the voice AI ecosystem.</p>
+
+            <div class="chapter-image">
+              <img src="images/7a.jpg" alt="A screenshot from the Coval evals platform UI" class="footnote-image" width="600">
+              <p class="image-caption">Figure 7.a: A screenshot from the Coval evals platform UI</p>
+            </div>
             
             <p>Coval and other evaluation platforms can help with:</p>
             
             <ul class="arrow-list">
               <li>Prompt iteration.</li>
-              <li>Off the shelf metrics for audio, workflow, function calling, and semantic evaluation of conversations.</li>
+              <li>Off-the-shelf metrics for audio, workflow, function calling, and semantic evaluation of conversations.</li>
               <li>Hillclimbing on problem areas (for example, making your agents better at handling interruptions).</li>
               <li>Regression testing (to be sure when you fix one problem area you don't introduce regressions in other previously solved problem areas).</li>
               <li>Tracking performance changes over time, both as changes are made by developers, and across user cohorts.</li>
@@ -2154,13 +2155,13 @@ interpreting phonemes or transcribed text as "MNI"
           <section id="telephony">
             <h1>8. Integrating with telephony infrastructure</h1>
             
-            <p>Most of the fastest growing voice AI use cases today involve telephone calls. New, generative AI voice agents are answering phone calls and making phone calls at scale today.</p>
+            <p><strong>Most of the fastest growing voice AI use cases today involve telephone calls.</strong> AI voice agents are answering phone calls and making phone calls at scale today.</p>
             
             <p>Some of this is happening in traditional call centers. Call centers mostly view voice AI as a technology that can improve "deflection rates" – the percentage of calls that can be handled by automation rather than human agents. This makes the ROI for adopting voice AI clear. If the per-minute cost of an LLM is cheaper than the per-minute cost of a human agent, the buying decision is easy.<sup>[53]</sup></p>
             
-            <p>A couple of interesting things are happening that accelerate adoption, though, beyond the simple ROI calculation.</p>
+            <p>A couple of interesting things are happening that accelerate adoption, though, beyond simple ROI calculations.</p>
             
-            <p>Voice AI agents are scalable in ways that a human staff isn't. Once you have voice AI in place, wait times during high-volume periods go down.</p>
+            <p>Voice AI agents are scalable in ways that a human staff isn't. Once you have voice AI in place, wait times during high-volume periods go down. (Customer satisfaction scores go up, as a direct result.)</p>
             
             <p>And LLMs can sometimes do a better job than human agents because we're giving them better tools. In many customer support situations, human agents have to deal with multiple legacy backend systems. Finding information in a timely fashion can be a challenge. When we deploy voice AI into that same situation, we have to build API-level access to these legacy systems. New LLM-plus-API layers are being built to enable the technology transition to voice AI.</p>
             
@@ -2168,7 +2169,7 @@ interpreting phonemes or transcribed text as "MNI"
             
             <p>Outside the call center, voice AI is changing how small businesses field phone calls, and how they use phone calls for information discovery and coordination. We talk every day to startups building specialized AI telephony solutions for every business vertical that you've ever heard of.</p>
             
-            <p>People in this space often joke that pretty soon humans won't make, or receive, phone calls at all. The phone calls will all be AI-to-AI. There's some truth to this! The trendline is real.</p>
+            <p>People in this space often joke that pretty soon humans won't make, or receive, phone calls at all. The phone calls will all be AI-to-AI. Judging from the trendlines we see, there's some truth to this!</p>
             
             <p>If you're interested in telephony for voice AI, there are a few acronyms and common ideas you should be familiar with.</p>
             
@@ -2201,10 +2202,10 @@ interpreting phonemes or transcribed text as "MNI"
           <section id="rag-memory">
             <h1>9. RAG and memory</h1>
             
-            <p>Voice AI agents often need access to information from external systems. You might need to:</p>
+            <p>Voice AI agents often access information from external systems. For example, you might need to:</p>
             
             <ul class="arrow-list">
-              <li>Incorporate information about the user.</li>
+              <li>Incorporate information about the user into the LLM system instructions.</li>
               <li>Retrieve previous conversation history.</li>
               <li>Look up information in a knowledge base.</li>
               <li>Perform a web search.</li>
@@ -2213,10 +2214,12 @@ interpreting phonemes or transcribed text as "MNI"
             
             <p>All of these fall under the category of RAG – retrieval augmented generation. RAG is the general AI engineering term for combining information retrieval and LLM prompting.</p>
             
-            <p>The "simplest possible RAG" for a voice agent is to look up information about a user when the voice agent starts, then merge that information into the LLM system instructions.</p>
+            <p>The "simplest possible RAG" for a voice agent is looking up information about a user before the conversation starts, then merging that information into the LLM system instructions.</p>
             
             <pre><code>user_info = fetch_user_info(user_id)
+
 system_prompt_base = "You are a voice AI assistant..."
+
 system_prompt = (
   system_prompt_base
   + f"""
@@ -2232,38 +2235,22 @@ The patient has the following medical history: {user_info["summarized_history"]}
             
             <p>Often, an 80/20 approach gets you a very long way. If you have an existing knowledge base, use the APIs you already have. Write simple evals so you can test a few different formats for injecting lookup results into the conversation context. Deploy to production, then monitor how well this works with real-world users.</p>
             
-            <pre><code>async def start_query_order_system(function_name, llm, context):
-  """Push a speech frame. This is handy when the LLM response might take a while."""
+            <pre><code>async def query_order_system(function_name, tool_call_id, args, llm, context, result_callback):
+  "First push a speech frame. This is handy when the LLM response might take a while."
   await llm.push_frame(TTSSpeakFrame("Please hold on while I look that order up for you."))
 
-async def query_order_system(function_name, tool_call_id, args, llm, context, result_callback):
- query_result = order_system.get(args["query"])
- await result_callback({
-  "info": json.dumps({
-   "lookup_success": True,
-   "order_status": query_result["order_status"],
-   "delivery_date": query_result["delivery_date"],
-  })
+  query_result = order_system.get(args["query"])
+  await result_callback({
+    "info": json.dumps({
+     "lookup_success": True,
+     "order_status": query_result["order_status"],
+     "delivery_date": query_result["delivery_date"],
+    })
  })
 
-llm.register_function("query_order_system",
- query_order_system
- start_callback=start_query_order_system
-)
+llm.register_function("query_order_system", query_order_system)
 </code></pre>
             <p class="image-caption">Figure 9.b: RAG during a session. Define a function for the LLM to call when information lookup is required. In this example, we also emit a pre-set spoken phrase to let the user know the system will take a few seconds to respond.</p>
-            
-            <pre><code>pipeline = Pipeline(
- [
-   transport.input(),
-   context_aggregator.user(),
-   llm,
-   tts,
-   transport.output(),
-   context_aggregator.assistant(),
- ]
-)
-</code></pre>
             
             <p>As always, latency is a bigger challenge with voice AI than for non-voice AI systems. When an LLM makes a function call request, the extra inference call adds to latency. Looking up information in external systems can be slow, too. It's often useful to trigger a simple speech output before executing the RAG lookup, to let the user know that work is in progress.</p>
             
@@ -2293,206 +2280,56 @@ llm.register_function("query_order_system",
         <div class="chapter-content">
           <section id="hosting">
             <h1>10. Hosting and Scaling</h1>
-            
-            <p>Voice AI agents are complex distributed systems. They need to:</p>
-            
-            <ul class="arrow-list">
-              <li>Maintain low-latency connections to end users.</li>
-              <li>Perform inference using multiple AI models.</li>
-              <li>Interact with back-end systems.</li>
-              <li>Scale up and down based on demand.</li>
-            </ul>
-            
-            <p>Let's talk about how to host and scale voice AI agents.</p>
+            <p>Voice AI applications often have some traditional application components — web app frontends, API endpoints and other back-end elements. But the agent process itself is different enough from traditional app components that deploying and scaling voice AI comes with unique challenges.</p>
 
-            <h2 id="hosting-options">10.1. Hosting options</h2>
-            
-            <p>There are three main approaches to hosting voice AI agents:</p>
-            
-            <ol class="list-decimal">
-              <li>Use a voice AI platform.</li>
-              <li>Use a serverless platform.</li>
-              <li>Build and manage your own infrastructure.</li>
-            </ol>
-            
-            <h3 id="voice-ai-platforms">10.1.1 Voice AI platforms</h3>
-            
-            <p>Voice AI platforms are the easiest way to get started. They handle all of the infrastructure complexity for you. You just need to write the code that defines your agent's behavior.</p>
-            
-            <p>The tradeoff is that you're locked into the platform's architecture and pricing model. And you may not have as much control over the details of how your agent works.</p>
-            
-            <p>Some voice AI platforms are:</p>
-            
             <ul class="arrow-list">
-              <li><a href="https://retellai.com" target="_blank">Retell</a> – A platform for building voice AI agents that can make and receive phone calls.</li>
-              <li><a href="https://vapi.ai" target="_blank">Vapi</a> – A platform for building voice AI agents that can make and receive phone calls.</li>
-              <li><a href="https://github.com/vocodedev/vocode-python" target="_blank">Vocode</a> – An open source framework for building voice AI agents.</li>
-            </ul>
-            
-            <h3 id="serverless-platforms">10.1.2 Serverless platforms</h3>
-            
-            <p>Serverless platforms are a good middle ground. They handle the infrastructure complexity, but give you more control over the details of how your agent works.</p>
-            
-            <p>The tradeoff is that you need to write more code. You need to handle the details of the voice AI processing loop yourself.</p>
-            
-            <p>Some serverless platforms that work well for voice AI are:</p>
-            
-            <ul class="arrow-list">
-              <li><a href="https://workers.cloudflare.com" target="_blank">Cloudflare Workers</a> – A serverless platform with good support for WebSockets and WebRTC.</li>
-              <li><a href="https://aws.amazon.com/lambda" target="_blank">AWS Lambda</a> – A serverless platform with good support for WebSockets and integration with AWS services.</li>
-              <li><a href="https://cloud.google.com/functions" target="_blank">Google Cloud Functions</a> – A serverless platform with good support for WebSockets and integration with Google Cloud services.</li>
-            </ul>
-            
-            <h3 id="self-hosted">10.1.3 Self-hosted</h3>
-            
-            <p>Self-hosted infrastructure gives you the most control. You can customize every aspect of how your agent works.</p>
-            
-            <p>The tradeoff is that you need to manage the infrastructure yourself. This is a significant ongoing operational burden.</p>
-            
-            <p>If you're building a voice AI agent that needs to handle a lot of concurrent sessions, you'll need to think about how to scale your infrastructure. This is a complex topic, but here are some general guidelines:</p>
-            
-            <ul class="arrow-list">
-              <li>Use a container orchestration system like Kubernetes to manage your infrastructure.</li>
-              <li>Use a load balancer to distribute traffic across your infrastructure.</li>
-              <li>Use a database to store session state.</li>
-              <li>Use a message queue to handle asynchronous tasks.</li>
+              <li>The voice AI agent conversation loop is usually a long-running process (not a request/response function that exits when a single response is finished generating).</li>
+              <li>Voice agents stream audio in realtime. Anything that stalls streaming can create audio glitches. (CPU spikes on a shared virtual machine, program flow that blocks audio thread execution even for as little as 10ms, etc.)</li>
+              <li>Voice agents usually need either WebSocket or WebRTC connectivity. Cloud service network gateway and routing products don’t support WebSockets nearly as well as they support HTTP. They often don’t support UDP at all. (UDP is required for WebRTC.)</li>
             </ul>
 
-            <h2 id="scaling-voice-ai">10.2. Scaling voice AI</h2>
-            
-            <p>Voice AI agents are stateful. Each session has its own conversation context, which needs to be maintained across multiple turns.</p>
-            
-            <p>This makes scaling voice AI agents more complex than scaling stateless web services.</p>
-            
-            <p>There are two main approaches to scaling voice AI agents:</p>
-            
-            <ol class="list-decimal">
-              <li>Sticky sessions</li>
-              <li>Shared state</li>
-            </ol>
-            
-            <h3 id="sticky-sessions">10.2.1 Sticky sessions</h3>
-            
-            <p>With sticky sessions, each user is assigned to a specific server for the duration of their session. The server maintains the session state in memory.</p>
-            
-            <p>This approach is simple and efficient. But it has some drawbacks:</p>
-            
-            <ul class="arrow-list">
-              <li>If a server fails, all of the sessions on that server are lost.</li>
-              <li>It's hard to scale up and down based on demand.</li>
-              <li>It's hard to deploy new versions of your code without disrupting active sessions.</li>
-            </ul>
-            
-            <h3 id="shared-state">10.2.2 Shared state</h3>
-            
-            <p>With shared state, session state is stored in a database or other shared storage system. Any server can handle any request for any session.</p>
-            
-            <p>This approach is more complex, but it has some advantages:</p>
-            
-            <ul class="arrow-list">
-              <li>If a server fails, sessions can be handled by other servers.</li>
-              <li>It's easier to scale up and down based on demand.</li>
-              <li>It's easier to deploy new versions of your code without disrupting active sessions.</li>
-            </ul>
-            
-            <p>The tradeoff is that you need to serialize and deserialize session state for every request. This adds latency and complexity.</p>
-            
-            <p>In practice, most voice AI systems use a hybrid approach. They use sticky sessions for the duration of a single conversation turn, but store session state in a shared database between turns.</p>
+            <p>For all of these reasons, it’s generally not possible to use a serverless framework like AWS Lambda or Google CloudRun for voice AI.</p>
+  
+            <p>The best practice today for deploying voice AI agents is:</p>
 
-            <h2 id="observability">10.3. Observability</h2>
-            
-            <p>Voice AI agents are complex distributed systems. They need good observability to help you understand what's happening and diagnose problems.</p>
-            
-            <p>There are three main aspects of observability:</p>
-            
-            <ol class="list-decimal">
-              <li>Logging</li>
-              <li>Metrics</li>
-              <li>Tracing</li>
-            </ol>
-            
-            <h3 id="logging">10.3.1 Logging</h3>
-            
-            <p>Logging is the most basic form of observability. It's a record of what happened in your system.</p>
-            
-            <p>For voice AI agents, you should log:</p>
-            
             <ul class="arrow-list">
-              <li>Session start and end events.</li>
-              <li>User and agent messages.</li>
-              <li>Function calls and their results.</li>
-              <li>Errors and exceptions.</li>
+              <li>Once you’ve gotten past the prototyping phase, invest engineering time in creating lightweight tooling to build Docker (or similar) containers to deploy your agents.</li>
+              <li>Push your container to your compute platform of choice. For simple deployments, you can just keep a fixed number of virtual machines running. At some point, though, you’ll want to hook into your platform’s tooling so you can autoscale, deploy new versions gracefully, implement good service discovery and failover, and build other at-scale devops requirements.</li>
+              <li>Kubernetes is the standard these days for managing containers, deployments, and scaling. Kubernetes has a very steep learning curve, but is supported on all of the major cloud platforms. Kubernetes has a very large ecosystem around it.</li>
+              <li>For deploying software updates, you’ll want to set long drain times that allow existing connections to stay alive until sessions end. This is not terribly hard to do in Kubernetes, but the details depend on your k8s engine and version.</li>
+              <li>Cold starts are a problem for voice AI agents, because fast connection times are usually pretty important. Keeping an idle pool of agents is the easiest way to avoid long cold starts. If your workloads don’t require running large models locally, you can generally engineer fast container cold starts without too much effort.<sup>67</sup></li>
             </ul>
-            
-            <p>It's also useful to log the full conversation context for each turn. This makes it easier to debug problems and understand what happened in a session.</p>
-            
-            <h3 id="metrics">10.3.2 Metrics</h3>
-            
-            <p>Metrics are numerical measurements of your system's behavior. They help you understand how your system is performing and identify trends.</p>
-            
-            <p>For voice AI agents, you should track metrics like:</p>
-            
-            <ul class="arrow-list">
-              <li>Session count and duration.</li>
-              <li>Voice-to-voice latency.</li>
-              <li>LLM inference latency.</li>
-              <li>Speech-to-text and text-to-speech latency.</li>
-              <li>Function call count and latency.</li>
-              <li>Error rates.</li>
-            </ul>
-            
-            <h3 id="tracing">10.3.3 Tracing</h3>
-            
-            <p>Tracing is a way to follow a request through your system. It helps you understand how different components interact and identify bottlenecks.</p>
-            
-            <p>For voice AI agents, you should trace:</p>
-            
-            <ul class="arrow-list">
-              <li>The path of each user message through your system.</li>
-              <li>The time spent in each component.</li>
-              <li>The dependencies between components.</li>
-            </ul>
-            
-            <p><a href="https://opentelemetry.io" target="_blank">OpenTelemetry</a> is a good framework for implementing tracing in your voice AI agent.</p>
-            
-            <table class="data-table">
-              <tr>
-                <th>Metric</th>
-                <th>Description</th>
-                <th>Target</th>
-              </tr>
-              <tr>
-                <td>Voice-to-voice latency</td>
-                <td>Time from end of user speech to start of agent speech</td>
-                <td>&lt; 800ms</td>
-              </tr>
-              <tr>
-                <td>LLM inference latency</td>
-                <td>Time to first token from LLM</td>
-                <td>&lt; 500ms</td>
-              </tr>
-              <tr>
-                <td>Speech-to-text latency</td>
-                <td>Time to first token from STT</td>
-                <td>&lt; 200ms</td>
-              </tr>
-              <tr>
-                <td>Text-to-speech latency</td>
-                <td>Time to first byte from TTS</td>
-                <td>&lt; 200ms</td>
-              </tr>
-              <tr>
-                <td>Function call latency</td>
-                <td>Time to execute a function call</td>
-                <td>&lt; 100ms</td>
-              </tr>
-            </table>
-            <p class="table-caption">Figure 10.a: Target latency metrics for voice AI agents</p>
+
+            <p>Virtual machine specs and container packing often trip people up when deploying to production for the first time. The specs your agents need will vary depending on what libraries you use and how much CPU-intensive work you do within your agent process. A good rule of thumb is to start by running a single agent per virtual machine CPU, with double the maximum amount of RAM you see an agent process consuming on your dev machines.<sup>68</sup></p>
+
           </section>
         </div>
-        
         <div class="chapter-notes">
+          <div class="chapter-footnotes" id="chapter-12-notes">
+            <div class="footnote" id="footnote-67">
+              <p>[67] If you are running large models locally, advice about cold starts is well outside the scope of this guide. If you’re not already an expert on GPU and container optimization, you probably want to find an expert, rather than climb up that learning curve yourself (at least until you’re operating at a big enough scale to amortize the cost of developing the tooling you need).</p>
+            </div>
+            <div class="footnote" id="footnote-68">
+              <p>[68] Make sure your container runtime is starting new agent processes on idle CPUs. This is not always the k8s default.</p>
+            </div>
+          </div>
+        </div>
+      </div>
 
+      <div class="chapter-row">
+        <div class="chapter-content">
+          <section id="future">
+            <h1>11. What's coming in 2025</h1>
+            
+            <p>Speaking of the growth of AI engineering, voice AI grew enormously in 2024 and we expect this to continue in 2025.</p>
+            
+            <p>This expanding interest and adoption will create continuing progress in some important core areas:</p>
+  to find an expert, rather than
+  climb up that learning curve
+  yourself (at least until you’re
+  operating at a big enough
+  scale to amortize the cost
+  of developing th</p>
 
         </div>
       </div>
@@ -2502,94 +2339,24 @@ llm.register_function("query_order_system",
           <section id="future">
             <h1>11. What's coming in 2025</h1>
             
-            <p>Voice AI is evolving rapidly. Here are some trends we expect to see in 2025:</p>
+            <p>Speaking of the growth of AI engineering, voice AI grew enormously in 2024 and we expect this to continue in 2025.</p>
+            
+            <p></p>This expanding interest and adoption will create continuing progress in some important core areas:</p>
 
-            <h2 id="speech-to-speech-models">11.1. Speech-to-speech models</h2>
-            
-            <p>Speech-to-speech models are going to get much better in 2025. We expect to see:</p>
-            
             <ul class="arrow-list">
-              <li>Lower latency</li>
-              <li>Better voice quality</li>
-              <li>More natural conversation flow</li>
-              <li>Better handling of interruptions</li>
+              <li>More latency optimization from all model builders and service providers. For a long time, most people implementing services and almost all published benchmarks focused on throughput rather than latency. For voice AI, we care about time to first token much more than we care about tokens per second.</li>
+              <li>Progress towards full integration of all the non-text modalities in models and APIs.</li>
+              <li>More audio-specific features in testing and eval tools.</li>
+              <li>Context caching APIs that support the needs of realtime multimodal use cases.</li>
+              <li>New voice agent platforms from multiple providers.</li>
+              <li>Speech-to-speech model APIs from multiple providers.</li>
             </ul>
-            
-            <p>The OpenAI Realtime API and Google Multimodal Live API are just the beginning. We expect to see these APIs mature and new competitors emerge.</p>
 
-            <h2 id="multimodal-agents">11.2. Multimodal agents</h2>
+            <p>If you’re interested in hot takes about 2025 from four experts in the voice AI space, skip to <a href="https://www.youtube.com/live/B6zTwHh-abw?t=3065s" target="_blank">54:05 in the recording of the panel</a> from January’s San Francisco Voice AI Meetup. Karan Goel, Niamh Gavin, Shrestha Basu-Mallick, and Swyx all offered their predictions for what we’ll see in the coming year: universal memory, AI in Hollywood, moving from model imitating to model understanding, and a contrarian position on robotics.</p>
             
-            <p>Multimodal agents that can see, hear, and speak are going to become more common in 2025. We expect to see:</p>
-            
-            <ul class="arrow-list">
-              <li>Better integration of vision and speech</li>
-              <li>More natural conversation about visual content</li>
-              <li>Better handling of complex visual scenes</li>
-            </ul>
-            
-            <p>The ability to see and understand the world is going to make voice AI agents much more useful in many contexts.</p>
+            <p>It’s going to be a fun year.</p>
 
-            <h2 id="specialized-models">11.3. Specialized models</h2>
-            
-            <p>We expect to see more specialized models for voice AI in 2025. These might include:</p>
-            
-            <ul class="arrow-list">
-              <li>Models optimized for specific domains (healthcare, finance, etc.)</li>
-              <li>Models optimized for specific tasks (scheduling, customer support, etc.)</li>
-              <li>Models optimized for specific languages and dialects</li>
-            </ul>
-            
-            <p>These specialized models will be smaller, faster, and more accurate than general-purpose models for their specific domains.</p>
 
-            <h2 id="better-tooling">11.4. Better tooling</h2>
-            
-            <p>Voice AI tooling is going to get much better in 2025. We expect to see:</p>
-            
-            <ul class="arrow-list">
-              <li>Better frameworks for building voice AI agents</li>
-              <li>Better testing and evaluation tools</li>
-              <li>Better observability and monitoring tools</li>
-              <li>Better deployment and scaling tools</li>
-            </ul>
-            
-            <p>These tools will make it easier to build, test, deploy, and operate voice AI agents at scale.</p>
-
-            <h2 id="more-natural-conversations">11.5. More natural conversations</h2>
-            
-            <p>Voice AI agents are going to become more natural conversationalists in 2025. We expect to see:</p>
-            
-            <ul class="arrow-list">
-              <li>Better handling of interruptions</li>
-              <li>More natural turn-taking</li>
-              <li>Better understanding of context and intent</li>
-              <li>More natural voice quality and prosody</li>
-            </ul>
-            
-            <p>These improvements will make voice AI agents feel more like talking to a human and less like talking to a machine.</p>
-
-            <h2 id="broader-adoption">11.6. Broader adoption</h2>
-            
-            <p>Voice AI is going to be adopted in more contexts in 2025. We expect to see:</p>
-            
-            <ul class="arrow-list">
-              <li>More voice AI in customer support</li>
-              <li>More voice AI in healthcare</li>
-              <li>More voice AI in education</li>
-              <li>More voice AI in personal assistants</li>
-              <li>More voice AI in gaming and entertainment</li>
-            </ul>
-            
-            <p>As voice AI becomes more capable and more natural, it's going to be used in more and more contexts.</p>
-
-            <h2 id="conclusion">11.7. Conclusion</h2>
-            
-            <p>Voice AI is at an exciting inflection point. The technology is good enough to be useful in many contexts, but it's still evolving rapidly.</p>
-            
-            <p>If you're building voice AI agents today, you're at the forefront of a technology that's going to transform how we interact with computers and with each other.</p>
-            
-            <p>We hope this guide has been helpful in understanding the state of the art in voice AI and how to build voice AI agents that work well in the real world.</p>
-            
-            <p>Good luck with your voice AI projects!</p>
           </section>
         </div>
         
@@ -2623,6 +2390,7 @@ llm.register_function("query_order_system",
             
             <h2 id="design">Design</h2>
             <p>Sascha Mombartz</p>
+            <p>Akhil K G</p>
           </section>
         </div>
         
