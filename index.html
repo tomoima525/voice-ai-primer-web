@@ -196,8 +196,7 @@
     <main>
       <div class="chapter-row">
         <div class="chapter-content">
-          <section id="conversational-voice-ai">
-            <h1>1. Conversational Voice AI in 2025</h1>
+          <h1 id="conversational-voice-ai">1. Conversational Voice AI in 2025</h1>
             
             <p>LLMs are good conversationalists.</p>
             
@@ -217,7 +216,7 @@
             </ul>
             
             <p>On the consumer side, conversational voice (and video) AI is also starting to make its way into social applications and games. And developers are sharing personal voice AI projects and experiments every day on github and social media.</p>
-          </section>
+
         </div>
         
         <div class="chapter-notes">
@@ -231,8 +230,7 @@
 
       <div class="chapter-row">
         <div class="chapter-content">
-          <section id="about-this-guide">
-            <h1>2. About this guide</h1>
+          <h1 id="about-this-guide">2. About this guide</h1>
             
             <p>This guide is a snapshot of the voice AI state of the art.</p>
             
@@ -252,7 +250,7 @@
             <p>We've tried to give general advice in this document, rather than recommend commercial products and services. Where we highlight specific vendors, we do so because they are used by a large percentage of voice AI developers.</p>
             
             <p>Let's get started …</p>
-          </section>
+
         </div>
         
         <div class="chapter-notes">
@@ -269,8 +267,7 @@
 
       <div class="chapter-row">
         <div class="chapter-content">
-          <section id="basic-loop">
-            <h1>3. The basic conversational AI loop</h1>
+          <h1 id="basic-loop">3. The basic conversational AI loop</h1>
             
             <p>The basic "job to be done" of a voice AI agent is to listen to what a human says, respond in some useful way, then repeat that sequence.</p>
             
@@ -301,7 +298,7 @@
               <li>How do you connect voice agents to existing back-end systems?<sup>[6]</sup></li>
               <li>How do you know if your voice agents are performing well?</li>
             </ol>
-          </section>
+
         </div>
         
         <div class="chapter-notes">
@@ -327,8 +324,7 @@
 
       <div class="chapter-row">
         <div class="chapter-content">
-          <section id="core-tech">
-            <h1>4. Core technologies and best practices</h1>
+          <h1 id="core-tech">4. Core technologies and best practices</h1>
             
             <h2 id="latency">4.1. Latency</h2>
             
@@ -577,7 +573,7 @@
             <p>The Google Multimodal Live API is another promising — and also currently beta — speech-to-speech service. This API offers a view into the near-future of the Gemini models: long context windows, excellent vision capabilities, fast inference, strong audio understanding, code execution, and search grounding. Like the OpenAI Realtime API, this beta product is not yet a good choice for most production voice AI applications.</p>
             
             <p>We expect to see lots of progress on the speech-to-speech front in 2025. But whether production voice AI applications will begin to use speech-to-speech APIs this year is still an open question.</p>
-          </section>
+
         </div>
         
         <div class="chapter-notes">
@@ -619,8 +615,7 @@
 
       <div class="chapter-row">
         <div class="chapter-content">
-          <section id="speech-to-text">
-            <h2 id="speech-to-text">4.3. Speech-to-text</h2>
+          <h2 id="speech-to-text">4.3. Speech-to-text</h2>
             
             <p>Speech-to-text — transcription — is the "input" stage for voice AI.</p>
             
@@ -753,7 +748,7 @@ Rules:
 - No response other than exact transcription, or "", is allowed.
             </code></pre>
 
-          </section>
+
         </div>
         
         <div class="chapter-notes">
@@ -771,8 +766,7 @@ Rules:
 
       <div class="chapter-row">
         <div class="chapter-content">
-          <section id="text-to-speech">
-            <h2 id="text-to-speech">4.4. Text-to-speech</h2>
+          <h2 id="text-to-speech">4.4. Text-to-speech</h2>
             
             <p>Text-to-speech is the output stage of the voice-to-voice processing loop.</p>
             
@@ -874,7 +868,6 @@ Rules:
               <li>OpenAI <a href="https://openai.com/index/introducing-our-next-generation-audio-models/" target="_blank">recently shipped</a> a new text-to-speech mode, gpt-4o-mini-tts. This model is fully steerable, which opens up new possibilities for telling a voice model not just <em>what</em> to say but <em>how</em> to speak. You can experiment with steering gpt-4o-mini-tts at <a href="https://openai.fm" target="_blank">openai.fm</a>. </li>
               <li><a href="https://groq.com/" target="_blank">Groq  </a> and <a href="https://play.ai/" target="_blank">PlayAI</a> recently <a href="https://groq.com/build-fast-with-text-to-speech/" target="_blank">announced a partnership</a>. Groq is known for fast inference, and PlayAI offers a low-latency voice model that supports more than 30 languages.</li>
             </ul>
-        </section>
         </div>
         
         <div class="chapter-notes">
@@ -906,8 +899,7 @@ you" in your responses.
 
       <div class="chapter-row">
         <div class="chapter-content">
-          <section id="audio-processing">
-            <h2 id="audio-processing">4.5. Audio processing</h2>
+          <h2 id="audio-processing">4.5. Audio processing</h2>
             
             <p>A good voice AI platform or library will mostly hide the complexities of audio capture and processing. But if you build complex voice agents, at some point you'll bump up against bugs and corner cases in audio handling.<sup>[18]</sup> So it's worth taking a quick tour of the audio input pipeline.</p>
 
@@ -1034,7 +1026,7 @@ you" in your responses.
             <h3 id="voice-activity-detection">4.5.6 Voice activity detection</h3>
             
             <p>A voice activity detection stage is part of almost every voice AI pipeline. VAD classifies audio segments as "speech" and "not speech." We will talk in detail about VAD in 4.7 Turn Detection, below.</p>
-          </section>
+
         </div>
         
         <div class="chapter-notes">
@@ -1064,8 +1056,7 @@ you" in your responses.
 
       <div class="chapter-row">
         <div class="chapter-content">
-          <section id="network-transport">
-            <h2 id="network-transport">4.6. Network transport</h2>
+          <h2 id="network-transport">4.6. Network transport</h2>
             
             <h3 id="websockets-webrtc">4.6.1 WebSockets and WebRTC</h3>
             
@@ -1160,7 +1151,7 @@ you" in your responses.
               <p class="image-caption">Figure 4.w: The jitter buffer. A larger jitter buffer translates directly to a larger perceived delay in audio and video. Keeping jitter buffers as small as possible contributes significantly to a good user experience.</p>
             </div>
             <p>A good WebRTC infrastructure provider will offer edge routing. They will be able to show you where they have server clusters and provide metrics that show their private route performance.</p>
-          </section>
+
         </div>
         
         <div class="chapter-notes">
@@ -1201,8 +1192,7 @@ you" in your responses.
 
       <div class="chapter-row">
         <div class="chapter-content">
-          <section id="turn-detection">
-            <h2 id="turn-detection">4.7. Turn detection</h2>
+          <h2 id="turn-detection">4.7. Turn detection</h2>
             
             <p><em>Turn detection </em> means determining when the user is finished talking and expects the LLM to respond.</p>
             
@@ -1329,7 +1319,7 @@ you" in your responses.
             <p class="image-caption">Figure 4.z: Pipecat pipeline <a href="https://github.com/pipecat-ai/pipecat/blob/main/examples/foundational/22d-natural-conversation-gemini-audio.py" target="_blank">code for context-aware turn detection</a> using Gemini 2.0 Flash native audio input. Turn detection and greedy conversation inference run in parallel. Output is gated until the turn detection inference detects a phrase endpoint.</p>
 
             <p>OpenAI recently shipped a new context-aware turn detection capability for their Realtime API. They call this feature <em>semantic VAD</em>, in contrast to the simpler <em>server VAD</em> (pause-based turn detection). Docs are <a href="https://platform.openai.com/docs/guides/realtime-vad#semantic-vad" target="_blank">here</a>.  </p>
-          </section>
+
         </div>
         
 
@@ -1352,8 +1342,7 @@ you" in your responses.
 
       <div class="chapter-row">
         <div class="chapter-content">
-          <section id="interruption-handling">
-            <h2 id="interruption-handling">4.8. Interruption handling</h2>
+          <h2 id="interruption-handling">4.8. Interruption handling</h2>
             
             <p><em>Interruption handling</em> is allowing the user to interrupt the voice AI agent. Interruptions are a normal part of conversation, so handling interruptions gracefully is important.</p>
             
@@ -1384,7 +1373,7 @@ you" in your responses.
             <p>So you need a way to figure out what text the user actually <em>heard!</em></p>
             
             <p>The best speech-to-text services can report word-level timestamp data. Use these word-level timestamps to buffer and assemble assistant message text that matches the audio heard by the user. See the discussion of word-level timestamps in the <a href="#text-to-speech"> 4.4 Text-to-speech </a> section, above.</p>
-          </section>
+
         </div>
         
         <div class="chapter-notes">
@@ -1407,8 +1396,7 @@ you" in your responses.
 
       <div class="chapter-row">
         <div class="chapter-content">
-          <section id="managing-conversation-context">
-            <h2 id="managing-conversation-context">4.9. Managing conversation context</h2>
+          <h2 id="managing-conversation-context">4.9. Managing conversation context</h2>
             
             <p>LLMs are stateless. This means that for a multi-turn conversation, you need to feed all of the previous user and agent messages — and other configuration elements — back into the LLM each time you generate a new response.</p>
 
@@ -1464,7 +1452,7 @@ Turn 3:
             <p>LLMs don't always need the full conversation context. Shortening or summarizing the context can reduce latency and cost. And carefully tailoring the context during the course of a session can significantly increase the reliability of a voice AI agent. More on this topic in the <strong>Scripting and instruction following</strong> section, below.</p>
 
 
-          </section>
+
         </div>
         
         <div class="chapter-notes">
@@ -1478,8 +1466,7 @@ Turn 3:
 
       <div class="chapter-row">
         <div class="chapter-content">
-          <section id="function-calling">
-            <h2 id="function-calling">4.10. Function calling</h2>
+          <h2 id="function-calling">4.10. Function calling</h2>
             
             <p>Production voice AI agents rely heavily on LLM function calling.</p>
             
@@ -1668,7 +1655,7 @@ Tower on a cloudy day.
             <p class="image-caption">The LLM figures out how to chain two functions – <strong> list_files()</strong> and <strong>load_resource()</strong> – to respond to a specific instruction. The two functions are described in a tools list. But this chaining behavior is not prompted for.</p>
             
             <p>Composite function calling is a relatively new capability of SOTA LLMs. Performance is "jagged" – surprisingly good, but frustratingly inconsistent.</p>
-          </section>
+
         </div>
         
         <div class="chapter-notes">
@@ -1699,8 +1686,7 @@ Tower on a cloudy day.
 
       <div class="chapter-row">
         <div class="chapter-content">
-          <section id="multimodality">
-            <h2 id="multimodality">4.11. Multimodality</h2>
+          <h2 id="multimodality">4.11. Multimodality</h2>
             
             <p>LLMs now consume and produce audio, images, and video in addition to text.</p>
             
@@ -1761,7 +1747,7 @@ Tower on a cloudy day.
             <p>You can summarize video as text, and keep only the summary in the context. You can calculate embeddings and do RAG-like lookup. LLMs are quite good at both feature summarization and using function-calling to trigger complex RAG queries. But both of those approaches are complicated to engineer.</p>
             
             <p>Ultimately, the biggest lever is context caching. All the SOTA API providers offer some support for caching. None of today's caching features are perfect, yet, for voice AI use cases. We expect caching APIs to improve this year, as multimodal, multi-turn conversation use cases get more attention from people training SOTA models.</p>
-          </section>
+
         </div>
         
         <div class="chapter-notes">
@@ -1787,8 +1773,7 @@ Tower on a cloudy day.
 
       <div class="chapter-row">
         <div class="chapter-content">
-          <section id="multiple-models">
-            <h1>5. Using multiple AI models</h1>
+          <h1 id="multiple-models">5. Using multiple AI models</h1>
             
             <p>Today's production voice AI agents use multiple deep learning models in combination.<sup>[43]</sup></p>
             
@@ -1949,7 +1934,7 @@ Tower on a cloudy day.
             </ul>
             
             <p>Can you think of other ideas?</p>
-          </section>
+
         </div>
         
         <div class="chapter-notes">
@@ -2001,8 +1986,7 @@ interpreting phonemes or transcribed text as "MNI"
 
       <div class="chapter-row">
         <div class="chapter-content">
-          <section id="scripting">
-            <h1>6. Scripting and instruction following</h1>
+          <h1 id="scripting">6. Scripting and instruction following</h1>
             
             <p>A year ago, just being able to build voice agents capable of open-ended conversations at natural human latency was exciting.</p>
             
@@ -2054,7 +2038,7 @@ interpreting phonemes or transcribed text as "MNI"
             <p>One of Pipecat's core architectural components is the parallel pipeline. A parallel pipeline allows you to split the data going through the processing graph and operate on it twice (or more). You can block and filter data. You can define many parallel pipelines. You could think of a workflow as a set of gated, coordinated parallel pipelines.</p>
             
             <p>The rapid evolution of voice AI tooling is exciting, and highlights how early we are in figuring out the best way to build these new kinds of programs.</p>
-          </section>
+
         </div>
         
         <div class="chapter-notes">
@@ -2069,8 +2053,7 @@ interpreting phonemes or transcribed text as "MNI"
 
       <div class="chapter-row">
         <div class="chapter-content">
-          <section id="evals">
-            <h1>7. Voice AI Evals</h1>
+          <h1 id="evals">7. Voice AI Evals</h1>
             
             <p>One very important type of tooling is the eval, short for evaluation.</p>
             
@@ -2108,7 +2091,7 @@ interpreting phonemes or transcribed text as "MNI"
             <p>One typical approach is to run each prompt whenever you test a new model or change a major part of your system, using an LLM to judge whether the responses fall within some definition of expected parameters.</p>
 
             <p>Having a basic eval is much better than not having any evals at all. But investing in evals – having really good evals – becomes critical as you start to operate at scale.</p>
-          </section>
+
         </div>
         
         <div class="chapter-notes">
@@ -2123,7 +2106,7 @@ interpreting phonemes or transcribed text as "MNI"
 
       <div class="chapter-row">
         <div class="chapter-content">
-          <section id="eval-platforms">
+          <div id="eval-platforms">
             <p>Evaluation platforms that offer sophisticated tooling for voice AI evals are just beginning to emerge. <a href="https://coval.dev" target="_blank">Coval</a> is a startup building testing and eval tools for voice and chat agents. Coval's simulation-oriented approach is strongly influencing the evolution of evals in the voice AI ecosystem.</p>
 
             <div class="chapter-image">
@@ -2140,7 +2123,7 @@ interpreting phonemes or transcribed text as "MNI"
               <li>Regression testing (to be sure when you fix one problem area you don't introduce regressions in other previously solved problem areas).</li>
               <li>Tracking performance changes over time, both as changes are made by developers, and across user cohorts.</li>
             </ul>
-          </section>
+
         </div>
         
         <div class="chapter-notes">
@@ -2152,8 +2135,7 @@ interpreting phonemes or transcribed text as "MNI"
 
       <div class="chapter-row">
         <div class="chapter-content">
-          <section id="telephony">
-            <h1>8. Integrating with telephony infrastructure</h1>
+          <h1 id="telephony">8. Integrating with telephony infrastructure</h1>
             
             <p><strong>Most of the fastest growing voice AI use cases today involve telephone calls.</strong> AI voice agents are answering phone calls and making phone calls at scale today.</p>
             
@@ -2182,7 +2164,7 @@ interpreting phonemes or transcribed text as "MNI"
               
               <li>Voice agents often need to execute call transfers. In a simple transfer, the voice AI exits the session by calling a function that triggers a call transfer.<sup>[54]</sup> A <em>warm transfer</em> is a hand-off from one agent to another, in which the agents talk to each other before transferring the caller to the second agent. Voice AI agents can do warm transfers, just like humans can. The voice agent starts out talking to the human caller, then puts the human caller on hold and has a conversation with the new human agent being brought into the call, then connects the human caller to the human agent.</li>
             </ul>
-          </section>
+
         </div>
         
         <div class="chapter-notes">
@@ -2199,8 +2181,7 @@ interpreting phonemes or transcribed text as "MNI"
 
       <div class="chapter-row">
         <div class="chapter-content">
-          <section id="rag-memory">
-            <h1>9. RAG and memory</h1>
+          <h1 id="rag-memory">9. RAG and memory</h1>
             
             <p>Voice AI agents often access information from external systems. For example, you might need to:</p>
             
@@ -2261,7 +2242,7 @@ llm.register_function("query_order_system", query_order_system)
               
               <li>Save each message in the conversation history separately in a database, along with metadata about the message graph. Index every message (perhaps using semantic embeddings). This allows you to build branching conversation histories dynamically. You might want to do this if your app makes heavy use of image input (LLM vision). Images take up a lot of context space!<sup>[56]</sup> This approach also allows you to build branching UIs, which is a direction that AI app designers are just starting to explore.</li>
             </ol>
-          </section>
+
         </div>
         
         <div class="chapter-notes">
@@ -2278,8 +2259,7 @@ llm.register_function("query_order_system", query_order_system)
 
       <div class="chapter-row">
         <div class="chapter-content">
-          <section id="hosting">
-            <h1>10. Hosting and Scaling</h1>
+          <h1 id="hosting">10. Hosting and Scaling</h1>
             <p>Voice AI applications often have some traditional application components — web app frontends, API endpoints and other back-end elements. But the agent process itself is different enough from traditional app components that deploying and scaling voice AI comes with unique challenges.</p>
 
             <ul class="arrow-list">
@@ -2302,7 +2282,7 @@ llm.register_function("query_order_system", query_order_system)
 
             <p>Virtual machine specs and container packing often trip people up when deploying to production for the first time. The specs your agents need will vary depending on what libraries you use and how much CPU-intensive work you do within your agent process. A good rule of thumb is to start by running a single agent per virtual machine CPU, with double the maximum amount of RAM you see an agent process consuming on your dev machines.<sup>68</sup></p>
 
-          </section>
+
         </div>
         <div class="chapter-notes">
           <div class="chapter-footnotes" id="chapter-12-notes">
@@ -2318,8 +2298,7 @@ llm.register_function("query_order_system", query_order_system)
 
       <div class="chapter-row">
         <div class="chapter-content">
-          <section id="future">
-            <h1>11. What's coming in 2025</h1>
+          <h1 id="future">11. What's coming in 2025</h1>
             
             <p>Speaking of the growth of AI engineering, voice AI grew enormously in 2024 and we expect this to continue in 2025.</p>
             
@@ -2336,8 +2315,7 @@ llm.register_function("query_order_system", query_order_system)
 
       <div class="chapter-row">
         <div class="chapter-content">
-          <section id="future">
-            <h1>11. What's coming in 2025</h1>
+          <h1 id="future">11. What's coming in 2025</h1>
             
             <p>Speaking of the growth of AI engineering, voice AI grew enormously in 2024 and we expect this to continue in 2025.</p>
             
@@ -2357,7 +2335,7 @@ llm.register_function("query_order_system", query_order_system)
             <p>It’s going to be a fun year.</p>
 
 
-          </section>
+
         </div>
         
         <div class="chapter-notes">
@@ -2370,8 +2348,7 @@ llm.register_function("query_order_system", query_order_system)
 
       <div class="chapter-row">
         <div class="chapter-content">
-          <section id="contributors">
-            <h1>Contributors</h1>
+          <h1 id="contributors">Contributors</h1>
             
             <h2 id="lead-author">Lead Author</h2>
             <p>Kwindla Hultman Kramer</p>
@@ -2391,7 +2368,7 @@ llm.register_function("query_order_system", query_order_system)
             <h2 id="design">Design</h2>
             <p>Sascha Mombartz</p>
             <p>Akhil K G</p>
-          </section>
+
         </div>
         
         <div class="chapter-notes">
