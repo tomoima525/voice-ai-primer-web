@@ -287,7 +287,14 @@ footer p {
     gap: 1rem;
   }
 
+  .chunk-content {
+    width: 100%;
+    flex: 1 1 auto;
+  }
+
   .chunk-notes {
+    width: 100%;
+    flex: 1 1 auto;
     justify-content: flex-start;
   }
 
