@@ -733,7 +733,7 @@ When you receive a transcribed user request:
 
 Your output will be directly converted to speech, so your response should be natural-sounding and appropriate for a spoken conversation.
 </code></pre>
-            <p class="image-caption">Figure 4.g: Example prompt language for a voice AI agent.</p>
+            <p class="image-caption">Example prompt language for a voice AI agent.</p>
         </div>
       </div>
       
@@ -1024,7 +1024,6 @@ Rules:
 
             <div class="chapter-image">
               <img src="images/Figure 1600.jpg" alt="Bluetooth is problematic? Always has been." class="microphone-image" width="900">
-              <p class="image-caption">Figure 4.n</p>
             </div>
             <p>Most audio capture pipelines will apply some amount of automatic gain control to the input signal. Again, this is usually what you want, because this compensates for things like the user's distance from the microphone. You can often disable some automatic gain control, but on consumer-class devices you usually can't disable it completely.</p>
         </div>
@@ -1147,7 +1146,7 @@ Rules:
                 <td>Legacy VoIP systems, telephony, fax transmission, voice messaging</td>
               </tr>
             </table>
-            <p class="image-caption">Figure 4.o: Audio codecs used most often for voice AI</p>
+            <p class="image-caption">Audio codecs used most often for voice AI</p>
             
             <p>Opus is by far the best of these three options. Opus is built into web browsers, designed from the ground up to be a low-latency codec, and very efficient. It also performs well across a wide range of bitrates, and supports both speech and high-fidelity use cases.</p>
             
@@ -1189,7 +1188,7 @@ Rules:
     ]
   )
             </code></pre>
-            <p class="image-caption">Figure 4.p: Pipecat pipeline with a Krisp processing element</p>
+            <p class="image-caption">Pipecat pipeline with a Krisp processing element</p>
         </div>
       </div>
 
@@ -1323,7 +1322,7 @@ Rules:
             <p>For example, round trip packet time from a user in the UK to a server hosted by AWS us-west-1 in Northern California will typically be about 140 milliseconds. In comparison, RTT from that same user to AWS eu-west-2 would generally be 15 milliseconds or less.</p>
             <div class="chapter-image">
               <img src="images/Figure 2300.svg" alt="Edge routing diagram" class="network-image" width="700">
-              <p class="image-caption">Figure 4.u: RTT from a user in the UK to AWS us-west-1 is ~100ms more than to AWS eu-west-2</p>
+              <p class="image-caption">RTT from a user in the UK to AWS us-west-1 is ~100ms more than to AWS eu-west-2</p>
             </div>
             <p>That's a difference of more than 100 milliseconds — ten percent of your latency "budget" if your voice-to-voice latency target is 1,000 milliseconds.</p>
             
@@ -1351,7 +1350,7 @@ Rules:
             <p>This edge routing reduces median packet RTT. The UK → Northern California route over a private backbone is likely to be about 100 milliseconds. 100 ms (the long-haul private route) + 15 ms (the first hop over the public Internet) = 115 ms. This private route median RTT is 25ms better than the public route median RTT.</p>
             <div class="chapter-image">
               <img src="images/Figure 2400.svg" alt="Edge routing diagram" class="network-image" width="700">
-              <p class="image-caption">Figure 4.v: Edge route from the UK to AWS us-west-1. The first hop over the public network still has an RTT of 15ms. But the long route to Northern California over the private network has an RTT of 100ms. The total RTT of 115ms is 25ms faster than the public route from the UK to us-west-1. It's also significantly less variable (less packet loss and lower jitter).</p>
+              <p class="image-caption">Edge route from the UK to AWS us-west-1. The first hop over the public network still has an RTT of 15ms. But the long route to Northern California over the private network has an RTT of 100ms. The total RTT of 115ms is 25ms faster than the public route from the UK to us-west-1. It's also significantly less variable (less packet loss and lower jitter).</p>
             </div>
             <p>Even more critical than median RTT improvement, though, is improved delivery reliability and lower jitter.<sup>[27]</sup> The P95 RTT of a private route will be significantly lower than the P95 of a public route.<sup>[28]</sup></p>
             
@@ -1450,7 +1449,6 @@ Rules:
   VAD_MIN_VOLUME = 0.6
   
 </code></pre>
-            <p class="image-caption">Figure 4.y</p>
             
             <p>Tuning these parameters can improve turn detection behavior a lot for specific use cases.</p>
         </div>
@@ -1558,7 +1556,7 @@ Rules:
     ],
 
 </code></pre>
-            <p class="image-caption">Figure 4.z: Pipecat pipeline <a href="https://github.com/pipecat-ai/pipecat/blob/main/examples/foundational/22d-natural-conversation-gemini-audio.py" target="_blank">code for context-aware turn detection</a> using Gemini 2.0 Flash native audio input. Turn detection and greedy conversation inference run in parallel. Output is gated until the turn detection inference detects a phrase endpoint.</p>
+            <p class="image-caption">Pipecat pipeline <a href="https://github.com/pipecat-ai/pipecat/blob/main/examples/foundational/22d-natural-conversation-gemini-audio.py" target="_blank">code for context-aware turn detection</a> using Gemini 2.0 Flash native audio input. Turn detection and greedy conversation inference run in parallel. Output is gated until the turn detection inference detects a phrase endpoint.</p>
 
             <p>OpenAI recently shipped a new context-aware turn detection capability for their Realtime API. They call this feature <em>semantic VAD</em>, in contrast to the simpler <em>server VAD</em> (pause-based turn detection). Docs are <a href="https://platform.openai.com/docs/guides/realtime-vad#semantic-vad" target="_blank">here</a>.  </p>
 
@@ -1654,7 +1652,7 @@ Turn 3:
   <strong>User:</strong> How tall is it?
   <strong>LLM:</strong> The Eiffel Tower is about 330 meters tall.
 </code></pre>
-<p class="image-caption">Figure 4.ab: Sending the entire conversation history to an LLM every turn.</p>
+<p class="image-caption">Sending the entire conversation history to an LLM every turn.</p>
               
             
             <p>For each inference operation — each conversation turn — you can send the LLM:</p>
@@ -1981,7 +1979,7 @@ Tower on a cloudy day.
         <div class="chunk-notes">
           <div class="chapter-image-positioned" data-align-with="function-calling-eval">
             <img src="images/4ad.svg" alt="TTFT for inference that includes a function call" class="latency-image" width="250">
-            <p class="image-caption">Figure 4.ad: TTFT for inference that includes a function call. Our LLM has a TTFT of 450ms and produces 100 tokens per second. If the function call request chunk is 100 tokens, it takes 1s to output the function call request. Then we execute the function and run inference again. This time, we can stream the output, so after 450ms we have tokens we can use. TTFT for the full inference is 1,450 (not including the time it takes to execute the function itself ).</p>
+            <p class="image-caption">TTFT for inference that includes a function call. Our LLM has a TTFT of 450ms and produces 100 tokens per second. If the function call request chunk is 100 tokens, it takes 1s to output the function call request. Then we execute the function and run inference again. This time, we can stream the output, so after 450ms we have tokens we can use. TTFT for the full inference is 1,450 (not including the time it takes to execute the function itself ).</p>
           </div>
     
           <div class="chunk-footnotes">
@@ -2367,7 +2365,7 @@ stock performance of MNI, which is the ticker symbol
 interpreting phonemes or transcribed text as "MNI"
  rather than "Miami".
             </code></pre>
-            <p class="image-caption">Figure 5.c: An example of an LLM adjusting behavior based on user feedback during a multi-turn session (in-context learning)</p>
+            <p class="image-caption">An example of an LLM adjusting behavior based on user feedback during a multi-turn session (in-context learning)</p>
           </div>
           <div class="chunk-footnotes">
           </div>
@@ -2430,7 +2428,7 @@ interpreting phonemes or transcribed text as "MNI"
             <p>The state diagram is represented as JSON and can be loaded into a Pipecat process. There's a graphical editor for creating these JSON state diagrams.</p>
             <div class="chapter-image">
               <img src="images/6a.png" alt="Pipecat Flows graphical editor" class="chunk-image-inline" width="80%">
-              <p class="image-caption">Figure 6.a: Pipecat Flows graphical editor</p>
+              <p class="image-caption">Pipecat Flows graphical editor</p>
             </div>
             <p>Pipecat Flows and state machines are seeing a lot of developer adoption right now. But there are other interesting ways to think about building abstractions for complex workflows.</p>
             
@@ -2529,7 +2527,7 @@ interpreting phonemes or transcribed text as "MNI"
 
           <div class="chapter-image">
             <img src="images/7a.jpg" alt="A screenshot from the Coval evals platform UI" class="chunk-image-inline" width="80%">
-            <p class="image-caption">Figure 7.a: A screenshot from the Coval evals platform UI</p>
+            <p class="image-caption">A screenshot from the Coval evals platform UI</p>
           </div>
             
             <p>Coval and other evaluation platforms can help with:</p>
@@ -2636,7 +2634,7 @@ The patient has the following medical history: {user_info["summarized_history"]}
 """
 )
 </code></pre>
-            <p class="image-caption">Figure 9.a: Simple RAG – perform a lookup at the beginning of the session</p>
+            <p class="image-caption">Simple RAG – perform a lookup at the beginning of the session</p>
             
             <p>RAG is a deep topic and an area of rapid change.<sup>[57]</sup> Techniques range from the relatively simple approach above that just uses basic lookups and string interpolation, to systems that organize very large amounts of semi-structured data using embeddings and vector databases.</p>
 
@@ -2669,7 +2667,7 @@ The patient has the following medical history: {user_info["summarized_history"]}
 
 llm.register_function("query_order_system", query_order_system)
 </code></pre>
-            <p class="image-caption">Figure 9.b: RAG during a session. Define a function for the LLM to call when information lookup is required. In this example, we also emit a pre-set spoken phrase to let the user know the system will take a few seconds to respond.</p>
+            <p class="image-caption">RAG during a session. Define a function for the LLM to call when information lookup is required. In this example, we also emit a pre-set spoken phrase to let the user know the system will take a few seconds to respond.</p>
             
             <p>As always, latency is a bigger challenge with voice AI than for non-voice AI systems. When an LLM makes a function call request, the extra inference call adds to latency. Looking up information in external systems can be slow, too. It's often useful to trigger a simple speech output before executing the RAG lookup, to let the user know that work is in progress.</p>
             
