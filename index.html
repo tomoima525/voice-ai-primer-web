@@ -263,7 +263,7 @@
               <p>[2] We originally wrote this guide for the AI Engineering Summit in February 2025. We updated it at the beginning of April.</p>
             </div>
             <div class="footnote">
-              <p>[3] <a href="https://webrtcforthecurious.com" target="_blank">webrtcforthecurious.com</a> — WebRTC is relevant to voice AI, as we'll discuss later in section 4.6.1.</p>
+              <p>[3] <a href="https://webrtcforthecurious.com" target="_blank">webrtcforthecurious.com</a> — WebRTC is relevant to voice AI, as we'll discuss later in the <a href="#websockets-webrtc">WebSockets and WebRTC</a> section.</p>
             </div>
             <div class="footnote">
               <p>[4] Pipecat has integrations for more than 40 AI models and services, along with state of-the-art implementations of things like turn detection and interruption handling. You can write code with Pipecat that uses WebSockets, WebRTC, HTTP, and telephony to communicate with users. Pipecat includes transport implementations for a variety of infrastructure platforms including Twilio, Telnyx, LiveKit, Daily, and others.</p>
@@ -1593,7 +1593,7 @@ Rules:
               
               <li>Echo cancellation failures. Echo cancellation algorithms aren't perfect. A transition from silence to speech playout is particularly challenging. If you've done a lot of voice agent testing, you've probably heard your bot interrupt itself right when it starts talking. The culprit is echo cancellation allowing a little bit of the initial speech audio to feed back into your microphone. The minimum VAD start segment length helps to avoid this problem. So does applying exponential smoothing<sup>[32]</sup> to the audio volume level to avoid sharp volume transitions.</li>
               
-              <li>Background speech. The VAD model will not distinguish between user speech and background speech. If the background speech is louder than your volume threshold, background speech will trigger an interruption. A speaker isolation audio processing step can reduce spurious interruptions caused by background speech. See the discussion in the <a href="#server-side-noise"> 4.5.5 Server-side noise processing and speaker isolation </a> section, above.</li>
+              <li>Background speech. The VAD model will not distinguish between user speech and background speech. If the background speech is louder than your volume threshold, background speech will trigger an interruption. A speaker isolation audio processing step can reduce spurious interruptions caused by background speech. See the discussion in the <a href="#server-side-noise">Server-side noise processing and speaker isolation</a> section, above.</li>
             </ol>
 
         </div>
@@ -1611,7 +1611,7 @@ Rules:
             
             <p>So you need a way to figure out what text the user actually <em>heard!</em></p>
             
-            <p>The best speech-to-text services can report word-level timestamp data. Use these word-level timestamps to buffer and assemble assistant message text that matches the audio heard by the user. See the discussion of word-level timestamps in the <a href="#text-to-speech"> 4.4 Text-to-speech </a> section, above.</p>
+            <p>The best speech-to-text services can report word-level timestamp data. Use these word-level timestamps to buffer and assemble assistant message text that matches the audio heard by the user. See the discussion of word-level timestamps in the <a href="#text-to-speech">Text-to-speech</a> section, above.</p>
 
         </div>
         
@@ -1704,7 +1704,7 @@ Turn 3:
             
             <p>Having to manage multi-turn context adds to the complexity of developing a voice AI agent. On the other hand, it can be useful to retroactively modify the context. For each conversation turn, you can decide exactly what to send the LLM.</p>
             
-            <p>LLMs don't always need the full conversation context. Shortening or summarizing the context can reduce latency and cost. And carefully tailoring the context during the course of a session can significantly increase the reliability of a voice AI agent. More on this topic in the <strong>Scripting and instruction following</strong> section, below.</p>
+            <p>LLMs don't always need the full conversation context. Shortening or summarizing the context can reduce latency and cost. And carefully tailoring the context during the course of a session can significantly increase the reliability of a voice AI agent. More on this topic in the <a href="#scripting">Scripting and instruction following</a> section, below.</p>
 
 
 
@@ -1749,7 +1749,7 @@ Turn 3:
 
             <p>This means that current-generation LLMs struggle with voice AI use cases even when they do well on general function calling benchmarks. Different LLMs and different updates of the same model are differentially good at function calling, and differently good at different kinds of function calling in different circumstances.</p>
             
-            <p id="function-calling-eval"><strong>If you are building voice AI agents, t's important to develop your own evals to test the function calling performance of your app. See the <a href="#evals">7. Voice AI evals</a> section, below.</strong></p>
+            <p id="function-calling-eval"><strong>If you are building voice AI agents, t's important to develop your own evals to test the function calling performance of your app. See the <a href="#evals">Voice AI Evals</a> section, below.</strong></p>
             
         </div>
       </div>
@@ -2180,7 +2180,7 @@ Tower on a cloudy day.
             <div class="chunk-content">
 
             <ol class="list-decimal">
-              <li>For embedded knowledge, implement a search capability that can pull information from your knowledge base and assemble search results into an effective prompt. For more on this, see the <a href="#rag-memory"> 9. Rag and memory section </a>, below.</li>
+              <li>For embedded knowledge, implement a search capability that can pull information from your knowledge base and assemble search results into an effective prompt. For more on this, see the <a href="#rag-memory">RAG and memory</a> section, below.</li>
               <li>For response patterns, embed examples of how you expect the model to respond to different questions. Sometimes, just a few examples are enough and a large model will generalize shockingly well. Sometimes, you will need lots of examples — 100 or more.</li>
             </ol>
 
@@ -2203,7 +2203,7 @@ Tower on a cloudy day.
             <p>A few examples of async inference tasks:</p>
             
             <ul class="arrow-list">
-              <li>Implementing content "guardrails". (See next section.)</li>
+              <li>Implementing content "guardrails". (See the <a href="#content-guardrails">Content guardrails</a> section.)</li>
               <li>Creating an image.</li>
               <li>Generating code to run in a sandbox.</li>
             </ul>
@@ -2306,14 +2306,14 @@ Tower on a cloudy day.
               <li>Any time you reach for a regular expression, you can probably write a prompt instead.</li>
               <li>Post-processing LLM output is often useful. For example, you might want to generate output in two formats: text for display in a UI and voice for the interactive conversation. You can prompt the conversation LLM to generate nicely formatted markdown text, then prompt the LLM again to shorten and reformat the text for voice generation.<sup>[51]</sup></li>
               <li>Recursion is powerful.<sup>[52]</sup> You can do things like have an LLM generate a list, and then call the LLM again to perform operations on each element of the list.</li>
-              <li>It turns out that you often want to summarize multi-turn conversations. LLMs are fantastic, steerable, summarizers. More on this in the 6. Scripting and instruction following section, below.</li>
+              <li>It turns out that you often want to summarize multi-turn conversations. LLMs are fantastic, steerable, summarizers. More on this in the <a href="#scripting">Scripting and instruction following</a> section, below.</li>
             </ul>
 
           </div>
           <div class="chunk-notes">
             <div class="chunk-footnotes">
               <div class="footnote">
-                <p>[51] See also the 5.3 Guardrails section, above, regarding post-processing LLM output.</p>
+                <p>[51] See also the <a href="#content-guardrails">Content guardrails</a> section, above, regarding post-processing LLM output.</p>
               </div>
               <div class="footnote">
                 <p>[52] We're programmers, of course we&nbsp;… — ed.</p>
