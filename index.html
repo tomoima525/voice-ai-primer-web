@@ -1198,7 +1198,7 @@ Rules:
         <div class="chunk-content">
             <h3 id="voice-activity-detection">4.5.6 Voice activity detection</h3>
             
-            <p>A voice activity detection stage is part of almost every voice AI pipeline. VAD classifies audio segments as "speech" and "not speech." We will talk in detail about VAD in 4.7 Turn Detection, below.</p>
+            <p>A voice activity detection stage is part of almost every voice AI pipeline. VAD classifies audio segments as "speech" and "not speech." We will talk in detail about VAD in the <a href="#turn-detection">Turn detection</a> section, below.</p>
         </div>
       </div>
 
@@ -1796,7 +1796,7 @@ Turn 3:
             <p>This means that:</p>
             
             <ol class="list-decimal">
-              <li>You need to stop your voice-to-voice inference loop until all function calls complete. See below for notes on 4.10.6 Asynchronous function calls.</li>
+              <li>You need to stop your voice-to-voice inference loop until all function calls complete. See below for notes on <a href="#async-function-calls">Asynchronous function calls</a>.</li>
               <li>If a function call is interrupted and will never complete, you need to put a function call response message into the context that indicates … something.</li>
             </ol>
             
@@ -1942,7 +1942,7 @@ Turn 3:
     Literal["in_progress", "canceled", "success", "failure"]</code></pre></li>
             </ul>
             
-            <p>For more discussion of this topic, see 5.2 Performing async inference tasks, below.</p>
+            <p>For more discussion of this topic, see the <a href="#async-inference-tasks">Performing async inference tasks</a> section, below.</p>
             
             <p>As LLMs and APIs evolve to better support multimodal conversational use cases, we'd love to see LLM researchers explore ideas around asynchronous functions and long-running functions that act as generators.</p>
             
