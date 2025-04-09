@@ -3,14 +3,14 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Voice AI & Voice Agents | An illustrated primer</title>
+  <title>Voice AI & Voice Agents | An Illustrated Primer</title>
   <meta name="description" content="A comprehensive guide to voice AI in 2025">
-  <meta property="og:title" content="Voice AI & Voice Agents | An illustrated primer">
+  <meta property="og:title" content="Voice AI & Voice Agents | An Illustrated Primer">
   <meta property="og:description" content="A comprehensive guide to voice AI in 2025">
   <meta property="og:image" content="images/meta.jpg">
   <meta property="og:type" content="website">
   <meta name="twitter:card" content="summary_large_image">
-  <meta name="twitter:title" content="Voice AI & Voice Agents | An illustrated primer">
+  <meta name="twitter:title" content="Voice AI & Voice Agents | An Illustrated Primer">
   <meta name="twitter:description" content="A comprehensive guide to voice AI in 2025">
   <meta name="twitter:image" content="images/meta.jpg">
   <link rel="stylesheet" href="styles.css">
@@ -30,10 +30,16 @@
 </head>
 <body>
   <div class="container">
+    <div style="float: right; margin: 1rem 0 1rem 1rem; width: 10rem;">
+      <img src="images/Figure 0100 horizontal.svg">
+    </div>
+
+
     <header class="header">
       <h1 class="title">Voice AI & Voice Agents</h1>
-      <h2 class="subtitle">An illustrated primer</h2>
+      <h2 class="subtitle">An Illustrated Primer</h2>
     </header>
+    
 
     <nav id="table-of-contents">
       <h2 class="table-of-contents-title">Table of Contents</h2>
@@ -196,6 +202,7 @@
     <main>
       <div class="chunk-row">
         <div class="chunk-content">
+
           <h1 id="conversational-voice-ai">1. Conversational Voice AI in 2025</h1>
             
             <p>LLMs are good conversationalists.</p>
@@ -222,11 +229,12 @@
             <ul class="arrow-list">
               <li>collecting patient data prior to healthcare appointments,</li>
               <li>following up on inbound sales leads,</li>
+              <li>handling an increasing variety of call center tasks,</li>
               <li>coordinating scheduling and logistics between companies, and</li>
               <li>answering the phone for nearly every kind of small business.</li>
             </ul>
             
-            <p>On the consumer side, conversational voice (and video) AI is also starting to make its way into social applications and games. And developers are sharing personal voice AI projects and experiments every day on github and social media.</p>
+            <p>On the consumer side, conversational voice (and video) AI is also starting to make its way into social applications and games. And developers are sharing personal voice AI projects and experiments every day on GitHub and social media.</p>
 
         </div>
       </div>
@@ -238,8 +246,6 @@
           <p>This guide is a snapshot of the voice AI state of the art.<sup>[2]</sup></p>
                         
             <p>Building production-ready voice agents is complicated. Many elements are non-trivial to implement from scratch. If you build voice AI apps, you'll likely rely on a framework for many of the things discussed in this document. But we think it's useful to understand how the pieces fit together, whether you are building them all from scratch or not.</p>
-            
-            <p>As more and more developers jump into building realtime, conversational AI applications, materials to help people get started are important.</p>
             
             <p>This guide was directly inspired by Sean DuBois' open-source book <a href="https://webrtcforthecurious.com" target="_blank">WebRTC For the Curious</a>. That book has helped numerous developers get up to speed with WebRTC since it was first released four years ago.<sup>[3]</sup></p>
             
@@ -266,7 +272,7 @@
               <p>[3] <a href="https://webrtcforthecurious.com" target="_blank">webrtcforthecurious.com</a> — WebRTC is relevant to voice AI, as we'll discuss later in the <a href="#websockets-webrtc">WebSockets and WebRTC</a> section.</p>
             </div>
             <div class="footnote">
-              <p>[4] Pipecat has integrations for more than 40 AI models and services, along with state of-the-art implementations of things like turn detection and interruption handling. You can write code with Pipecat that uses WebSockets, WebRTC, HTTP, and telephony to communicate with users. Pipecat includes transport implementations for a variety of infrastructure platforms including Twilio, Telnyx, LiveKit, Daily, and others.</p>
+              <p>[4] Pipecat has integrations for more than 50 <a href="https://docs.pipecat.ai/server/services/supported-services" target="_blank">AI models and services</a>, along with state of-the-art implementations of things like turn detection and interruption handling. You can write code with Pipecat that uses WebSockets, WebRTC, HTTP, and telephony to communicate with users. Pipecat includes transport implementations for a variety of infrastructure platforms including Twilio, Telnyx, LiveKit, Daily, and others. There are <a href="https://docs.pipecat.ai/client/introduction" target="_blank">client-side Pipecat SDKs</a> for JavaScript, React, iOS, Android, and C++.</p>
             </div>
           </div>
         </div>
@@ -274,13 +280,13 @@
 
       <div class="chunk-row">
         <div class="chunk-content">
+
           <h1 id="basic-loop">3. The basic conversational AI loop</h1>
-            
+
             <p>The basic "job to be done" of a voice AI agent is to listen to what a human says, respond in some useful way, then repeat that sequence.</p>
             
-            <p>This is a useful high-level starting point. But if you're building a voice agent, today, you'll need to dive into the details of speech processing, LLM inference, voice generation, and orchestration.</p>
-            
             <p>Production voice agents today almost all have a very similar architecture. A voice agent program runs in the cloud and orchestrates the speech-to-speech loop. The agent program uses multiple AI models, some running locally to the agent, some accessed via APIs. The agent program also uses LLM function calling or structured outputs to integrate with back-end systems.</p>
+
             
             <ol class="list-decimal">
               <li>Speech is captured by a microphone on a user's device, encoded, and sent over the network to a voice agent program running in the cloud.</li>
@@ -310,10 +316,8 @@
         
         <div class="chunk-notes">
           <div class="chapter-image">
-            <img src="images/Figure 0100 horizontal.svg">
-            <p class="image-caption">The basic conversational AI loop</p>
-            <img src="images/Figure 0200.svg" class="basic-loop-image" width="100%">
-            <p class="image-caption">The architecture of almost all production voice AI agents today</p>
+            <img src="images/Figure 0200.svg" class="image-hide-narrow" width="100%">
+            <p class="image-caption image-hide-narrow">The architecture of almost all production voice AI agents today</p>
           </div>
           <div class="chunk-footnotes">
             <div class="footnote">
@@ -443,7 +447,7 @@
             <p>Because latency is so important for voice use cases, latency will come up often throughout this guide.</p>
         </div>
         <div class="chunk-notes">
-          <div class="chapter-image-positioned">
+          <div class="image-hide-narrow">
             <img src="images/Figure 0300.svg" width="100%">
           </div>
         </div>
