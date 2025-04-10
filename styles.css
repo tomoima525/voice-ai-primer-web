@@ -39,12 +39,12 @@ h2,
 h3 {
   font-weight: 700;
   line-height: 1.2;
-  margin-top: 1.5em;
-  margin-bottom: 0.5em;
+  margin-top: 1rem;
+  margin-bottom: 0.75rem;
 }
 
 h1 {
-  font-size: 2.5rem;
+  font-size: 2rem;
   font-weight: 600;
 }
 h2 {
@@ -185,6 +185,10 @@ sup:hover {
   color: var(--foreground);
 }
 
+.footnote .arrow-list li {
+  margin: 0;
+}
+
 ol.list-decimal {
   list-style-type: decimal;
 }
@@ -230,19 +234,21 @@ footer p {
 }
 
 /* Chapter Row Layout */
-.chapter-row {
+.chunk-row {
   display: flex;
-  margin-bottom: 4rem;
   position: relative;
   gap: 3rem;
+  justify-content: space-between;
 }
 
-.chapter-content {
-  flex: 3;
+.chunk-content {
+  width: calc(75% - 1.5rem);
+  flex: 0 0 auto;
 }
 
-.chapter-notes {
-  flex: 1;
+.chunk-notes {
+  width: calc(25% - 1.5rem);
+  flex: 0 0 auto;
   font-size: 0.9rem;
   color: var(--muted);
   display: flex;
@@ -250,15 +256,19 @@ footer p {
   position: relative;
 }
 
+.chapter-image {
+  margin-top: 3rem;
+}
+
 /* Footnotes aligned at the bottom of chapter content */
-.chapter-footnotes {
+.chunk-footnotes {
   position: static;
   padding-left: 1rem;
   /* border-left: 1px solid var(--border); */
   margin-top: auto;
 }
 
-.chapter-footnotes h3 {
+.chunk-footnotes h3 {
   font-size: 1rem;
   margin-top: 0;
   margin-bottom: 1rem;
@@ -272,25 +282,37 @@ footer p {
 
 /* Responsive adjustments */
 @media (max-width: 768px) {
-  .chapter-row {
+  .chunk-row {
     flex-direction: column;
     gap: 1rem;
   }
 
-  .chapter-notes {
+  .chunk-content {
+    width: 100%;
+    flex: 1 1 auto;
+  }
+
+  .chunk-notes {
+    width: 100%;
+    flex: 1 1 auto;
     justify-content: flex-start;
   }
 
-  .chapter-footnotes {
+  .chunk-footnotes {
     border-left: none;
     border-top: 1px solid var(--border);
     padding-left: 0;
     padding-top: 1rem;
     margin-top: 1rem;
   }
+
+  .image-hide-narrow {
+    display: none;
+  }
+  
 }
 
-.chapter-image {
+.chunk-image {
   margin-top: 40px;
   width: 100%;
   display: flex;
@@ -298,40 +320,16 @@ footer p {
   align-items: center;
 }
 
-/* New class for positioned images */
-.chapter-image-positioned {
-  width: 100%;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  position: sticky;
-  top: 20px; /* Default sticky position from top */
-  margin-bottom: 30px; /* Add space between positioned images */
-  z-index: 1; /* Ensure proper stacking */
-}
-
-/* Class to adjust the vertical position of an image */
-.image-position-adjust {
-  margin-top: var(--position-offset, 0);
-}
-
 /* Class for images that should appear within the content flow */
-.chapter-image-inline {
-  width: 100%;
+.chunk-image-inline {
   display: flex;
-  flex-direction: column;
-  align-items: center;
-  margin: 30px 0;
+  margin: 2rem auto;
 }
 
-.basic-loop-image {
-  max-width: 100%;
-  height: auto;
-  object-fit: contain;
-}
 
 .image-caption {
   margin-top: 0.75rem;
+  margin-bottom: 1.5rem;
   font-size: 0.9rem;
   color: var(--muted);
   text-align: center;
@@ -390,29 +388,23 @@ pre code {
   width: 100%;
 }
 
+pre code .pre-highlight {
+  background-color: #f2f2f2;
+}
+
 .nobreak {
   white-space: nowrap;
   word-break: keep-all;
 }
 
-/* Table styles moved from inline CSS */
-.latency-table {
-  margin-top: 20px;
-  font-size: 0.9em;
-}
-
-.latency-table h4 {
-  font-size: 1em;
-  margin-bottom: 10px;
-  font-weight: 500;
-}
 
 .data-table {
   width: 100%;
   border-collapse: collapse;
+  margin-top: 1em;
   margin-bottom: 1em;
   box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
-  font-size: 0.85em;
+  font-size: 75%;
   font-family: "DM Mono", monospace;
 }
 
@@ -421,12 +413,12 @@ pre code {
   color: #333;
   font-weight: 600;
   text-align: left;
-  padding: 8px 12px;
+  padding: 0.75em 0.5em;
   border: 1px solid #ddd;
 }
 
 .data-table td {
-  padding: 8px 12px;
+  padding: 0.25em 0.5em;
   border: 1px solid #ddd;
   vertical-align: middle;
 }
@@ -439,6 +431,27 @@ pre code {
   background-color: #f0f0f0;
 }
 
+.latency-breakdown {
+  font-size: 60%;
+}
+
+.latency-breakdown th:last-child {
+  text-align: right;
+}
+
+.latency-breakdown tr {
+  background-color: #f8f8f8
+}
+
+.latency-breakdown .network-row {
+  background-color: #f2f2f2;
+}
+
+.latency-breakdown td:last-child {
+  text-align: right;
+  font-family: "DM Mono", monospace;
+}
+
 .table-caption {
   font-size: 0.85em;
   margin-top: 8px;
@@ -448,17 +461,13 @@ pre code {
 }
 
 /* Specific styling for cost and latency tables */
+
 .model-comparison td:first-child {
   font-weight: 500;
 }
 
 .model-comparison td:not(:first-child) {
   text-align: center;
-}
-
-.latency-breakdown td:last-child {
-  text-align: right;
-  font-family: "DM Mono", monospace;
 }
 
 .total-row {
